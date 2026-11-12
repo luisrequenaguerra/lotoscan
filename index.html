@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>LotoScan — LotoScan 0.24 · Escáner y entrada manual</title>
+<title>LotoScan — LotoScan 0.25 · Escáner y entrada manual</title>
 <style>
 :root{--bg:#f6f4ef;--paper:#fffefa;--ink:#2b2c2a;--muted:#777b70;--line:#e7e2d8;--olive:#7a846b;--olive2:#e8ece3;--gold:#b99a60;--radius:22px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -70,6 +70,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .processing{display:inline-flex;align-items:center;gap:8px}.spinner{width:13px;height:13px;border:2px solid #d5dacd;border-top-color:#65715c;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .game-filter{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font-size:12px;margin:8px 0 12px}
 @media(max-width:380px){header{padding-top:11px;padding-bottom:11px}.brandmark{width:40px;height:40px;flex-basis:40px}.brand{font-size:21px}.subbrand{font-size:7px;letter-spacing:.13em}}
+.portfolio-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}.portfolio-tools label{font-size:12px;color:var(--muted);white-space:nowrap}.portfolio-tools select{max-width:220px;margin:0}.portfolio-summary{font-size:12px;color:var(--muted);margin:8px 0 16px}.ticket-state{font-size:11px;color:#737d66;margin-top:5px}
 </style>
 </head>
 <body>
@@ -130,16 +131,16 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
   <button class="primary" type="button" style="width:100%;background:#65715c;color:white;margin-top:10px" onclick="saveRecognizedTicket()">Confirmar y guardar en Mis boletos</button>
   <button class="secondary" type="button" style="margin-top:8px" onclick="resetScanner()">Volver a escanear</button>
 </div>
-<p class="notice">Versión 0.24 · lectura adaptable de la línea inferior para décimos de Lotería Nacional. Revisa los datos antes de guardar. Si la lectura falla, puedes introducirlos manualmente. La comprobación de premios aún no está conectada.</p>
+<p class="notice">Versión 0.25 · lectura adaptable de la línea inferior para décimos de Lotería Nacional. Revisa los datos antes de guardar. Si la lectura falla, puedes introducirlos manualmente. La comprobación de premios aún no está conectada.</p>
 </section>
 
 <section id="tickets" class="screen">
 <button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">TU COLECCIÓN</div><h1>Mis boletos.</h1><p class="lead">Todos tus números, organizados y listos para comprobar.</p>
 <div class="row" style="margin:18px 0 4px"><span class="eyebrow">TODOS TUS SORTEOS</span><span class="pill" id="ticketCount">4 boletos</span></div>
 <select id="gameFilter" class="game-filter" onchange="renderTickets()"><option value="all">Todos los juegos</option><option value="loteria_nacional">Lotería Nacional</option><option value="euromillones">Euromillones</option><option value="primitiva">La Primitiva</option><option value="bonoloto">Bonoloto</option><option value="gordo">El Gordo de la Primitiva</option><option value="quiniela">Quiniela</option><option value="quinigol">Quinigol</option><option value="lototurf">Lototurf</option><option value="quintuple_plus">Quíntuple Plus</option></select>
-<div id="allTickets"></div>
+<div class="portfolio-tools"><label for="ticketSort">Ordenar por</label><select id="ticketSort" class="game-filter" onchange="renderTickets()"><option value="date_desc">Sorteo más reciente</option><option value="date_asc">Sorteo más antiguo</option><option value="added_desc">Añadidos recientemente</option><option value="number">Número</option></select></div><div class="portfolio-summary" id="portfolioSummary"></div><div id="allTickets"></div>
 <button class="secondary" onclick="go('addTicket')">＋ Añadir manualmente</button>
-<p class="notice">Los décimos iniciales son datos de muestra. Los boletos se guardan solo en este navegador y dispositivo; no están sincronizados ni comprobados.</p>
+<p class="notice">Los décimos iniciales son datos de muestra. Todos los boletos figuran pendientes de comprobar: no hay resultados oficiales conectados. Se guardan solo en este navegador y dispositivo, sin sincronización.</p>
 </section>
 
 <section id="ticketDetail" class="screen">
@@ -155,12 +156,23 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
     <div class="detail-cell"><small>Precio</small><strong id="detailPrice">20 €</strong></div>
     <div class="detail-cell"><small>Juego</small><strong style="font-size:14px">Nacional</strong></div>
   </div>
-  <div class="status-note">Estado: décimo guardado como referencia. La comprobación de premios todavía no está conectada. Confirma siempre los premios por los canales oficiales.</div>
+  <div class="status-note" id="detailStatus">Pendiente de comprobar. La comprobación automática de premios todavía no está conectada.</div>
 </div>
+<button class="primary" onclick="editCurrentTicket()">Editar datos del boleto</button>
 <button class="secondary" onclick="deleteCurrentTicket()" style="color:#9a4d44;border-color:#d9c6c1">Eliminar este boleto</button>
 <button class="secondary" onclick="go('tickets')">Volver a la cartera</button>
 </section>
 
+<section id="editTicket" class="screen">
+<button class="back" onclick="go('ticketDetail')">← Volver al boleto</button><div class="eyebrow">CORREGIR DATOS</div><h1>Editar décimo.</h1><p class="lead">Comprueba los datos impresos antes de guardar.</p>
+<form class="panel" onsubmit="saveEditedTicket(event)">
+<label class="formlabel" for="editNumber">Número (5 cifras)</label><input id="editNumber" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" required>
+<div class="formrow"><div><label class="formlabel" for="editSeries">Serie</label><input id="editSeries" type="number" min="1" required></div><div><label class="formlabel" for="editFraction">Fracción</label><input id="editFraction" type="number" min="1" required></div></div>
+<label class="formlabel" for="editDate">Fecha del sorteo</label><input id="editDate" type="date" required>
+<div class="formrow"><div><label class="formlabel" for="editCode">Código del sorteo</label><input id="editCode"></div><div><label class="formlabel" for="editPrice">Precio (€)</label><input id="editPrice" type="number" min="0" step="0.01" required></div></div>
+<button class="primary" type="submit">Guardar cambios</button></form>
+<p class="notice">La edición no comprueba resultados ni premios. Revisa siempre los datos con el boleto original.</p>
+</section>
 <section id="addTicket" class="screen">
 <button class="back" onclick="go('tickets')">← Volver a mis boletos</button><div class="eyebrow">ENTRADA MANUAL</div><h1>Añadir décimo.</h1><p class="lead">Introduce los datos impresos en tu décimo de Lotería Nacional.</p>
 <form class="panel" onsubmit="saveManualTicket(event)">
@@ -186,7 +198,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <div class="panel"><div class="row"><strong style="font-size:13px">Euromillones</strong><span class="pill">Último resultado</span></div><div style="display:flex;gap:7px;margin:16px 0 8px"><span class="ticketicon">07</span><span class="ticketicon">14</span><span class="ticketicon">23</span><span class="ticketicon">36</span><span class="ticketicon">48</span></div><p class="ticketmeta">Estrellas: 02 · 09</p></div>
 <p class="notice">Números de muestra para el prototipo. No son resultados reales ni válidos para comprobar premios.</p>
 </section>
-<p class="notice" style="text-align:center">LotoScan · LotoScan 0.24 · Escáner y entrada manual</p>
+<p class="notice" style="text-align:center">LotoScan · LotoScan 0.25 · Escáner y entrada manual</p>
 </div>
 <nav>
 <button class="active" data-tab="home" onclick="go('home')"><b>⌂</b>Inicio</button>
@@ -213,9 +225,13 @@ function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
 function formatDate(value){return new Date(value+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}
 function gameLabel(g){return ({loteria_nacional:'Lotería Nacional',euromillones:'Euromillones',primitiva:'La Primitiva',bonoloto:'Bonoloto',gordo:'El Gordo de la Primitiva',quiniela:'Quiniela',quinigol:'Quinigol',lototurf:'Lototurf',quintuple_plus:'Quíntuple Plus'})[g]||'Lotería Nacional'}
-function ticketCard(t){return `<div class="ticket-entry"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})"><div class="ticketicon">✦</div><div class="ticketmain"><div class="ticket-tag">${gameLabel(t.game)} · ${t.code||''}</div><div class="ticket-number">${t.number}</div><div class="ticketmeta">${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div></div><span class="chev">›</span></button><button class="ticket-menu" type="button" aria-label="Eliminar boleto ${t.number}" title="Eliminar boleto" onclick="confirmDeleteTicket(${t.id})"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7M14 10v7"/></svg></button></div>`}
-function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=filter==='all'?tickets:tickets.filter(t=>t.game===filter);document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.<br>Podrás añadirlos cuando incorporemos su escáner.</div>';document.getElementById('homeTickets').innerHTML=tickets.slice(-2).reverse().map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos'}
-function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.getElementById('detailNumber').textContent=t.number;document.getElementById('detailSeries').textContent=t.series;document.getElementById('detailFraction').textContent=t.fraction;document.getElementById('detailPrice').textContent=t.price+' €';document.getElementById('detailDate').textContent=formatDate(t.date);document.getElementById('detailCode').textContent=t.code||'Sin código';document.getElementById('detailDraw').textContent=t.draw;go('ticketDetail')}
+function ticketStatus(t){return 'Pendiente de comprobar'}
+function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'date_desc';return [...items].sort((a,b)=>{if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
+function ticketCard(t){return `<div class="ticket-entry"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})"><div class="ticketicon">✦</div><div class="ticketmain"><div class="ticket-tag">${gameLabel(t.game)} · ${t.code||''}</div><div class="ticket-number">${t.number}</div><div class="ticketmeta">${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div><div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button><button class="ticket-menu" type="button" aria-label="Eliminar boleto ${t.number}" title="Eliminar boleto" onclick="confirmDeleteTicket(${t.id})"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7M14 10v7"/></svg></button></div>`}
+function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=sortedTickets(filter==='all'?tickets:tickets.filter(t=>t.game===filter));document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';document.getElementById('homeTickets').innerHTML=sortedTickets(tickets).slice(0,2).map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos';document.getElementById('portfolioSummary').textContent=shown.length+' boletos · Pendientes de comprobar · Sin resultados oficiales conectados'}
+function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.getElementById('detailNumber').textContent=t.number;document.getElementById('detailSeries').textContent=t.series;document.getElementById('detailFraction').textContent=t.fraction;document.getElementById('detailPrice').textContent=t.price+' €';document.getElementById('detailDate').textContent=formatDate(t.date);document.getElementById('detailCode').textContent=t.code||'Sin código';document.getElementById('detailDraw').textContent=t.draw;document.getElementById('detailStatus').textContent='Pendiente de comprobar. La comprobación automática de premios todavía no está conectada.';go('ticketDetail')}
+function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket')}
+function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||!Number.isInteger(series)||series<1||!Number.isInteger(fraction)||fraction<1||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}Object.assign(t,{number,series,fraction,date,price,code:document.getElementById('editCode').value.trim()});if(!persistTickets())return;renderTickets();openTicket(t.id)}
 function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);persistTickets();renderTickets();e.target.reset();go('tickets')}
 function go(id){if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
 let cameraStream=null, selectedImage=null;
@@ -228,7 +244,7 @@ async function startCamera(){
 }
 function stopCamera(){if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null}document.getElementById('cameraVideo').srcObject=null;document.getElementById('cameraWrap').classList.remove('has-camera');document.getElementById('captureButton').style.display='none';document.getElementById('cameraOverlay').hidden=true}
 function capturePhoto(){const video=document.getElementById('cameraVideo');if(!video.videoWidth){scanMessage('La cámara todavía no está preparada.');return}const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;c.getContext('2d').drawImage(video,0,0);c.toBlob(b=>{selectedImage=b;showSelectedImage(URL.createObjectURL(b));stopCamera();},'image/jpeg',.94)}
-function showSelectedImage(url){const wrap=document.getElementById('cameraWrap'),img=document.getElementById('capturedPreview');img.src=url;wrap.classList.remove('has-camera');wrap.classList.add('has-image');document.getElementById('readButton').style.display='block';document.getElementById('scanResult').innerHTML='';document.getElementById('reviewPanel').classList.remove('visible');scanMessage('Fotografía preparada. Pulsa «Leer código inferior» para analizarla.')}
+function showSelectedImage(url){const wrap=document.getElementById('cameraWrap'),img=document.getElementById('capturedPreview');img.src=url;wrap.classList.remove('has-camera');wrap.classList.add('has-image');document.getElementById('readButton').style.display='block';document.getElementById('scanResult').innerHTML='';document.getElementById('reviewPanel').classList.remove('visible');scanMessage('Fotografía preparada. Pulsa «Reconocer boleto» para analizarla.')}
 function handlePhoto(e){const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){scanMessage('Selecciona un archivo de imagen.');return}stopCamera();selectedImage=f;showSelectedImage(URL.createObjectURL(f));e.target.value=''}
 // OCR 0.13: interpreta campos por etiquetas y líneas, sin elegir números arbitrarios.
 function parseNationalLotteryOCR(raw){
