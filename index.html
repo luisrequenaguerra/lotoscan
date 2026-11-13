@@ -265,7 +265,7 @@ function sortedTickets(items){const mode=document.getElementById('ticketSort')?.
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ticketCard(t){return `<div class="ticket-entry"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${gameLabel(t.game)} · ${esc(t.code||'')}</div><div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div><div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
 function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=sortedTickets(filter==='all'?tickets:tickets.filter(t=>t.game===filter));document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';document.getElementById('homeTickets').innerHTML=sortedTickets(tickets).slice(0,2).map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos';document.getElementById('portfolioSummary').textContent=shown.length+' boletos · Pendientes de comprobar · Sin resultados oficiales conectados'}
-function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.getElementById('detailNumber').textContent=t.number||'Apuesta';document.getElementById('detailSeries').textContent=t.series??'—';document.getElementById('detailFraction').textContent=t.fraction??'—';document.getElementById('detailPrice').textContent=t.price+' €';document.getElementById('detailDate').textContent=formatDate(t.date);document.getElementById('detailCode').textContent=t.code||'Sin código';document.getElementById('detailDraw').textContent=t.draw;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('detailStatus').textContent=t.game==='loteria_nacional'?'Pendiente de comprobar. La comprobación automática de premios todavía no está conectada.':('Apuestas: '+(t.entries||[]).join(' · ')+'. Pendiente de comprobar.');document.querySelector('#ticketDetail .screen');go('ticketDetail')}
+function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.getElementById('detailNumber').textContent=t.number||'Apuesta';document.getElementById('detailSeries').textContent=t.series??'—';document.getElementById('detailFraction').textContent=t.fraction??'—';document.getElementById('detailPrice').textContent=t.price==null?'No indicado':t.price+' €';document.getElementById('detailDate').textContent=formatDate(t.date);document.getElementById('detailCode').textContent=t.code||'Sin código';document.getElementById('detailDraw').textContent=t.draw;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('detailStatus').textContent=t.game==='lototurf'?('Seis números: '+(t.entries||[]).join(' · ')+'. Caballo 4.ª carrera: '+(t.horse||t.extra||'—')+'. Reintegro: '+(t.reintegro??'—')+'. Pendiente de comprobar.'):t.game==='quintuple_plus'?('Carreras 1–5 y segundo de la 5.ª: '+(t.racePicks||[]).join(' · ')+'. Pendiente de comprobar.'):t.game==='loteria_nacional'?'Pendiente de comprobar. La comprobación automática de premios todavía no está conectada.':('Apuestas: '+(t.entries||[]).join(' · ')+'. Pendiente de comprobar.');document.querySelector('#ticketDetail .screen');go('ticketDetail')}
 function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;if(t.game!=='loteria_nacional'){alert('La edición de apuestas de este juego llegará en una próxima versión. Puedes eliminar y volver a añadir el resguardo.');return;}for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket')}
 function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||!Number.isInteger(series)||series<1||!Number.isInteger(fraction)||fraction<1||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}Object.assign(t,{number,series,fraction,date,price,code:document.getElementById('editCode').value.trim()});if(!persistTickets())return;renderTickets();openTicket(t.id)}
 function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);persistTickets();renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
@@ -578,12 +578,13 @@ const GAME_DEFS={
  eurodreams:{label:'EuroDreams',kind:'balls',count:6,max:40,extraCount:1,extraMax:5,extraLabel:'Sueño'},
  quiniela:{label:'La Quiniela',kind:'quiniela'},
  quinigol:{label:'El Quinigol',kind:'quinigol'},
- lototurf:{label:'Lototurf',kind:'balls',count:6,max:31,extraCount:1,extraMax:9,extraLabel:'Caballo / reintegro (revisar resguardo)'},
+ lototurf:{label:'Lototurf',kind:'turf',count:6,max:31},
  quintuple_plus:{label:'Quíntuple Plus',kind:'horses'}
 };
 let selectedGame='euromillones';
 let visualMain=[],visualExtra=[];
 const VISUAL_GAMES=['primitiva','euromillones','bonoloto','gordo','eurodreams'];
+let turfNumbers=[],turfHorse=null,turfRefund=null,quintuplePicks=Array(6).fill(null);
 function numberGridHtml(id,max){return `<div id="${id}" class="lotogrid" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0"></div>`}
 function visualSelectorHtml(title,id,max,count){return `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:16px"><strong>${title}</strong><span id="${id}Count" class="ticketmeta">0/${count}</span></div>${numberGridHtml(id,max)}<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span id="${id}Preview" class="ticketmeta">Selecciona los números</span><button type="button" onclick="clearVisual('${id}')" style="padding:9px;border-radius:12px;border:1px solid #c9c9be;background:transparent">Limpiar</button></div>`}
 function renderVisual(id,max,count){
@@ -630,6 +631,44 @@ function renderSportsBoard(){
  }
  board.innerHTML=html;
 }
+// Selectores hípicos: solo una apuesta sencilla por resguardo en esta versión.
+function hippoPick(kind,n){
+ if(kind==='turfNumber'){if(turfNumbers.includes(n))turfNumbers=turfNumbers.filter(x=>x!==n);else if(turfNumbers.length<6)turfNumbers.push(n)}
+ if(kind==='turfHorse')turfHorse=turfHorse===n?null:n;
+ if(kind==='turfRefund')turfRefund=turfRefund===n?null:n;
+ if(kind.startsWith('q')){const idx=Number(kind.slice(1));quintuplePicks[idx]=quintuplePicks[idx]===n?null:n;
+  if(idx===4&&quintuplePicks[5]===n)quintuplePicks[5]=null;
+  if(idx===5&&quintuplePicks[4]===n)quintuplePicks[4]=null;
+ }
+ renderHippoBoard();
+}
+function hippoGrid(kind,from,to,selected){
+ return `<div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin:10px 0 18px">${Array.from({length:to-from+1},(_,i)=>i+from).map(n=>sportButton(n,Array.isArray(selected)?selected.includes(n):selected===n,`hippoPick('${kind}',${n})`)).join('')}</div>`;
+}
+function hippoFormHtml(game){
+ const notice='<p class="ticketmeta" style="padding:12px;border:1px solid #deddd3;border-radius:12px">Solo una apuesta sencilla por resguardo. No se admiten apuestas múltiples, reducidas ni otros sistemas especiales. Comprueba el programa oficial de la jornada y los dorsales válidos.</p>';
+ return notice+'<div id="hippoBoard"></div><input type="hidden" id="entryMain" required><input type="hidden" id="entryExtra">';
+}
+function renderHippoBoard(){
+ const board=document.getElementById('hippoBoard');if(!board)return;
+ let html='';
+ if(selectedGame==='lototurf'){
+  html+='<h3>Seis números (1–31)</h3><p class="ticketmeta">Seleccionados: '+turfNumbers.length+'/6</p>'+hippoGrid('turfNumber',1,31,turfNumbers);
+  html+='<h3>Caballo ganador · 4.ª carrera</h3><p class="ticketmeta">Selecciona el dorsal impreso (1–12).</p>'+hippoGrid('turfHorse',1,12,turfHorse);
+  html+='<h3>Reintegro del resguardo</h3><p class="ticketmeta">Asignado automáticamente por SELAE. Copia el que aparece impreso.</p>'+hippoGrid('turfRefund',0,9,turfRefund);
+  document.getElementById('entryMain').value=turfNumbers.slice().sort((a,b)=>a-b).join(' ');
+  document.getElementById('entryExtra').value=turfHorse===null?'':String(turfHorse);
+ }else{
+  html+='<p class="ticketmeta">Selecciona un dorsal por carrera. Los dorsales disponibles dependen de cada jornada: compruébalos en el programa oficial. Aquí se muestran del 1 al 20 como límite general, no como participantes confirmados.</p>';
+  for(let i=0;i<6;i++){
+   const title=i<5?'Ganador · carrera '+(i+1):'Segundo clasificado · carrera 5';
+   html+=`<div style="border-bottom:1px solid #e3e1d7;padding:12px 0"><strong>${title}</strong>${hippoGrid('q'+i,1,20,quintuplePicks[i])}</div>`;
+  }
+  document.getElementById('entryMain').value=quintuplePicks.every(n=>n!==null)?quintuplePicks.join(' '):'';
+  document.getElementById('entryExtra').value='';
+ }
+ board.innerHTML=html;
+}
 function fieldText(label,id,placeholder,required=true){return `<label class="formlabel" for="${id}">${label}</label><input id="${id}" ${required?'required':''} placeholder="${placeholder}" autocomplete="off">`}
 function openGameForm(game){if(!GAME_DEFS[game])return;selectedGame=game;const d=GAME_DEFS[game];if(game==='loteria_nacional'){go('addTicket');return}document.getElementById('gameEntryTitle').textContent=d.label+'.';document.getElementById('gameEntryIntro').textContent='Introduce los datos tal como aparecen en el resguardo. Puedes guardar varias apuestas.';let fields='';
 if(VISUAL_GAMES.includes(game)){
@@ -646,24 +685,24 @@ if(VISUAL_GAMES.includes(game)){
 } else if(d.kind==='balls'){fields+=fieldText(`Números (${d.count} distintos entre 1 y ${d.max}, separados por espacios)`, 'entryMain', 'Ej. 04 12 19 27 35 40');fields+=fieldText(`${d.extraLabel} (${d.extraCount} valor(es))`, 'entryExtra','Ej. 02 09',false)}
 if(d.kind==='quiniela')fields+=sportsFormHtml(game);
 if(d.kind==='quinigol')fields+=sportsFormHtml(game);
-if(d.kind==='horses')fields+=fieldText('Caballos seleccionados (5 números separados por espacios)','entryMain','Ej. 02 05 07 10 12')+fieldText('Selección adicional / orden (si figura)','entryExtra','Según resguardo',false);
-if(!VISUAL_GAMES.includes(game)&&!['quiniela','quinigol'].includes(game))fields+='<div class="status-note" style="margin:12px 0">Para guardar varias apuestas del mismo resguardo, escribe una apuesta por línea. En Quiniela y Quinigol, cada línea representa una columna.</div>';
-document.getElementById('gameEntryFields').innerHTML=(VISUAL_GAMES.includes(game)||['quiniela','quinigol'].includes(game))?fields:fields.replace(/<input id="entryMain"([^>]*)>/,'<textarea id="entryMain" rows="3" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;background:#fffefa;font-size:14px;margin:8px 0 12px" required></textarea>');
-document.getElementById('gameEntryForm').reset();if(['quiniela','quinigol'].includes(game)){sportsPicks=game==='quiniela'?Array(14).fill(''):Array.from({length:6},()=>['','']);sportsPleno=['',''];renderSportsBoard();document.getElementById('gameEntryIntro').textContent='Toca las opciones que figuran en tu resguardo.'}if(VISUAL_GAMES.includes(game)){renderVisuals();document.getElementById('gameEntryIntro').textContent='Toca los números que aparecen en tu resguardo.'}go('gameEntry')}
+if(['turf','horses'].includes(d.kind))fields+=hippoFormHtml(game);
+if(!VISUAL_GAMES.includes(game)&&!['quiniela','quinigol','lototurf','quintuple_plus'].includes(game))fields+='<div class="status-note" style="margin:12px 0">Para guardar varias apuestas del mismo resguardo, escribe una apuesta por línea. En Quiniela y Quinigol, cada línea representa una columna.</div>';
+document.getElementById('gameEntryFields').innerHTML=(VISUAL_GAMES.includes(game)||['quiniela','quinigol','lototurf','quintuple_plus'].includes(game))?fields:fields.replace(/<input id="entryMain"([^>]*)>/,'<textarea id="entryMain" rows="3" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;background:#fffefa;font-size:14px;margin:8px 0 12px" required></textarea>');
+document.getElementById('gameEntryForm').reset();if(['quiniela','quinigol'].includes(game)){sportsPicks=game==='quiniela'?Array(14).fill(''):Array.from({length:6},()=>['','']);sportsPleno=['',''];renderSportsBoard();document.getElementById('gameEntryIntro').textContent='Toca las opciones que figuran en tu resguardo.'}if(['lototurf','quintuple_plus'].includes(game)){turfNumbers=[];turfHorse=null;turfRefund=null;quintuplePicks=Array(6).fill(null);renderHippoBoard();document.getElementById('gameEntryIntro').textContent='Toca los números y dorsales que figuran en tu resguardo.'}if(VISUAL_GAMES.includes(game)){renderVisuals();document.getElementById('gameEntryIntro').textContent='Toca los números que aparecen en tu resguardo.'}go('gameEntry')}
 function parseNumbers(value,count,max,min=1){const values=value.trim().split(/[\s,;]+/).filter(Boolean);if(values.length!==count)return null;const nums=values.map(Number);if(nums.some(n=>!Number.isInteger(n)||n<min||n>max)||new Set(nums).size!==nums.length)return null;return nums.map(n=>String(n).padStart(2,'0')).join(' ')}
-function saveGameEntry(e){e.preventDefault();const d=GAME_DEFS[selectedGame];const raw=document.getElementById('entryMain').value.trim();if(selectedGame==='quiniela'&&(sportsPicks.some(x=>!x)||sportsPleno.some(x=>!x))){alert('Completa los 14 partidos y los dos resultados del Pleno al 15.');return}if(selectedGame==='quinigol'&&sportsPicks.some(p=>p.some(x=>!x))){alert('Completa los seis partidos, tanto local como visitante.');return}const lines=raw.split(/\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length||lines.length>20){alert('Introduce entre 1 y 20 apuestas.');return}let entries=[];
+function saveGameEntry(e){e.preventDefault();const d=GAME_DEFS[selectedGame];const raw=document.getElementById('entryMain').value.trim();if(selectedGame==='quiniela'&&(sportsPicks.some(x=>!x)||sportsPleno.some(x=>!x))){alert('Completa los 14 partidos y los dos resultados del Pleno al 15.');return}if(selectedGame==='quinigol'&&sportsPicks.some(p=>p.some(x=>!x))){alert('Completa los seis partidos, tanto local como visitante.');return}if(selectedGame==='lototurf'&&(turfNumbers.length!==6||turfHorse===null||turfRefund===null)){alert('Completa los seis números, el caballo de la cuarta carrera y el reintegro impreso.');return}if(selectedGame==='quintuple_plus'&&(quintuplePicks.some(x=>x===null)||quintuplePicks[4]===quintuplePicks[5])){alert('Selecciona los seis dorsales. En la quinta carrera el primero y el segundo deben ser distintos.');return}const lines=raw.split(/\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length||lines.length>20){alert('Introduce entre 1 y 20 apuestas.');return}let entries=[];
 for(const line of lines){let val=line;if(d.kind==='balls'){val=parseNumbers(line,d.count,d.max);if(!val){alert('Comprueba los números y el rango de cada apuesta.');return}}
 else if(d.kind==='quiniela'){val=line.toUpperCase().replace(/\s/g,'');if(!/^[1X2]{14}$/.test(val)){alert('La Quiniela necesita 14 signos (1, X o 2) por apuesta.');return}}
 else if(d.kind==='quinigol'){const matches=line.toUpperCase().split(/\s*,\s*/);if(matches.length!==6||matches.some(x=>! /^(?:[012M])-(?:[012M])$/.test(x))){alert('El Quinigol necesita 6 resultados, como 1-0, 2-M.');return}val=matches.join(', ')}
-else if(d.kind==='horses'){val=parseNumbers(line,5,99);if(!val){alert('Introduce cinco números de caballo distintos por apuesta.');return}}
+else if(d.kind==='horses'){const vals=line.split(/\s+/).map(Number);if(vals.length!==6||vals.some(n=>!Number.isInteger(n)||n<1||n>20)||vals[4]===vals[5]){alert('Revisa los seis dorsales y los dos puestos de la quinta carrera.');return}val=vals.map(n=>String(n).padStart(2,'0')).join(' ')}
 entries.push(val)}
 const extra=(document.getElementById('entryExtra')?.value||'').trim();
 if(VISUAL_GAMES.includes(selectedGame)&&(visualMain.length!==d.count||visualExtra.length!==d.extraCount||lines.length!==1)){alert('Completa los números y '+(selectedGame==='euromillones'?'las dos estrellas.':selectedGame==='gordo'?'el número clave.':selectedGame==='eurodreams'?'el número sueño.':'el reintegro del resguardo.'));return}
 const joker=(document.getElementById('entryJoker')?.value||'').trim();if(selectedGame==='primitiva'&&joker&&!/^\d{7}$/.test(joker)){alert('El código Joker debe tener siete cifras.');return}
 if(selectedGame==='quiniela'&&!/^[012M]-[012M]$/.test(extra)){alert('Completa el Pleno al 15.');return}if(d.kind==='balls'&&extra){const parsed=parseNumbers(extra,d.extraCount,d.extraMax,d.extraCount===2?1:0);if(!parsed){alert('Comprueba los valores de '+d.extraLabel+'.');return}}
 const date=document.getElementById('gameEntryDate').value,priceText=document.getElementById('gameEntryPrice').value.trim(),price=priceText===''?null:Number(priceText);if(!date||(price!==null&&(!Number.isFinite(price)||price<0))){alert('Comprueba fecha e importe.');return}
-const t={id:Date.now(),modality:['quiniela','quinigol'].includes(selectedGame)?'simple':undefined,game:selectedGame,number:entries[0],entries,extra,joker,series:null,fraction:null,date,price,code:'',draw:d.label,source:'manual',status:'pending'};
-tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
+const t={id:Date.now(),modality:['quiniela','quinigol','lototurf','quintuple_plus'].includes(selectedGame)?'simple':undefined,game:selectedGame,number:entries[0],entries,extra,joker,series:null,fraction:null,date,price,code:'',draw:d.label,source:'manual',status:'pending'};
+if(selectedGame==='lototurf'){t.extra=String(turfHorse);t.reintegro=String(turfRefund);t.horse=String(turfHorse)}if(selectedGame==='quintuple_plus'){t.racePicks=quintuplePicks.slice();t.extra=String(quintuplePicks[5])}tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
 
 // Mantener exactamente la iconografía de la versión 0.29, salvo Quinigol.
 const GAME_GLYPHS={loteria_nacional:'◉',euromillones:'✦',primitiva:'◯',bonoloto:'●',gordo:'◒',eurodreams:'✧',quiniela:'1 X 2',lototurf:'♞',quintuple_plus:'▥'};
