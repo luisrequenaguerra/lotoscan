@@ -118,7 +118,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">ESCÁNER LOTOSCAN</div><h1>Enfoca tu boleto.</h1><p class="lead">Coloca el boleto dentro del marco. Asegúrate de tener buena luz y que el texto se vea nítido.</p>
 <div class="camera-wrap" id="cameraWrap">
   <video id="cameraVideo" autoplay playsinline muted></video>
-  <img id="capturedPreview" alt="Vista previa del décimo capturado">
+  <img id="capturedPreview" alt="Vista previa del boleto capturado">
   <div class="camera-placeholder"><div class="scanframe"><div class="scanline"></div></div><div class="centerhint">Abre la cámara o elige una fotografía de tu galería</div></div>
   <div class="camera-overlay" id="cameraOverlay" hidden><div class="scanframe"></div></div>
 </div>
@@ -127,10 +127,23 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
   <button class="secondary" type="button" onclick="document.getElementById('photoInput').click()">↑ Elegir de galería</button>
 </div>
 <input id="photoInput" type="file" accept="image/*" style="display:none" onchange="handlePhoto(event)">
-<button id="captureButton" class="primary" type="button" style="width:100%;margin-top:9px;background:#2b2c2a;color:white;display:none" onclick="capturePhoto()">Capturar décimo</button>
+<button id="captureButton" class="primary" type="button" style="width:100%;margin-top:9px;background:#2b2c2a;color:white;display:none" onclick="capturePhoto()">Capturar boleto</button>
 <p id="scanStatus" class="scan-status">La cámara necesita permiso y HTTPS. También puedes seleccionar una foto guardada.</p>
 <button id="readButton" class="primary" type="button" style="width:100%;background:#7a846b;color:white;display:none" onclick="recognizeTicket()">Reconocer boleto</button>
 <div id="scanResult"></div>
+<div id="qrReviewPanel" class="panel review-panel" style="display:none">
+  <div class="eyebrow">EUROMILLONES · QR</div><h2 style="font:400 23px Georgia,serif;margin:8px 0">Comprueba la apuesta.</h2>
+  <p class="ticketmeta">Verifica todos los datos con el resguardo original. Solo admitimos una apuesta sencilla de Euromillones en esta primera versión.</p>
+  <div class="review-grid">
+    <div style="grid-column:1/-1"><label for="qrNumbers">Cinco números</label><input id="qrNumbers" inputmode="numeric" placeholder="09 18 22 23 25"></div>
+    <div style="grid-column:1/-1"><label for="qrStars">Dos estrellas</label><input id="qrStars" inputmode="numeric" placeholder="02 12"></div>
+    <div><label for="qrDate">Fecha del sorteo</label><input id="qrDate" type="date"></div>
+    <div><label for="qrDraw">Sorteo (opcional)</label><input id="qrDraw" placeholder="078"></div>
+    <div style="grid-column:1/-1"><label for="qrMillion">El Millón (opcional)</label><input id="qrMillion" placeholder="GJM92241" maxlength="12"></div>
+  </div>
+  <button class="primary" type="button" style="width:100%;background:#65715c;color:white;margin-top:10px" onclick="saveQRReview()">Confirmar y guardar en Mis boletos</button>
+  <button class="secondary" type="button" style="margin-top:8px" onclick="resetScanner()">Volver a escanear</button>
+</div>
 <button id="scanManualButton" class="secondary" type="button" style="width:100%;margin-top:10px" onclick="openManualReview()">✎ Introducir datos manualmente</button>
 <div id="reviewPanel" class="panel review-panel">
   <div class="eyebrow">DATOS DEL DÉCIMO</div><h2 style="font:400 23px Georgia,serif;margin:8px 0">Comprueba los datos.</h2>
@@ -146,7 +159,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
   <button class="primary" type="button" style="width:100%;background:#65715c;color:white;margin-top:10px" onclick="saveRecognizedTicket()">Confirmar y guardar en Mis boletos</button>
   <button class="secondary" type="button" style="margin-top:8px" onclick="resetScanner()">Volver a escanear</button>
 </div>
-<p class="notice">Lectura adaptable de la línea inferior para décimos de Lotería Nacional. Revisa los datos antes de guardar. Si la lectura falla, puedes introducirlos manualmente. La comprobación de premios aún no está conectada.</p>
+<p class="notice">Lectura QR para resguardos sencillos compatibles de Euromillones y lectura de la línea inferior de Lotería Nacional. Revisa los datos antes de guardar. Si la lectura falla, puedes introducirlos manualmente. La comprobación de premios aún no está conectada.</p>
 </section>
 
 <section id="tickets" class="screen">
@@ -275,12 +288,12 @@ function scanMessage(msg,working=false){document.getElementById('scanStatus').in
 async function startCamera(){
   const video=document.getElementById('cameraVideo'),wrap=document.getElementById('cameraWrap');
   if(!navigator.mediaDevices?.getUserMedia){scanMessage('Este navegador no permite abrir la cámara aquí. Prueba desde HTTPS o selecciona una fotografía.');return}
-  try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});video.srcObject=cameraStream;wrap.classList.remove('has-image');wrap.classList.add('has-camera');document.getElementById('capturedPreview').removeAttribute('src');await video.play();document.getElementById('cameraOverlay').hidden=false;document.getElementById('captureButton').style.display='block';document.getElementById('readButton').style.display='none';scanMessage('Cámara activa. Encuadra el décimo completo y mantén el móvil estable.');}
+  try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});video.srcObject=cameraStream;wrap.classList.remove('has-image');wrap.classList.add('has-camera');document.getElementById('capturedPreview').removeAttribute('src');await video.play();document.getElementById('cameraOverlay').hidden=false;document.getElementById('captureButton').style.display='block';document.getElementById('readButton').style.display='none';scanMessage('Cámara activa. Encuadra el boleto completo y mantén el móvil estable.');}
   catch(e){scanMessage(e.name==='NotAllowedError'?'No se ha concedido permiso para usar la cámara. Puedes habilitarlo en los ajustes del navegador o subir una fotografía.':'No se ha podido iniciar la cámara. Comprueba los permisos o selecciona una fotografía.');}
 }
 function stopCamera(){if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null}document.getElementById('cameraVideo').srcObject=null;document.getElementById('cameraWrap').classList.remove('has-camera');document.getElementById('captureButton').style.display='none';document.getElementById('cameraOverlay').hidden=true}
 function capturePhoto(){const video=document.getElementById('cameraVideo');if(!video.videoWidth){scanMessage('La cámara todavía no está preparada.');return}const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;c.getContext('2d').drawImage(video,0,0);c.toBlob(b=>{selectedImage=b;showSelectedImage(URL.createObjectURL(b));stopCamera();},'image/jpeg',.94)}
-function showSelectedImage(url){const wrap=document.getElementById('cameraWrap'),img=document.getElementById('capturedPreview');img.src=url;wrap.classList.remove('has-camera');wrap.classList.add('has-image');document.getElementById('readButton').style.display='block';document.getElementById('scanResult').innerHTML='';document.getElementById('reviewPanel').classList.remove('visible');scanMessage('Fotografía preparada. Pulsa «Reconocer boleto» para analizarla.')}
+function showSelectedImage(url){const wrap=document.getElementById('cameraWrap'),img=document.getElementById('capturedPreview');img.src=url;wrap.classList.remove('has-camera');wrap.classList.add('has-image');document.getElementById('readButton').style.display='block';document.getElementById('scanResult').innerHTML='';document.getElementById('reviewPanel').classList.remove('visible');document.getElementById('qrReviewPanel').style.display='none';scanMessage('Fotografía preparada. Pulsa «Reconocer boleto» para analizarla.')}
 function handlePhoto(e){const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){scanMessage('Selecciona un archivo de imagen.');return}stopCamera();selectedImage=f;showSelectedImage(URL.createObjectURL(f));e.target.value=''}
 // OCR 0.13: interpreta campos por etiquetas y líneas, sin elegir números arbitrarios.
 function parseNationalLotteryOCR(raw){
@@ -513,12 +526,89 @@ function makeDetail(parent,label,canvas,text){
  const im=document.createElement('img');im.src=canvas.toDataURL('image/jpeg',.82);im.style.cssText='width:100%;max-height:220px;object-fit:contain;background:white;margin-top:6px';wrap.appendChild(im);
  const p=document.createElement('pre');p.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px';p.textContent=text||'(sin texto)';wrap.appendChild(p);parent.appendChild(wrap);
 }
+// LotoScan 0.33: QR primero; el motor OCR de Lotería Nacional permanece intacto.
+let qrLibraryPromise=null;
+function loadQRLibrary(){
+ if(window.jsQR)return Promise.resolve(window.jsQR);
+ if(!qrLibraryPromise)qrLibraryPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+  script.onload=()=>window.jsQR?resolve(window.jsQR):reject(Error('Lector QR no disponible'));
+  script.onerror=()=>reject(Error('Sin conexión para cargar el lector QR'));
+  document.head.appendChild(script);
+ });return qrLibraryPromise;
+}
+function decodeQRImage(img,reader){
+ const sizes=[1500,2200];
+ for(const maxSide of sizes){
+  const scale=Math.min(1,maxSide/Math.max(img.naturalWidth||img.width,img.naturalHeight||img.height));
+  const w=Math.max(1,Math.round((img.naturalWidth||img.width)*scale)),h=Math.max(1,Math.round((img.naturalHeight||img.height)*scale));
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,w,h);
+  const data=ctx.getImageData(0,0,w,h);
+  const result=reader(data.data,w,h,{inversionAttempts:'attemptBoth'});
+  if(result?.data)return result.data;
+ }
+ return null;
+}
+function parseEuromillonesQR(raw){
+ if(typeof raw!=='string'||raw.length>5000)return null;
+ // Format verified against the sample: .1=0918222325:0212; S=07829SEP26:1; RI=11[S=...,GJM92241]
+ const bets=[...raw.matchAll(/(?:^|;)\.(\d+)=([0-9]{10}):([0-9]{4})(?=;|$)/g)];
+ if(bets.length!==1||bets[0][1]!=='1')return null; // no multiple/unknown formats
+ const main=Array.from({length:5},(_,i)=>Number(bets[0][2].slice(i*2,i*2+2)));
+ const stars=Array.from({length:2},(_,i)=>Number(bets[0][3].slice(i*2,i*2+2)));
+ if(main.some(n=>n<1||n>50)||new Set(main).size!==5||stars.some(n=>n<1||n>12)||new Set(stars).size!==2)return null;
+ const m=raw.match(/(?:^|;)S=(\d{3})(\d{2})([A-Z]{3})(\d{2}):1(?=;|$)/);
+ if(!m)return null;
+ const months={JAN:1,FEB:2,MAR:3,APR:4,MAY:5,JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12};
+ const month=months[m[3]],day=Number(m[2]),year=2000+Number(m[4]);if(!month)return null;
+ const d=new Date(Date.UTC(year,month-1,day));if(d.getUTCFullYear()!==year||d.getUTCMonth()!==month-1||d.getUTCDate()!==day)return null;
+ const date=year+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+ const million=raw.match(/(?:^|;)RI=\d+\[S=[^\]]*,([A-Z]{3}\d{5})\]/);
+ // Only accept a clearly identified EuroMillions-style ticket; never infer game from an arbitrary QR.
+ if(!/(?:^|;)RI=/.test(raw)||!/(?:^|;)A=\d+;/.test(raw))return null;
+ return {main,stars,date,draw:m[1],million:million?million[1]:''};
+}
+function showQRReview(data){
+ document.getElementById('qrNumbers').value=data.main.map(n=>String(n).padStart(2,'0')).join(' ');
+ document.getElementById('qrStars').value=data.stars.map(n=>String(n).padStart(2,'0')).join(' ');
+ document.getElementById('qrDate').value=data.date;
+ document.getElementById('qrDraw').value=data.draw;
+ document.getElementById('qrMillion').value=data.million;
+ document.getElementById('qrReviewPanel').style.display='block';
+ scanMessage('QR de Euromillones interpretado. Revisa los datos antes de guardar.');
+ document.getElementById('qrReviewPanel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function saveQRReview(){
+ const main=parseNumbers(document.getElementById('qrNumbers').value,5,50),stars=parseNumbers(document.getElementById('qrStars').value,2,12);
+ const date=document.getElementById('qrDate').value,draw=document.getElementById('qrDraw').value.trim(),million=document.getElementById('qrMillion').value.trim().toUpperCase();
+ if(!main||!stars||!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Comprueba los cinco números, las dos estrellas y la fecha.');return}
+ if(draw&&!/^\d{1,3}$/.test(draw)){alert('Comprueba el número de sorteo.');return}
+ if(million&&!/^[A-Z]{3}\d{5}$/.test(million)){alert('Comprueba el código de El Millón.');return}
+ if(tickets.some(t=>t.game==='euromillones'&&t.date===date&&t.number===main&&t.extra===stars)){alert('Esta combinación ya figura en Mis boletos para ese sorteo.');return}
+ const t={id:Date.now(),game:'euromillones',number:main,entries:[main],extra:stars,date,draw:'Euromillones',code:draw,elMillon:million,price:null,source:'qr_user_confirmed',status:'pending',modality:'simple'};
+ tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();resetScanner();go('tickets');
+}
+async function tryRecognizeQR(){
+ try{
+  scanMessage('Buscando un código QR…',true);
+  const img=await loadOCRImage(selectedImage);
+  const reader=await timeout(loadQRLibrary(),12000,'La carga del lector QR');
+  const raw=decodeQRImage(img,reader);
+  if(!raw)return false;
+  const parsed=parseEuromillonesQR(raw);
+  if(!parsed){scanMessage('Se ha leído un QR, pero su formato todavía no es compatible. No se interpretarán datos sin verificar.');return 'unsupported'}
+  showQRReview(parsed);return true;
+ }catch(e){return false}
+}
 async function recognizeTicket(){
  if(!selectedImage){scanMessage('Selecciona primero una fotografía.');return}
  const button=document.getElementById('readButton'),output=document.getElementById('scanResult');
- button.disabled=true;output.replaceChildren();document.getElementById('reviewPanel').classList.remove('visible');
+ button.disabled=true;output.replaceChildren();document.getElementById('reviewPanel').classList.remove('visible');document.getElementById('qrReviewPanel').style.display='none';
  let worker=null;
  try{
+  const qrState=await tryRecognizeQR();
+  if(qrState===true||qrState==='unsupported')return;
   scanMessage('Buscando la línea de identificación en la mitad inferior…',true);
   const img=await loadOCRImage(selectedImage);
   const T=await timeout(loadOCRLibrary(),15000,'La descarga del OCR');
@@ -565,7 +655,7 @@ function openManualReview(clear=true){
  document.getElementById('reviewPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function saveRecognizedTicket(){const number=document.getElementById('ocrNumber').value.trim();const series=Number(document.getElementById('ocrSeries').value);const fraction=Number(document.getElementById('ocrFraction').value);const date=document.getElementById('ocrDate').value;if(!/^\d{5}$/.test(number)||!series||!fraction||!date){alert('Revisa el número, la serie, la fracción y la fecha antes de guardar.');return}const code=document.getElementById('ocrCode').value.trim();if(tickets.some(t=>t.game==='loteria_nacional'&&t.number===number&&t.series===series&&t.fraction===fraction&&t.date===date)){alert('Este décimo ya está en tu cartera.');return}tickets.unshift({id:Date.now(),game:'loteria_nacional',number,series,fraction,date,code,price:Number(document.getElementById('ocrPrice').value)||20,draw:'Lotería Nacional',source:'user_confirmed'});persistTickets();renderTickets();resetScanner();go('tickets')}
-function resetScanner(){stopCamera();selectedImage=null;document.getElementById('cameraWrap').classList.remove('has-image','has-camera');document.getElementById('capturedPreview').src='';document.getElementById('readButton').style.display='none';document.getElementById('reviewPanel').classList.remove('visible');document.getElementById('scanResult').innerHTML='';scanMessage('La cámara necesita permiso y HTTPS. También puedes seleccionar una foto guardada.')}
+function resetScanner(){stopCamera();selectedImage=null;document.getElementById('cameraWrap').classList.remove('has-image','has-camera');document.getElementById('capturedPreview').src='';document.getElementById('readButton').style.display='none';document.getElementById('reviewPanel').classList.remove('visible');document.getElementById('qrReviewPanel').style.display='none';document.getElementById('scanResult').innerHTML='';scanMessage('La cámara necesita permiso y HTTPS. También puedes seleccionar una foto guardada.')}
 
 
 // Formularios independientes del OCR de Lotería Nacional.
