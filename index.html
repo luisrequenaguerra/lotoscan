@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>LotoScan 0.29 — Mis boletos y selectores</title>
+<title>LotoScan 0.30 — Identidad visual coherente</title>
 <style>
 :root{--bg:#f6f4ef;--paper:#fffefa;--ink:#2b2c2a;--muted:#777b70;--line:#e7e2d8;--olive:#7a846b;--olive2:#e8ece3;--gold:#b99a60;--radius:22px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -81,6 +81,12 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 #gameChooser .game-tile-icon{height:44px;display:flex;align-items:center;justify-content:center;color:#63735b;font-size:34px;line-height:1;font-weight:650;letter-spacing:-.08em}
 #gameChooser .game-tile strong{font-size:12px;line-height:1.25;overflow-wrap:anywhere;max-width:100%}
 #gameChooser .game-tile:active{background:#edf0e9}
+/* 0.30: iconografía única en inicio, selección y cartera */
+.lotogame-icon{width:32px;height:32px;display:block;stroke:currentColor;stroke-width:2.1;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.game-tile-icon .lotogame-icon{width:42px;height:42px}
+.ticketicon .lotogame-icon{width:26px;height:26px}
+.gameicon .lotogame-icon{width:24px;height:24px}
+.ticket-entry>.ticket{width:100%;}
 </style>
 </head>
 <body>
@@ -101,12 +107,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <div class="sectionhead"><h3>Mis boletos</h3><button class="textbtn" onclick="go('tickets')">Ver todos</button></div>
 <div id="homeTickets"></div>
 <div class="sectionhead"><h3>Juega a</h3><span class="pill">SELAE</span></div>
-<div class="gamegrid">
-<button class="game" onclick="gameInfo('Euromillones')"><span class="gameicon"><svg viewBox="0 0 24 24"><path d="M12 2.8l2.1 5.7 6.1.2-4.8 3.8 1.7 5.9-5.1-3.4-5.1 3.4 1.7-5.9-4.8-3.8 6.1-.2z"/></svg></span><strong>Euromillones</strong><small>Martes y viernes</small></button>
-<button class="game" onclick="gameInfo('La Primitiva')"><span class="gameicon"><svg viewBox="0 0 24 24"><path d="M12 20.5C5 16 3.8 12.8 5.1 9.8c1.2-2.8 4.5-2.9 6.9.3 2.4-3.2 5.7-3.1 6.9-.3C20.2 12.8 19 16 12 20.5z"/><path d="M12 10.1v10.2"/></svg></span><strong>La Primitiva</strong><small>Lunes, jueves y sábado</small></button>
-<button class="game" onclick="gameInfo('Bonoloto')"><span class="gameicon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="5.2"/><circle cx="16.5" cy="15.5" r="5.2"/></svg></span><strong>Bonoloto</strong><small>Todos los días</small></button>
-<button class="game" onclick="gameInfo('Lotería Nacional')"><span class="gameicon"><svg viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M7 9h10M7 12h6M7 15h3"/></svg></span><strong>Lotería Nacional</strong><small>Jueves y sábado</small></button>
-</div>
+<div class="gamegrid" id="homeGameGrid"></div>
 </section>
 
 <section id="scan" class="screen">
@@ -141,7 +142,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
   <button class="primary" type="button" style="width:100%;background:#65715c;color:white;margin-top:10px" onclick="saveRecognizedTicket()">Confirmar y guardar en Mis boletos</button>
   <button class="secondary" type="button" style="margin-top:8px" onclick="resetScanner()">Volver a escanear</button>
 </div>
-<p class="notice">Versión 0.26 · lectura adaptable de la línea inferior para décimos de Lotería Nacional. Revisa los datos antes de guardar. Si la lectura falla, puedes introducirlos manualmente. La comprobación de premios aún no está conectada.</p>
+<p class="notice">Lectura adaptable de la línea inferior para décimos de Lotería Nacional. Revisa los datos antes de guardar. Si la lectura falla, puedes introducirlos manualmente. La comprobación de premios aún no está conectada.</p>
 </section>
 
 <section id="tickets" class="screen">
@@ -228,7 +229,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <div class="panel"><div class="row"><strong style="font-size:13px">Euromillones</strong><span class="pill">Último resultado</span></div><div style="display:flex;gap:7px;margin:16px 0 8px"><span class="ticketicon">07</span><span class="ticketicon">14</span><span class="ticketicon">23</span><span class="ticketicon">36</span><span class="ticketicon">48</span></div><p class="ticketmeta">Estrellas: 02 · 09</p></div>
 <p class="notice">Números de muestra para el prototipo. No son resultados reales ni válidos para comprobar premios.</p>
 </section>
-<p class="notice" style="text-align:center">LotoScan · LotoScan 0.26 · Escáner y entrada manual</p>
+<p class="notice" style="text-align:center">LotoScan · Escáner y entrada manual</p>
 </div>
 <nav>
 <button class="active" data-tab="home" onclick="go('home')"><b>⌂</b>Inicio</button>
@@ -258,7 +259,7 @@ function gameLabel(g){return ({loteria_nacional:'Lotería Nacional',euromillones
 function ticketStatus(t){return 'Pendiente de comprobar'}
 function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'date_desc';return [...items].sort((a,b)=>{if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function ticketCard(t){return `<div class="ticket-entry"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})"><div class="ticketicon">✦</div><div class="ticketmain"><div class="ticket-tag">${gameLabel(t.game)} · ${esc(t.code||'')}</div><div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div><div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button><button class="ticket-menu" type="button" aria-label="Eliminar boleto ${t.number}" title="Eliminar boleto" onclick="confirmDeleteTicket(${t.id})"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7M14 10v7"/></svg></button></div>`}
+function ticketCard(t){return `<div class="ticket-entry"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${gameLabel(t.game)} · ${esc(t.code||'')}</div><div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div><div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
 function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=sortedTickets(filter==='all'?tickets:tickets.filter(t=>t.game===filter));document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';document.getElementById('homeTickets').innerHTML=sortedTickets(tickets).slice(0,2).map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos';document.getElementById('portfolioSummary').textContent=shown.length+' boletos · Pendientes de comprobar · Sin resultados oficiales conectados'}
 function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.getElementById('detailNumber').textContent=t.number||'Apuesta';document.getElementById('detailSeries').textContent=t.series??'—';document.getElementById('detailFraction').textContent=t.fraction??'—';document.getElementById('detailPrice').textContent=t.price+' €';document.getElementById('detailDate').textContent=formatDate(t.date);document.getElementById('detailCode').textContent=t.code||'Sin código';document.getElementById('detailDraw').textContent=t.draw;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('detailStatus').textContent=t.game==='loteria_nacional'?'Pendiente de comprobar. La comprobación automática de premios todavía no está conectada.':('Apuestas: '+(t.entries||[]).join(' · ')+'. Pendiente de comprobar.');document.querySelector('#ticketDetail .screen');go('ticketDetail')}
 function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;if(t.game!=='loteria_nacional'){alert('La edición de apuestas de este juego llegará en una próxima versión. Puedes eliminar y volver a añadir el resguardo.');return;}for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket')}
@@ -626,12 +627,28 @@ if(d.kind==='balls'&&extra){const parsed=parseNumbers(extra,d.extraCount,d.extra
 const date=document.getElementById('gameEntryDate').value,priceText=document.getElementById('gameEntryPrice').value.trim(),price=priceText===''?null:Number(priceText);if(!date||(price!==null&&(!Number.isFinite(price)||price<0))){alert('Comprueba fecha e importe.');return}
 const t={id:Date.now(),game:selectedGame,number:entries[0],entries,extra,joker,series:null,fraction:null,date,price,code:'',draw:d.label,source:'manual',status:'pending'};
 tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
+
+const GAME_ICONS={
+ loteria_nacional:'<circle cx="24" cy="22" r="15"/><path d="M17 11v22M22 8v28M27 8v28M32 11v22M12 39h24M16 39l-3 5m19-5 3 5"/>',
+ euromillones:'<path d="M7 34c10-20 23-25 32-23-3 10-13 21-32 23Z"/><path d="M12 33c12 2 23-1 31-12"/><path d="m36 4 1.7 4.3L42 10l-4.3 1.7L36 16l-1.7-4.3L30 10l4.3-1.7Z"/>',
+ primitiva:'<circle cx="19" cy="28" r="12"/><circle cx="29" cy="17" r="12"/><circle cx="32" cy="32" r="12"/>',
+ bonoloto:'<circle cx="24" cy="10" r="7"/><circle cx="12" cy="25" r="7"/><circle cx="36" cy="25" r="7"/><circle cx="24" cy="39" r="7"/>',
+ gordo:'<circle cx="24" cy="24" r="18"/><path d="M8 18h32M6 25h36M10 32h28"/>',
+ eurodreams:'<path d="M24 5c3 10 9 16 19 19-10 3-16 9-19 19-3-10-9-16-19-19 10-3 16-9 19-19Z"/><path d="m39 4 1 3 3 1-3 1-1 3-1-3-3-1 3-1Z"/>',
+ quiniela:'<rect x="5" y="12" width="38" height="24" rx="6"/><path d="M18 16v16M31 16v16"/><text x="11.5" y="28" font-size="10" text-anchor="middle" stroke="none" fill="currentColor" font-weight="700">1</text><text x="24.5" y="28" font-size="10" text-anchor="middle" stroke="none" fill="currentColor" font-weight="700">X</text><text x="37" y="28" font-size="10" text-anchor="middle" stroke="none" fill="currentColor" font-weight="700">2</text>',
+ quinigol:'<circle cx="24" cy="24" r="18"/><path d="m24 15 8 6-3 10H19l-3-10 8-6ZM16 21l-9-2M32 21l9-2M19 31l-4 9M29 31l4 9"/>',
+ lototurf:'<path d="M12 41V26l7-11 7-5 9 3 4 9-3 6-7-2-5 6 1 9M19 15l-2-8M29 12l4-7M12 41h26"/>',
+ quintuple_plus:'<rect x="8" y="30" width="6" height="12" rx="1"/><rect x="18" y="22" width="6" height="20" rx="1"/><rect x="28" y="14" width="6" height="28" rx="1"/><circle cx="39" cy="35" r="7"/><path d="M35 35h8m-4-4v8"/>'
+};
+function gameIcon(game){return `<svg class="lotogame-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">${GAME_ICONS[game]||GAME_ICONS.loteria_nacional}</svg>`}
+function renderHomeGames(){const el=document.getElementById('homeGameGrid');if(!el)return;const items=[['euromillones','Martes y viernes'],['primitiva','Lunes, jueves y sábado'],['bonoloto','Todos los días'],['loteria_nacional','Jueves y sábado']];el.innerHTML=items.map(([k,days])=>`<button class="game" type="button" onclick="openGameForm('${k}')"><span class="gameicon">${gameIcon(k)}</span><strong>${gameLabel(k)}</strong><small>${days}</small></button>`).join('')}
+
 function renderGameChooser(){
  const el=document.getElementById('gameChooser');if(!el)return;
- const icons={loteria_nacional:'◉',euromillones:'✦',primitiva:'◯',bonoloto:'●',gordo:'◒',eurodreams:'✧',quiniela:'1 X 2',quinigol:'⚽',lototurf:'♞',quintuple_plus:'▥'};
- el.innerHTML=Object.entries(GAME_DEFS).map(([k,v])=>`<button type="button" class="game game-tile" onclick="openGameForm('${k}')" aria-label="Añadir boleto de ${v.label}"><span class="game-tile-icon" aria-hidden="true">${icons[k]}</span><strong>${v.label}</strong></button>`).join('');
+ el.innerHTML=Object.entries(GAME_DEFS).map(([k,v])=>`<button type="button" class="game game-tile" onclick="openGameForm('${k}')" aria-label="Añadir boleto de ${v.label}"><span class="game-tile-icon" aria-hidden="true">${gameIcon(k)}</span><strong>${v.label}</strong></button>`).join('');
 }
 renderGameChooser();
+renderHomeGames();
 
 function gameInfo(name){const key=Object.keys(GAME_DEFS).find(k=>GAME_DEFS[k].label===name)||({ 'La Primitiva':'primitiva','Bonoloto':'bonoloto','Lotería Nacional':'loteria_nacional' })[name];if(key)openGameForm(key);else go('gameForms')}
 renderTickets();
