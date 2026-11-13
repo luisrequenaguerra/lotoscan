@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>LotoScan — LotoScan 0.26 · Escáner y entrada manual</title>
+<title>LotoScan 0.29 — Mis boletos y selectores</title>
 <style>
 :root{--bg:#f6f4ef;--paper:#fffefa;--ink:#2b2c2a;--muted:#777b70;--line:#e7e2d8;--olive:#7a846b;--olive2:#e8ece3;--gold:#b99a60;--radius:22px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -71,6 +71,16 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .game-filter{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font-size:12px;margin:8px 0 12px}
 @media(max-width:380px){header{padding-top:11px;padding-bottom:11px}.brandmark{width:40px;height:40px;flex-basis:40px}.brand{font-size:21px}.subbrand{font-size:7px;letter-spacing:.13em}}
 .portfolio-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}.portfolio-tools label{font-size:12px;color:var(--muted);white-space:nowrap}.portfolio-tools select{max-width:220px;margin:0}.portfolio-summary{font-size:12px;color:var(--muted);margin:8px 0 16px}.ticket-state{font-size:11px;color:#737d66;margin-top:5px}
+
+/* 0.29: cabecera accesible y selector de juegos uniforme */
+.tickets-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0 8px}
+.tickets-heading h1{margin:0;min-width:0}
+.add-top{flex-shrink:0;background:#65715c;color:#fff;border:0;border-radius:25px;padding:12px 14px;font-size:12px;font-weight:700;cursor:pointer}
+#gameChooser.game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+#gameChooser .game-tile{width:100%;min-width:0;min-height:132px;aspect-ratio:1.12;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:12px 8px;border-radius:20px}
+#gameChooser .game-tile-icon{height:44px;display:flex;align-items:center;justify-content:center;color:#63735b;font-size:34px;line-height:1;font-weight:650;letter-spacing:-.08em}
+#gameChooser .game-tile strong{font-size:12px;line-height:1.25;overflow-wrap:anywhere;max-width:100%}
+#gameChooser .game-tile:active{background:#edf0e9}
 </style>
 </head>
 <body>
@@ -135,11 +145,11 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 </section>
 
 <section id="tickets" class="screen">
-<button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">TU COLECCIÓN</div><h1>Mis boletos.</h1><p class="lead">Todos tus números, organizados y listos para comprobar.</p>
+<button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">TU COLECCIÓN</div><div class="tickets-heading"><h1>Mis boletos.</h1><button type="button" class="add-top" onclick="go('gameForms')" aria-label="Añadir boleto">＋ Añadir</button></div><p class="lead">Todos tus números, organizados y listos para comprobar.</p>
 <div class="row" style="margin:18px 0 4px"><span class="eyebrow">TODOS TUS SORTEOS</span><span class="pill" id="ticketCount">4 boletos</span></div>
 <select id="gameFilter" class="game-filter" onchange="renderTickets()"><option value="all">Todos los juegos</option><option value="loteria_nacional">Lotería Nacional</option><option value="euromillones">Euromillones</option><option value="primitiva">La Primitiva</option><option value="bonoloto">Bonoloto</option><option value="gordo">El Gordo de la Primitiva</option><option value="quiniela">Quiniela</option><option value="quinigol">Quinigol</option><option value="lototurf">Lototurf</option><option value="quintuple_plus">Quíntuple Plus</option><option value="eurodreams">EuroDreams</option></select>
 <div class="portfolio-tools"><label for="ticketSort">Ordenar por</label><select id="ticketSort" class="game-filter" onchange="renderTickets()"><option value="date_desc">Sorteo más reciente</option><option value="date_asc">Sorteo más antiguo</option><option value="added_desc">Añadidos recientemente</option><option value="number">Número</option></select></div><div class="portfolio-summary" id="portfolioSummary"></div><div id="allTickets"></div>
-<button class="secondary" onclick="go('gameForms')">＋ Añadir boleto de cualquier juego</button>
+
 <p class="notice">Los décimos iniciales son datos de muestra. Todos los boletos figuran pendientes de comprobar: no hay resultados oficiales conectados. Se guardan solo en este navegador y dispositivo, sin sincronización.</p>
 </section>
 
@@ -187,7 +197,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 
 <section id="gameForms" class="screen">
 <button class="back" onclick="go('tickets')">← Volver a mis boletos</button><div class="eyebrow">TODOS LOS JUEGOS</div><h1>Selecciona tu juego.</h1>
-<p class="lead">Añade tus apuestas manualmente. El escáner de otros juegos se incorporará más adelante.</p>
+<p class="lead">Elige el sorteo que quieres añadir.</p>
 <div id="gameChooser" class="game-grid" style="margin-top:16px"></div>
 <p class="notice">Los formularios guardan las apuestas que introduces, pero no validan la existencia del resguardo ni comprueban premios.</p>
 </section>
@@ -197,7 +207,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <form class="panel" id="gameEntryForm" onsubmit="saveGameEntry(event)">
 <div id="gameEntryFields"></div>
 <label class="formlabel" for="gameEntryDate">Fecha del sorteo</label><input type="date" id="gameEntryDate" required>
-<label class="formlabel" for="gameEntryPrice">Importe pagado (€)</label><input type="number" id="gameEntryPrice" min="0" step="0.01" placeholder="Ej. 2,50" required>
+<label class="formlabel" for="gameEntryPrice">Importe pagado (€) · opcional</label><input type="number" id="gameEntryPrice" min="0" step="0.01" placeholder="Solo si deseas registrarlo">
 
 <button class="primary" type="submit">Guardar en Mis boletos</button>
 </form>
@@ -568,19 +578,19 @@ const GAME_DEFS={
 };
 let selectedGame='euromillones';
 let visualMain=[],visualExtra=[];
-const VISUAL_GAMES=['primitiva','euromillones','bonoloto'];
+const VISUAL_GAMES=['primitiva','euromillones','bonoloto','gordo','eurodreams'];
 function numberGridHtml(id,max){return `<div id="${id}" class="lotogrid" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0"></div>`}
 function visualSelectorHtml(title,id,max,count){return `<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:16px"><strong>${title}</strong><span id="${id}Count" class="ticketmeta">0/${count}</span></div>${numberGridHtml(id,max)}<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span id="${id}Preview" class="ticketmeta">Selecciona los números</span><button type="button" onclick="clearVisual('${id}')" style="padding:9px;border-radius:12px;border:1px solid #c9c9be;background:transparent">Limpiar</button></div>`}
 function renderVisual(id,max,count){
  const grid=document.getElementById(id);if(!grid)return;
  const sel=id==='mainGrid'?visualMain:visualExtra;
- grid.innerHTML=Array.from({length:max},(_,i)=>{const n=id==='extraGrid'&&selectedGame!=='euromillones'?i:i+1,on=sel.includes(n);return `<button type="button" aria-label="Número ${n}" aria-pressed="${on}" onclick="toggleVisual('${id}',${n})" style="min-width:0;aspect-ratio:1;border-radius:50%;border:1px solid #c9c9be;background:${on?'#64735b':'#f5f3eb'};color:${on?'white':'#30382b'};font-weight:700;font-size:15px">${n}</button>`}).join('');
+ grid.innerHTML=Array.from({length:max},(_,i)=>{const n=id==='extraGrid'&&!['euromillones','eurodreams'].includes(selectedGame)?i:i+1,on=sel.includes(n);return `<button type="button" aria-label="Número ${n}" aria-pressed="${on}" onclick="toggleVisual('${id}',${n})" style="min-width:0;aspect-ratio:1;border-radius:50%;border:1px solid #c9c9be;background:${on?'#64735b':'#f5f3eb'};color:${on?'white':'#30382b'};font-weight:700;font-size:15px">${n}</button>`}).join('');
  document.getElementById(id+'Count').textContent=sel.length+'/'+count+' seleccionados';
  document.getElementById(id+'Preview').textContent=sel.length?sel.slice().sort((a,b)=>a-b).map(n=>String(n).padStart(2,'0')).join(' · '):'Sin seleccionar';
  document.getElementById(id==='mainGrid'?'entryMain':'entryExtra').value=sel.slice().sort((a,b)=>a-b).join(' ');
 }
-function renderVisuals(){const d=GAME_DEFS[selectedGame];renderVisual('mainGrid',d.max,d.count);renderVisual('extraGrid',selectedGame==='euromillones'?12:10,selectedGame==='euromillones'?2:1)}
-function toggleVisual(id,n){const d=GAME_DEFS[selectedGame],main=id==='mainGrid',sel=main?visualMain:visualExtra,limit=main?d.count:(selectedGame==='euromillones'?2:1);if(sel.includes(n))sel.splice(sel.indexOf(n),1);else if(sel.length<limit){if(!main&&selectedGame!=='euromillones')sel.splice(0,sel.length);sel.push(n)}renderVisuals()}
+function renderVisuals(){const d=GAME_DEFS[selectedGame];renderVisual('mainGrid',d.max,d.count);renderVisual('extraGrid',d.extraCount===2?12:(selectedGame==='eurodreams'?5:10),d.extraCount)}
+function toggleVisual(id,n){const d=GAME_DEFS[selectedGame],main=id==='mainGrid',sel=main?visualMain:visualExtra,limit=main?d.count:d.extraCount;if(sel.includes(n))sel.splice(sel.indexOf(n),1);else if(sel.length<limit){if(!main&&selectedGame!=='euromillones')sel.splice(0,sel.length);sel.push(n)}renderVisuals()}
 function clearVisual(id){if(id==='mainGrid')visualMain=[];else visualExtra=[];renderVisuals()}
 function fieldText(label,id,placeholder,required=true){return `<label class="formlabel" for="${id}">${label}</label><input id="${id}" ${required?'required':''} placeholder="${placeholder}" autocomplete="off">`}
 function openGameForm(game){if(!GAME_DEFS[game])return;selectedGame=game;const d=GAME_DEFS[game];if(game==='loteria_nacional'){go('addTicket');return}document.getElementById('gameEntryTitle').textContent=d.label+'.';document.getElementById('gameEntryIntro').textContent='Introduce los datos tal como aparecen en el resguardo. Puedes guardar varias apuestas.';let fields='';
@@ -589,6 +599,8 @@ if(VISUAL_GAMES.includes(game)){
  fields+=visualSelectorHtml(`Selecciona ${d.count} números (1–${d.max})`,'mainGrid',d.max,d.count);
  fields+='<input type="hidden" id="entryMain" required>';
  if(game==='euromillones')fields+=visualSelectorHtml('Selecciona 2 estrellas (1–12)','extraGrid',12,2);
+ else if(game==='gordo')fields+=visualSelectorHtml('Número clave (0–9)','extraGrid',10,1);
+ else if(game==='eurodreams')fields+=visualSelectorHtml('Número sueño (1–5)','extraGrid',5,1);
  else fields+=visualSelectorHtml('Reintegro impreso (0–9)','extraGrid',10,1);
  fields+='<input type="hidden" id="entryExtra">';
  if(game==='primitiva')fields+='<p class="ticketmeta">El reintegro se copia del resguardo; el complementario se determina en el sorteo y no se introduce aquí.</p><label class="formlabel" for="entryJoker">Joker (opcional, 7 cifras)</label><input id="entryJoker" inputmode="numeric" pattern="[0-9]{7}" maxlength="7" placeholder="Solo si figura en tu resguardo">';
@@ -608,13 +620,17 @@ else if(d.kind==='quinigol'){const matches=line.toUpperCase().split(/\s*,\s*/);i
 else if(d.kind==='horses'){val=parseNumbers(line,5,99);if(!val){alert('Introduce cinco números de caballo distintos por apuesta.');return}}
 entries.push(val)}
 const extra=(document.getElementById('entryExtra')?.value||'').trim();
-if(VISUAL_GAMES.includes(selectedGame)&&(visualMain.length!==d.count||visualExtra.length!==(selectedGame==='euromillones'?2:1)||lines.length!==1)){alert('Completa los números y '+(selectedGame==='euromillones'?'las dos estrellas.':'el reintegro del resguardo.'));return}
+if(VISUAL_GAMES.includes(selectedGame)&&(visualMain.length!==d.count||visualExtra.length!==d.extraCount||lines.length!==1)){alert('Completa los números y '+(selectedGame==='euromillones'?'las dos estrellas.':selectedGame==='gordo'?'el número clave.':selectedGame==='eurodreams'?'el número sueño.':'el reintegro del resguardo.'));return}
 const joker=(document.getElementById('entryJoker')?.value||'').trim();if(selectedGame==='primitiva'&&joker&&!/^\d{7}$/.test(joker)){alert('El código Joker debe tener siete cifras.');return}
 if(d.kind==='balls'&&extra){const parsed=parseNumbers(extra,d.extraCount,d.extraMax,d.extraCount===2?1:0);if(!parsed){alert('Comprueba los valores de '+d.extraLabel+'.');return}}
-const date=document.getElementById('gameEntryDate').value,price=Number(document.getElementById('gameEntryPrice').value);if(!date||!Number.isFinite(price)||price<0){alert('Comprueba fecha e importe.');return}
+const date=document.getElementById('gameEntryDate').value,priceText=document.getElementById('gameEntryPrice').value.trim(),price=priceText===''?null:Number(priceText);if(!date||(price!==null&&(!Number.isFinite(price)||price<0))){alert('Comprueba fecha e importe.');return}
 const t={id:Date.now(),game:selectedGame,number:entries[0],entries,extra,joker,series:null,fraction:null,date,price,code:'',draw:d.label,source:'manual',status:'pending'};
 tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
-function renderGameChooser(){const el=document.getElementById('gameChooser');if(!el)return;el.innerHTML=Object.entries(GAME_DEFS).map(([k,v])=>`<button class="game" onclick="openGameForm('${k}')" style="min-height:85px"><strong>${v.label}</strong><small>Introducir datos →</small></button>`).join('')}
+function renderGameChooser(){
+ const el=document.getElementById('gameChooser');if(!el)return;
+ const icons={loteria_nacional:'◉',euromillones:'✦',primitiva:'◯',bonoloto:'●',gordo:'◒',eurodreams:'✧',quiniela:'1 X 2',quinigol:'⚽',lototurf:'♞',quintuple_plus:'▥'};
+ el.innerHTML=Object.entries(GAME_DEFS).map(([k,v])=>`<button type="button" class="game game-tile" onclick="openGameForm('${k}')" aria-label="Añadir boleto de ${v.label}"><span class="game-tile-icon" aria-hidden="true">${icons[k]}</span><strong>${v.label}</strong></button>`).join('');
+}
 renderGameChooser();
 
 function gameInfo(name){const key=Object.keys(GAME_DEFS).find(k=>GAME_DEFS[k].label===name)||({ 'La Primitiva':'primitiva','Bonoloto':'bonoloto','Lotería Nacional':'loteria_nacional' })[name];if(key)openGameForm(key);else go('gameForms')}
