@@ -1,1 +1,20 @@
 
+name: Auditar fuente de resultados SELAE
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 8 * * 3,6'
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verificar disponibilidad y estructura (sin publicar resultados)
+        run: python scripts/check_official_source.py
+
