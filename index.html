@@ -270,7 +270,7 @@ function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
 function formatDate(value){return new Date(value+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}
 function gameLabel(g){return ({loteria_nacional:'Lotería Nacional',euromillones:'Euromillones',primitiva:'La Primitiva',bonoloto:'Bonoloto',gordo:'El Gordo de la Primitiva',quiniela:'Quiniela',quinigol:'Quinigol',lototurf:'Lototurf',quintuple_plus:'Quíntuple Plus',eurodreams:'EuroDreams'})[g]||'Lotería Nacional'}
-// LotoScan 0.41: comprobador local de resultados oficiales VERIFICADOS.
+// LotoScan 0.43: comprobador local de resultados oficiales VERIFICADOS.
 // Este primer catálogo contiene un sorteo histórico, NO una conexión en directo.
 // Los importes son premios brutos publicados por SELAE (13/11/2026).
 const VERIFIED_DRAWS={
@@ -281,22 +281,24 @@ const VERIFIED_DRAWS={
  }
 };
 
-// 0.41: catálogo remoto verificable, alojado en el propio GitHub Pages.
+// 0.43: catálogo remoto verificable, alojado en el propio GitHub Pages.
 // Nunca se aceptan sorteos sin premios completos y código de El Millón.
 let resultsCatalogState41='Cargando histórico…';
 function validDraw41(d){
  if(!d||d.game!=='euromillones'||!/^2026-\d{2}-\d{2}$/.test(d.date||''))return false;
+ const date=new Date(d.date+'T12:00:00');
+ if(Number.isNaN(date.getTime())||date.toISOString().slice(0,10)!==d.date||![2,5].includes(date.getDay()))return false;
  const n=d.numbers,st=d.stars;
  if(!Array.isArray(n)||n.length!==5||new Set(n).size!==5||!n.every(x=>Number.isInteger(x)&&x>=1&&x<=50))return false;
  if(!Array.isArray(st)||st.length!==2||new Set(st).size!==2||!st.every(x=>Number.isInteger(x)&&x>=1&&x<=12))return false;
  if(!/^[A-Z]{3}\d{5}$/.test(d.million||''))return false;
  const cats=['5+2','5+1','5+0','4+2','4+1','3+2','4+0','2+2','3+1','3+0','1+2','2+1','2+0'];
  if(!d.prizes||!cats.every(k=>typeof d.prizes[k]==='number'&&Number.isFinite(d.prizes[k])&&d.prizes[k]>=0))return false;
- return typeof d.source==='string'&&d.source.length>5;
+ return typeof d.source==='string'&&d.source.length>5 && typeof d.sourceUrl==='string'&&/^https:\/\//.test(d.sourceUrl) && d.verified===true;
 }
 async function loadDraws41(){
  try{
-  const response=await fetch('./resultados/euromillones-2026.json?revision=41',{cache:'no-store'});
+  const response=await fetch('./resultados/euromillones-2026.json?revision=43',{cache:'no-store'});
   if(!response.ok)throw new Error('Archivo histórico todavía no publicado');
   const body=await response.json();
   if(!body||!Array.isArray(body.draws))throw new Error('Formato de histórico inválido');
