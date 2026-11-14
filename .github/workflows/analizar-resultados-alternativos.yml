@@ -1,1 +1,24 @@
 
+name: LotoScan - Analizar resultados alternativos
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  analizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Analizar paginas sin publicar resultados
+        run: python scripts/analizar_resultados_alternativos.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: informe-lotoscan-046
+          path: informe-lotoscan-046.json
+          if-no-files-found: warn
+
