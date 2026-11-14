@@ -267,7 +267,7 @@ function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
 function formatDate(value){return new Date(value+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}
 function gameLabel(g){return ({loteria_nacional:'Lotería Nacional',euromillones:'Euromillones',primitiva:'La Primitiva',bonoloto:'Bonoloto',gordo:'El Gordo de la Primitiva',quiniela:'Quiniela',quinigol:'Quinigol',lototurf:'Lototurf',quintuple_plus:'Quíntuple Plus',eurodreams:'EuroDreams'})[g]||'Lotería Nacional'}
-// LotoScan 0.38: comprobador local de resultados oficiales VERIFICADOS.
+// LotoScan 0.39: comprobador local de resultados oficiales VERIFICADOS.
 // Este primer catálogo contiene un sorteo histórico, NO una conexión en directo.
 // Los importes son premios brutos publicados por SELAE (13/11/2026).
 const VERIFIED_DRAWS={
@@ -277,6 +277,40 @@ const VERIFIED_DRAWS={
   source:'SELAE · Sorteo de Euromillones del 13/11/2026'
  }
 };
+
+// 0.39: selector de jornadas habituales. No equivale a calendario oficial de excepciones.
+const DRAW_WEEKDAYS39={euromillones:[2,5],primitiva:[1,4,6],bonoloto:[0,1,2,3,4,5,6],gordo:[0],eurodreams:[1,4],loteria_nacional:[4,6]};
+function dateAllowed39(game,date){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
+ const d=new Date(date+'T12:00:00');if(Number.isNaN(d.getTime())||d.toISOString().slice(0,10)!==date)return false;
+ const days=DRAW_WEEKDAYS39[game];return !days||days.includes(d.getDay());
+}
+function configureDrawDate39(id,game,current){
+ const old=document.getElementById(id);if(!old)return;
+ const days=DRAW_WEEKDAYS39[game];
+ if(!days){old.type='date';old.min='2026-01-01';old.value=current||'';return;}
+ const select=document.createElement('select');select.id=id;select.name=old.name||id;select.required=true;
+ select.style.cssText='width:100%;max-width:100%;min-width:0;padding:14px;border:1px solid #dedbd0;border-radius:13px;background:#fffefa;color:#30312e;font-size:16px;box-sizing:border-box';
+ const now=new Date();const until=new Date(now.getFullYear(),now.getMonth(),now.getDate()+90);
+ const start=new Date(2026,0,1);let options='<option value="">Selecciona una fecha de sorteo</option>';
+ const fmt=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ let found=false;
+ for(let d=new Date(until);d>=start;d.setDate(d.getDate()-1)){
+  if(!days.includes(d.getDay()))continue;
+  const iso=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+  options+='<option value="'+iso+'">'+fmt.format(d)+'</option>';
+  if(iso===current)found=true;
+ }
+ if(current&&!found)options='<option value="'+current+'">'+current+' · fecha del boleto (verificar)</option>'+options;
+ select.innerHTML=options;old.replaceWith(select);select.value=current||'';
+ const help=document.createElement('p');help.className='ticketmeta';help.textContent='Fechas habituales desde 2026. Los sorteos excepcionales se deben contrastar con el calendario oficial.';select.after(help);
+}
+function validateDrawDate39(game,date){
+ if(date<'2026-01-01'){alert('LotoScan solo admite comprobación automática de sorteos desde 2026.');return false}
+ if(!dateAllowed39(game,date)){alert('La fecha no corresponde a un día habitual de sorteo de '+gameLabel(game)+'. Comprueba la fecha del resguardo.');return false}
+ return true;
+}
+
 function money38(n){return Number(n).toLocaleString('es-ES',{style:'currency',currency:'EUR'})}
 function validNumbers38(value,count,max){const a=String(value??'').match(/\d+/g)?.map(Number)||[];return a.length===count&&new Set(a).size===count&&a.every(x=>Number.isInteger(x)&&x>=1&&x<=max)?a:null}
 function checkTicket38(t){
@@ -304,7 +338,7 @@ function renderOfficialResults(){
  const el=document.getElementById('officialResultsList');if(!el)return;
  const rows=tickets.map(t=>({t,r:checkTicket38(t)}));
  const done=rows.filter(x=>x.r.state!=='pending').length;
- el.innerHTML='<p class="ticketmeta">Comprobación dentro de LotoScan: '+done+' de '+rows.length+' boletos comprobados. Por ahora hay resultados verificados del Euromillones del 13/11/2026.</p>'+
+ el.innerHTML='<p class="ticketmeta">Comprobación dentro de LotoScan: '+done+' de '+rows.length+' boletos comprobados. Por ahora solo hay resultados integrados del Euromillones del 13/11/2026. El histórico de 2026 aún no está conectado.</p>'+
  '<button class="primary" style="width:100%;margin:12px 0" onclick="renderTickets();renderOfficialResults()">Comprobar mis boletos</button>'+
  rows.map(({t,r})=>'<div class="detail-line"><span>'+esc(gameLabel(t.game))+' · '+esc(t.date||'Sin fecha')+'</span><strong>'+esc(ticketStatus(t))+'</strong></div>').join('')+
  '<p class="notice">Solo se emiten resultados definitivos cuando existen números, categorías, importes y código de El Millón verificables. No se consultan resultados nuevos automáticamente en esta versión.</p>';
@@ -374,8 +408,8 @@ function openSpecificEditor(t){let fields='';const g=t.game;const entries=ticket
  fields+='<label class="formlabel" for="editGameDate">Fecha del sorteo</label><input id="editGameDate" type="date" value="'+esc(t.date||'')+'" required>';
  fields+=editorField('Número de sorteo / jornada (opcional)','editGameCode',t.code);
  fields+='<label class="formlabel" for="editGamePrice">Importe pagado (opcional)</label><input id="editGamePrice" type="number" min="0" step="0.01" value="'+esc(t.price??'')+'">';
- document.getElementById('editGameFields').innerHTML=fields;renderEditBoard();go('editGameTicket')}
-function saveEditedGameTicket(event){event.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const g=t.game;const val=id=>(document.getElementById(id)?.value||'').trim();const date=val('editGameDate'),priceStr=val('editGamePrice');if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Introduce una fecha válida.');return}const price=priceStr===''?null:Number(priceStr);if(price!==null&&(!Number.isFinite(price)||price<0)){alert('Revisa el importe.');return}
+ document.getElementById('editGameFields').innerHTML=fields;configureDrawDate39('editGameDate',g,t.date);renderEditBoard();go('editGameTicket')}
+function saveEditedGameTicket(event){event.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const g=t.game;const val=id=>(document.getElementById(id)?.value||'').trim();const date=val('editGameDate'),priceStr=val('editGamePrice');if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!validateDrawDate39(g,date)){alert('Introduce una fecha válida para este sorteo.');return}const price=priceStr===''?null:Number(priceStr);if(price!==null&&(!Number.isFinite(price)||price<0)){alert('Revisa el importe.');return}
  let main='',extra='',entries=[],update={};
  const defs={euromillones:[5,50,2,12,1],primitiva:[6,49,1,9,0],bonoloto:[6,49,1,9,0],gordo:[5,54,1,9,0],eurodreams:[6,40,1,5,1],lototurf:[6,31,0,0,0]};
  if(defs[g]){const [count,max,ec,em,emin]=defs[g];if(editSelections.main.length!==count){alert('Completa todos los números de la apuesta.');return}const parsed=parseNumbers(editSelections.main.join(' '),count,max);if(!parsed){alert('Revisa los números.');return}entries=[parsed];if(g==='lototurf'){const horse=editSelections.horse,refund=editSelections.refund;if(!Number.isInteger(horse)||horse<1||horse>12||!Number.isInteger(refund)||refund<0||refund>9){alert('Revisa el caballo y el reintegro.');return}update.horse=String(horse);update.reintegro=String(refund);extra=String(horse)}else{if(editSelections.extra.length!==ec){alert('Completa los números adicionales.');return}const parsedExtra=parseNumbers(editSelections.extra.join(' '),ec,em,emin);if(!parsedExtra){alert('Revisa los números adicionales.');return}extra=parsedExtra}if(g==='euromillones'){const million=val('editGameMillion').toUpperCase();if(million&&!/^[A-Z]{3}\d{5}$/.test(million)){alert('Revisa el código de El Millón.');return}update.elMillon=million}if(g==='primitiva'){const joker=val('editGameJoker');if(joker&&!/^\d{7}$/.test(joker)){alert('Revisa el Joker.');return}update.joker=joker}}
@@ -711,7 +745,7 @@ function showQRReview(data){
 function saveQRReview(){
  const main=parseNumbers(document.getElementById('qrNumbers').value,5,50),stars=parseNumbers(document.getElementById('qrStars').value,2,12);
  const date=document.getElementById('qrDate').value,draw=document.getElementById('qrDraw').value.trim(),million=document.getElementById('qrMillion').value.trim().toUpperCase();
- if(!main||!stars||!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Comprueba los cinco números, las dos estrellas y la fecha.');return}
+ if(!main||!stars||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!validateDrawDate39('euromillones',date)){alert('Comprueba los cinco números, las dos estrellas y la fecha.');return}
  if(draw&&!/^\d{1,3}$/.test(draw)){alert('Comprueba el número de sorteo.');return}
  if(million&&!/^[A-Z]{3}\d{5}$/.test(million)){alert('Comprueba el código de El Millón.');return}
  if(tickets.some(t=>t.game==='euromillones'&&t.date===date&&Array.isArray(t.number)&&t.number.join(',')===main.join(',')&&Array.isArray(t.extra)&&t.extra.join(',')===stars.join(','))){alert('Esta combinación ya figura en Mis boletos para ese sorteo.');return}
@@ -907,7 +941,7 @@ if(d.kind==='quinigol')fields+=sportsFormHtml(game);
 if(['turf','horses'].includes(d.kind))fields+=hippoFormHtml(game);
 if(!VISUAL_GAMES.includes(game)&&!['quiniela','quinigol','lototurf','quintuple_plus'].includes(game))fields+='<div class="status-note" style="margin:12px 0">Para guardar varias apuestas del mismo resguardo, escribe una apuesta por línea. En Quiniela y Quinigol, cada línea representa una columna.</div>';
 document.getElementById('gameEntryFields').innerHTML=(VISUAL_GAMES.includes(game)||['quiniela','quinigol','lototurf','quintuple_plus'].includes(game))?fields:fields.replace(/<input id="entryMain"([^>]*)>/,'<textarea id="entryMain" rows="3" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;background:#fffefa;font-size:14px;margin:8px 0 12px" required></textarea>');
-document.getElementById('gameEntryForm').reset();if(['quiniela','quinigol'].includes(game)){sportsPicks=game==='quiniela'?Array(14).fill(''):Array.from({length:6},()=>['','']);sportsPleno=['',''];renderSportsBoard();document.getElementById('gameEntryIntro').textContent='Toca las opciones que figuran en tu resguardo.'}if(['lototurf','quintuple_plus'].includes(game)){turfNumbers=[];turfHorse=null;turfRefund=null;quintuplePicks=Array(6).fill(null);renderHippoBoard();document.getElementById('gameEntryIntro').textContent='Toca los números y dorsales que figuran en tu resguardo.'}if(VISUAL_GAMES.includes(game)){renderVisuals();document.getElementById('gameEntryIntro').textContent='Toca los números que aparecen en tu resguardo.'}go('gameEntry')}
+document.getElementById('gameEntryForm').reset();if(['quiniela','quinigol'].includes(game)){sportsPicks=game==='quiniela'?Array(14).fill(''):Array.from({length:6},()=>['','']);sportsPleno=['',''];renderSportsBoard();document.getElementById('gameEntryIntro').textContent='Toca las opciones que figuran en tu resguardo.'}if(['lototurf','quintuple_plus'].includes(game)){turfNumbers=[];turfHorse=null;turfRefund=null;quintuplePicks=Array(6).fill(null);renderHippoBoard();document.getElementById('gameEntryIntro').textContent='Toca los números y dorsales que figuran en tu resguardo.'}if(VISUAL_GAMES.includes(game)){renderVisuals();document.getElementById('gameEntryIntro').textContent='Toca los números que aparecen en tu resguardo.'}configureDrawDate39('gameEntryDate',game,'');go('gameEntry')}
 function parseNumbers(value,count,max,min=1){const values=value.trim().split(/[\s,;]+/).filter(Boolean);if(values.length!==count)return null;const nums=values.map(Number);if(nums.some(n=>!Number.isInteger(n)||n<min||n>max)||new Set(nums).size!==nums.length)return null;return nums.map(n=>String(n).padStart(2,'0')).join(' ')}
 function saveGameEntry(e){e.preventDefault();const d=GAME_DEFS[selectedGame];const raw=document.getElementById('entryMain').value.trim();if(selectedGame==='quiniela'&&(sportsPicks.some(x=>!x)||sportsPleno.some(x=>!x))){alert('Completa los 14 partidos y los dos resultados del Pleno al 15.');return}if(selectedGame==='quinigol'&&sportsPicks.some(p=>p.some(x=>!x))){alert('Completa los seis partidos, tanto local como visitante.');return}if(selectedGame==='lototurf'&&(turfNumbers.length!==6||turfHorse===null||turfRefund===null)){alert('Completa los seis números, el caballo de la cuarta carrera y el reintegro impreso.');return}if(selectedGame==='quintuple_plus'&&(quintuplePicks.some(x=>x===null)||quintuplePicks[4]===quintuplePicks[5])){alert('Selecciona los seis dorsales. En la quinta carrera el primero y el segundo deben ser distintos.');return}const lines=raw.split(/\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length||lines.length>20){alert('Introduce entre 1 y 20 apuestas.');return}let entries=[];
 for(const line of lines){let val=line;if(d.kind==='balls'){val=parseNumbers(line,d.count,d.max);if(!val){alert('Comprueba los números y el rango de cada apuesta.');return}}
@@ -919,7 +953,7 @@ const extra=(document.getElementById('entryExtra')?.value||'').trim();
 if(VISUAL_GAMES.includes(selectedGame)&&(visualMain.length!==d.count||visualExtra.length!==d.extraCount||lines.length!==1)){alert('Completa los números y '+(selectedGame==='euromillones'?'las dos estrellas.':selectedGame==='gordo'?'el número clave.':selectedGame==='eurodreams'?'el número sueño.':'el reintegro del resguardo.'));return}
 const joker=(document.getElementById('entryJoker')?.value||'').trim();if(selectedGame==='primitiva'&&joker&&!/^\d{7}$/.test(joker)){alert('El código Joker debe tener siete cifras.');return}
 if(selectedGame==='quiniela'&&!/^[012M]-[012M]$/.test(extra)){alert('Completa el Pleno al 15.');return}if(d.kind==='balls'&&extra){const parsed=parseNumbers(extra,d.extraCount,d.extraMax,d.extraCount===2?1:0);if(!parsed){alert('Comprueba los valores de '+d.extraLabel+'.');return}}
-const date=document.getElementById('gameEntryDate').value,priceText=document.getElementById('gameEntryPrice').value.trim(),price=priceText===''?null:Number(priceText);if(!date||(price!==null&&(!Number.isFinite(price)||price<0))){alert('Comprueba fecha e importe.');return}
+const date=document.getElementById('gameEntryDate').value,priceText=document.getElementById('gameEntryPrice').value.trim(),price=priceText===''?null:Number(priceText);if(!date||!validateDrawDate39(selectedGame,date)||(price!==null&&(!Number.isFinite(price)||price<0))){alert('Comprueba fecha e importe.');return}
 const t={id:Date.now(),modality:['quiniela','quinigol','lototurf','quintuple_plus'].includes(selectedGame)?'simple':undefined,game:selectedGame,number:entries[0],entries,extra,joker,series:null,fraction:null,date,price,code:'',draw:d.label,source:'manual',status:'pending'};
 if(selectedGame==='lototurf'){t.extra=String(turfHorse);t.reintegro=String(turfRefund);t.horse=String(turfHorse)}if(selectedGame==='quintuple_plus'){t.racePicks=quintuplePicks.slice();t.extra=String(quintuplePicks[5])}tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
 
