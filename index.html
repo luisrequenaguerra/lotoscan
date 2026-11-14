@@ -92,7 +92,9 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .consistent-gameicon{font-size:23px;font-weight:650;letter-spacing:-.06em}
 .ticketicon{font-weight:650}
 </style>
-</head>
+<style>
+.detail-bubbles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.detail-bubble{display:flex;align-items:center;justify-content:center;min-width:43px;height:43px;padding:0 7px;border-radius:50%;background:#65715c;color:white;font-size:16px;font-weight:600}.detail-bubble-extra{background:transparent;border:1.5px solid #65715c;color:#65715c}.detail-subtitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#737b69;font-weight:700;margin:16px 0 8px}.detail-line{display:flex;justify-content:space-between;gap:14px;align-items:baseline;border-top:1px solid #e5e1d7;padding:12px 0;font-size:13px}.detail-line span{color:#777c70}.detail-line strong{text-align:right;overflow-wrap:anywhere}.sports-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 20px}.sports-detail>div{display:flex;justify-content:space-between;gap:6px;background:#f2f0e9;border-radius:12px;padding:12px;align-items:center}.sports-detail small{font-size:11px;color:#737b69}.sports-detail strong{font-size:19px}.review-grid>div{min-width:0}.review-grid input{width:100%;min-width:0;box-sizing:border-box}
+</style></head>
 <body>
 <div class="app">
 <header>
@@ -137,8 +139,8 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
   <div class="review-grid">
     <div style="grid-column:1/-1"><label for="qrNumbers">Cinco números</label><input id="qrNumbers" inputmode="numeric" placeholder="09 18 22 23 25"></div>
     <div style="grid-column:1/-1"><label for="qrStars">Dos estrellas</label><input id="qrStars" inputmode="numeric" placeholder="02 12"></div>
-    <div><label for="qrDate">Fecha del sorteo</label><input id="qrDate" type="date"></div>
-    <div><label for="qrDraw">Sorteo (opcional)</label><input id="qrDraw" placeholder="078"></div>
+    <div style="grid-column:1/-1"><label for="qrDate">Fecha del sorteo</label><input id="qrDate" type="date"></div>
+    <div style="grid-column:1/-1"><label for="qrDraw">Sorteo (opcional)</label><input id="qrDraw" placeholder="078"></div>
     <div style="grid-column:1/-1"><label for="qrMillion">El Millón (opcional)</label><input id="qrMillion" placeholder="GJM92241" maxlength="12"></div>
   </div>
   <button class="primary" type="button" style="width:100%;background:#65715c;color:white;margin-top:10px" onclick="saveQRReview()">Confirmar y guardar en Mis boletos</button>
@@ -173,24 +175,14 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 
 <section id="ticketDetail" class="screen">
 <button class="back" onclick="go('tickets')">← Volver a mis boletos</button>
-<div class="eyebrow">FICHA DEL DÉCIMO</div><h1>Lotería Nacional.</h1>
-<div class="panel" style="padding:20px">
-  <div class="row"><span class="ticket-tag" id="detailDraw">SORTEO DE NAVIDAD</span><span class="pill" id="detailCode">102/23</span></div>
-  <div class="detail-number" id="detailNumber">25389</div>
-  <div class="ticketmeta" id="detailDate">22 de diciembre de 2023</div>
-  <div class="detail-grid">
-    <div class="detail-cell"><small>Serie</small><strong id="detailSeries">28</strong></div>
-    <div class="detail-cell"><small>Fracción</small><strong id="detailFraction">7</strong></div>
-    <div class="detail-cell"><small>Precio</small><strong id="detailPrice">20 €</strong></div>
-    <div class="detail-cell"><small>Juego</small><strong style="font-size:14px">Nacional</strong></div>
-  </div>
-  <div class="status-note" id="detailStatus">Pendiente de comprobar. La comprobación automática de premios todavía no está conectada.</div>
-</div>
+<div class="eyebrow">FICHA DEL BOLETO</div><h1>Lotería Nacional.</h1>
+<div class="panel" id="specificTicketDetail" style="padding:20px"></div>
 <button class="primary" onclick="editCurrentTicket()">Editar datos del boleto</button>
 <button class="secondary" onclick="deleteCurrentTicket()" style="color:#9a4d44;border-color:#d9c6c1">Eliminar este boleto</button>
 <button class="secondary" onclick="go('tickets')">Volver a la cartera</button>
 </section>
 
+<section id="editGameTicket" class="screen"><button class="back" onclick="go('ticketDetail')">← Volver al boleto</button><div class="eyebrow">CORREGIR DATOS</div><h1 id="editGameTitle">Editar boleto.</h1><form class="panel" id="editGameForm" onsubmit="saveEditedGameTicket(event)"><div id="editGameFields"></div><button class="primary" type="submit">Guardar cambios</button></form><p class="notice">Comprueba los datos con el resguardo original. Los premios todavía no se verifican automáticamente.</p></section>
 <section id="editTicket" class="screen">
 <button class="back" onclick="go('ticketDetail')">← Volver al boleto</button><div class="eyebrow">CORREGIR DATOS</div><h1>Editar décimo.</h1><p class="lead">Comprueba los datos impresos antes de guardar.</p>
 <form class="panel" onsubmit="saveEditedTicket(event)">
@@ -278,8 +270,60 @@ function sortedTickets(items){const mode=document.getElementById('ticketSort')?.
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ticketCard(t){return `<div class="ticket-entry"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${gameLabel(t.game)} · ${esc(t.code||'')}</div><div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div><div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
 function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=sortedTickets(filter==='all'?tickets:tickets.filter(t=>t.game===filter));document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';document.getElementById('homeTickets').innerHTML=sortedTickets(tickets).slice(0,2).map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos';document.getElementById('portfolioSummary').textContent=shown.length+' boletos · Pendientes de comprobar · Sin resultados oficiales conectados'}
-function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.getElementById('detailNumber').textContent=t.number||'Apuesta';document.getElementById('detailSeries').textContent=t.series??'—';document.getElementById('detailFraction').textContent=t.fraction??'—';document.getElementById('detailPrice').textContent=t.price==null?'No indicado':t.price+' €';document.getElementById('detailDate').textContent=formatDate(t.date);document.getElementById('detailCode').textContent=t.code||'Sin código';document.getElementById('detailDraw').textContent=t.draw;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('detailStatus').textContent=t.game==='lototurf'?('Seis números: '+(t.entries||[]).join(' · ')+'. Caballo 4.ª carrera: '+(t.horse||t.extra||'—')+'. Reintegro: '+(t.reintegro??'—')+'. Pendiente de comprobar.'):t.game==='quintuple_plus'?('Carreras 1–5 y segundo de la 5.ª: '+(t.racePicks||[]).join(' · ')+'. Pendiente de comprobar.'):t.game==='loteria_nacional'?'Pendiente de comprobar. La comprobación automática de premios todavía no está conectada.':('Apuestas: '+(t.entries||[]).join(' · ')+'. Pendiente de comprobar.');document.querySelector('#ticketDetail .screen');go('ticketDetail')}
-function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;if(t.game!=='loteria_nacional'){alert('La edición de apuestas de este juego llegará en una próxima versión. Puedes eliminar y volver a añadir el resguardo.');return;}for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket')}
+function detailTokens(value){if(Array.isArray(value))return value.flatMap(detailTokens);return String(value??'').trim().split(/[\s,;]+/).filter(Boolean)}
+function detailBubbles(value,kind='main'){return '<div class="detail-bubbles">'+detailTokens(value).map(n=>'<span class="detail-bubble '+(kind==='extra'?'detail-bubble-extra':'')+'">'+esc(n)+'</span>').join('')+'</div>'}
+function detailField(label,value){return '<div class="detail-cell"><small>'+esc(label)+'</small><strong>'+esc(value==null||value===''?'No indicado':value)+'</strong></div>'}
+function detailLine(label,value){return '<div class="detail-line"><span>'+esc(label)+'</span><strong>'+esc(value==null||value===''?'No indicado':value)+'</strong></div>'}
+function ticketEntries(t){return Array.isArray(t.entries)&&t.entries.length?t.entries:[t.number].filter(Boolean)}
+function detailContent(t){
+ const g=t.game, entries=ticketEntries(t);let h='<div class="row"><span class="ticket-tag">'+esc(gameLabel(g).toUpperCase())+'</span>'+(t.code?'<span class="pill">'+esc(t.code)+'</span>':'')+'</div>';
+ h+='<div class="ticketmeta" style="margin:14px 0">'+esc(t.date?formatDate(t.date):'Fecha no indicada')+'</div>';
+ if(g==='loteria_nacional'){
+  h+='<div class="detail-number">'+esc(t.number||'—')+'</div><div class="detail-grid">'+detailField('Serie',t.series)+detailField('Fracción',t.fraction)+detailField('Importe',t.price==null?'No indicado':t.price+' €')+detailField('Sorteo',t.code||'No indicado')+'</div>';
+ }else if(['euromillones','primitiva','bonoloto','gordo','eurodreams','lototurf'].includes(g)){
+  entries.forEach((entry,i)=>{h+='<div class="detail-subtitle">'+(entries.length>1?'Apuesta '+(i+1):'Números')+'</div>'+detailBubbles(entry)});
+  const label={euromillones:'Estrellas',primitiva:'Reintegro',bonoloto:'Reintegro',gordo:'Número clave',eurodreams:'Número sueño'}[g];
+  if(label){h+='<div class="detail-subtitle">'+label+'</div>'+detailBubbles(t.extra||'—','extra')}
+  if(g==='lototurf')h+=detailLine('Caballo · cuarta carrera',t.horse??t.extra)+detailLine('Reintegro',t.reintegro);
+  if(g==='euromillones'&&t.elMillon)h+=detailLine('Código El Millón',t.elMillon);
+  if(g==='primitiva'&&t.joker)h+=detailLine('Joker',t.joker);
+ }else if(g==='quiniela'){
+  const signs=String(entries[0]||'').replace(/\s/g,'');h+='<div class="detail-subtitle">Pronósticos · 14 partidos</div><div class="sports-detail">';for(let i=0;i<14;i++)h+='<div><small>Partido '+(i+1)+'</small><strong>'+esc(signs[i]||'—')+'</strong></div>';h+='</div>'+detailLine('Pleno al 15',t.extra);
+ }else if(g==='quinigol'){
+  const matches=String(entries[0]||'').split(/\s*,\s*/);h+='<div class="detail-subtitle">Seis partidos</div><div class="sports-detail">';for(let i=0;i<6;i++)h+='<div><small>Partido '+(i+1)+'</small><strong>'+esc(matches[i]||'—')+'</strong></div>';h+='</div>';
+ }else if(g==='quintuple_plus'){
+  const picks=Array.isArray(t.racePicks)&&t.racePicks.length===6?t.racePicks:detailTokens(entries[0]);h+='<div class="detail-subtitle">Pronósticos de carreras</div><div class="sports-detail">';for(let i=0;i<5;i++)h+='<div><small>Carrera '+(i+1)+' · ganador</small><strong>'+esc(picks[i]??'—')+'</strong></div>';h+='<div><small>5.ª · segundo</small><strong>'+esc(picks[5]??'—')+'</strong></div></div>';
+ }
+ if(t.price!=null&&g!=='loteria_nacional')h+=detailLine('Importe pagado (opcional)',t.price+' €');
+ h+='<div class="status-note" style="margin-top:18px">Pendiente de comprobar. Los resultados oficiales todavía no están conectados.</div>';return h;
+}
+function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('specificTicketDetail').innerHTML=detailContent(t);go('ticketDetail')}
+function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;if(t.game==='loteria_nacional'){for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket');return}openSpecificEditor(t)}
+function editorField(label,id,value,help=''){return '<label class="formlabel" for="'+id+'">'+esc(label)+'</label><input id="'+id+'" value="'+esc(value??'')+'" '+(help?'placeholder="'+esc(help)+'"':'')+' autocomplete="off">'}
+function openSpecificEditor(t){let fields='';const g=t.game;const entries=ticketEntries(t);document.getElementById('editGameTitle').textContent='Editar '+gameLabel(g)+'.';
+ if(['euromillones','primitiva','bonoloto','gordo','eurodreams','lototurf'].includes(g)){
+ fields+=editorField('Números de la apuesta (separados por espacios)','editGameMain',entries[0]);
+ if(g==='lototurf'){fields+=editorField('Caballo · cuarta carrera','editGameHorse',t.horse??t.extra)+editorField('Reintegro','editGameRefund',t.reintegro)}
+ else fields+=editorField(({euromillones:'Dos estrellas',primitiva:'Reintegro',bonoloto:'Reintegro',gordo:'Número clave',eurodreams:'Número sueño'})[g],'editGameExtra',t.extra);
+ if(g==='euromillones')fields+=editorField('Código El Millón (opcional)','editGameMillion',t.elMillon);
+ if(g==='primitiva')fields+=editorField('Joker (opcional)','editGameJoker',t.joker);
+ }else if(g==='quiniela')fields+=editorField('14 pronósticos (1, X, 2)','editGameMain',entries[0])+editorField('Pleno al 15 (ej. 1-M)','editGameExtra',t.extra);
+ else if(g==='quinigol')fields+=editorField('6 resultados separados por comas (ej. 1-0, 2-M...)','editGameMain',entries[0]);
+ else if(g==='quintuple_plus')fields+=editorField('6 dorsales: ganadores de carreras 1–5 y segundo de la 5.ª','editGameMain',(t.racePicks||detailTokens(entries[0])).join(' '));
+ fields+='<label class="formlabel" for="editGameDate">Fecha del sorteo</label><input id="editGameDate" type="date" value="'+esc(t.date||'')+'" required>';
+ fields+=editorField('Número de sorteo / jornada (opcional)','editGameCode',t.code);
+ fields+='<label class="formlabel" for="editGamePrice">Importe pagado (opcional)</label><input id="editGamePrice" type="number" min="0" step="0.01" value="'+esc(t.price??'')+'">';
+ document.getElementById('editGameFields').innerHTML=fields;go('editGameTicket')}
+function saveEditedGameTicket(event){event.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const g=t.game;const val=id=>(document.getElementById(id)?.value||'').trim();const date=val('editGameDate'),priceStr=val('editGamePrice');if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('Introduce una fecha válida.');return}const price=priceStr===''?null:Number(priceStr);if(price!==null&&(!Number.isFinite(price)||price<0)){alert('Revisa el importe.');return}
+ let main=val('editGameMain'),extra=val('editGameExtra');let entries=[],update={};
+ const defs={euromillones:[5,50,2,12,1],primitiva:[6,49,1,9,0],bonoloto:[6,49,1,9,0],gordo:[5,54,1,9,0],eurodreams:[6,40,1,5,1],lototurf:[6,31,0,0,0]};
+ if(defs[g]){const [count,max,ec,em,emin]=defs[g];const parsed=parseNumbers(main,count,max);if(!parsed){alert('Revisa los números de la apuesta.');return}entries=[parsed];if(g==='lototurf'){const horse=Number(val('editGameHorse')),refund=val('editGameRefund');if(!Number.isInteger(horse)||horse<1||horse>12||!/^[0-9]$/.test(refund)){alert('Revisa el caballo y el reintegro.');return}update.horse=String(horse);update.reintegro=refund;extra=String(horse)}else{const parsedExtra=parseNumbers(extra,ec,em,emin);if(!parsedExtra){alert('Revisa los números adicionales.');return}extra=parsedExtra}if(g==='euromillones'){const million=val('editGameMillion').toUpperCase();if(million&&!/^[A-Z]{3}\d{5}$/.test(million)){alert('Revisa el código de El Millón.');return}update.elMillon=million}if(g==='primitiva'){const joker=val('editGameJoker');if(joker&&!/^\d{7}$/.test(joker)){alert('Revisa el Joker.');return}update.joker=joker}}
+ else if(g==='quiniela'){main=main.toUpperCase().replace(/\s/g,'');extra=extra.toUpperCase();if(!/^[1X2]{14}$/.test(main)||!/^[012M]-[012M]$/.test(extra)){alert('Revisa los 14 pronósticos y el Pleno al 15.');return}entries=[main]}
+ else if(g==='quinigol'){const matches=main.toUpperCase().split(/\s*,\s*/);if(matches.length!==6||matches.some(x=>!/^[012M]-[012M]$/.test(x))){alert('Revisa los seis resultados.');return}entries=[matches.join(', ')]}
+ else if(g==='quintuple_plus'){const picks=detailTokens(main).map(Number);if(picks.length!==6||picks.some(n=>!Number.isInteger(n)||n<1||n>20)||picks[4]===picks[5]){alert('Revisa los seis dorsales y la quinta carrera.');return}update.racePicks=picks;entries=[picks.map(n=>String(n).padStart(2,'0')).join(' ')];extra=String(picks[5])}
+ else return;
+ Object.assign(t,{number:entries[0],entries,extra,date,price,code:val('editGameCode')},update);if(!persistTickets())return;renderTickets();openTicket(t.id)
+}
 function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||!Number.isInteger(series)||series<1||!Number.isInteger(fraction)||fraction<1||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}Object.assign(t,{number,series,fraction,date,price,code:document.getElementById('editCode').value.trim()});if(!persistTickets())return;renderTickets();openTicket(t.id)}
 function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);persistTickets();renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
 function go(id){if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
@@ -526,7 +570,7 @@ function makeDetail(parent,label,canvas,text){
  const im=document.createElement('img');im.src=canvas.toDataURL('image/jpeg',.82);im.style.cssText='width:100%;max-height:220px;object-fit:contain;background:white;margin-top:6px';wrap.appendChild(im);
  const p=document.createElement('pre');p.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px';p.textContent=text||'(sin texto)';wrap.appendChild(p);parent.appendChild(wrap);
 }
-// LotoScan 0.34: QR adaptable primero; el motor OCR de Lotería Nacional permanece intacto.
+// LotoScan 0.35: QR adaptable primero; el motor OCR de Lotería Nacional permanece intacto.
 let qrLibraryPromise=null;
 function loadQRLibrary(){
  if(window.jsQR)return Promise.resolve(window.jsQR);
