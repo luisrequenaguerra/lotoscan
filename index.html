@@ -170,21 +170,21 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <select id="gameFilter" class="game-filter" onchange="renderTickets()"><option value="all">Todos los juegos</option><option value="loteria_nacional">Lotería Nacional</option><option value="euromillones">Euromillones</option><option value="primitiva">La Primitiva</option><option value="bonoloto">Bonoloto</option><option value="gordo">El Gordo de la Primitiva</option><option value="quiniela">Quiniela</option><option value="quinigol">Quinigol</option><option value="lototurf">Lototurf</option><option value="quintuple_plus">Quíntuple Plus</option><option value="eurodreams">EuroDreams</option></select>
 <div class="portfolio-tools"><label for="ticketSort">Ordenar por</label><select id="ticketSort" class="game-filter" onchange="renderTickets()"><option value="date_desc">Sorteo más reciente</option><option value="date_asc">Sorteo más antiguo</option><option value="added_desc">Añadidos recientemente</option><option value="number">Número</option></select></div><div class="portfolio-summary" id="portfolioSummary"></div><div id="allTickets"></div>
 
-<p class="notice">Los décimos iniciales son datos de muestra. Puedes consultar los resultados en SELAE desde cada ficha, pero LotoScan todavía no calcula premios automáticamente. Los boletos se guardan solo en este navegador, sin sincronización.</p>
+<p class="notice">Los décimos iniciales son datos de muestra. LotoScan comprueba únicamente los sorteos cuyos resultados verificados están integrados. Los boletos se guardan solo en este navegador, sin sincronización.</p>
 </section>
 
 <section id="ticketDetail" class="screen">
 <button class="back" onclick="go('tickets')">← Volver a mis boletos</button>
 <div class="eyebrow">FICHA DEL BOLETO</div><h1>Lotería Nacional.</h1>
 <div class="panel" id="specificTicketDetail" style="padding:20px"></div>
-<button class="primary" type="button" onclick="openOfficialForCurrentTicket()">Consultar resultado oficial ↗</button>
-<p class="notice" style="margin-top:6px">Se abrirá la web oficial. LotoScan aún no certifica premios ni interpreta automáticamente el escrutinio.</p>
+<button class="primary" type="button" onclick="openOfficialForCurrentTicket()">Ver comprobación del boleto</button>
+<p class="notice" style="margin-top:6px">La comprobación se realiza dentro de LotoScan para los sorteos integrados. Los demás permanecen pendientes.</p>
 <button class="primary" onclick="editCurrentTicket()">Editar datos del boleto</button>
 <button class="secondary" onclick="deleteCurrentTicket()" style="color:#9a4d44;border-color:#d9c6c1">Eliminar este boleto</button>
 <button class="secondary" onclick="go('tickets')">Volver a la cartera</button>
 </section>
 
-<section id="editGameTicket" class="screen"><button class="back" onclick="go('ticketDetail')">← Volver al boleto</button><div class="eyebrow">CORREGIR DATOS</div><h1 id="editGameTitle">Editar boleto.</h1><form class="panel" id="editGameForm" onsubmit="saveEditedGameTicket(event)"><div id="editGameFields"></div><button class="primary" type="submit">Guardar cambios</button></form><p class="notice">Comprueba los datos con el resguardo original. Los premios todavía no se verifican automáticamente.</p></section>
+<section id="editGameTicket" class="screen"><button class="back" onclick="go('ticketDetail')">← Volver al boleto</button><div class="eyebrow">CORREGIR DATOS</div><h1 id="editGameTitle">Editar boleto.</h1><form class="panel" id="editGameForm" onsubmit="saveEditedGameTicket(event)"><div id="editGameFields"></div><button class="primary" type="submit">Guardar cambios</button></form><p class="notice">Comprueba los datos con el resguardo original. Solo se comprueban sorteos integrados y verificados.</p></section>
 <section id="editTicket" class="screen">
 <button class="back" onclick="go('ticketDetail')">← Volver al boleto</button><div class="eyebrow">CORREGIR DATOS</div><h1>Editar décimo.</h1><p class="lead">Comprueba los datos impresos antes de guardar.</p>
 <form class="panel" onsubmit="saveEditedTicket(event)">
@@ -193,7 +193,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <label class="formlabel" for="editDate">Fecha del sorteo</label><input id="editDate" type="date" required>
 <div class="formrow"><div><label class="formlabel" for="editCode">Código del sorteo</label><input id="editCode"></div><div><label class="formlabel" for="editPrice">Precio (€)</label><input id="editPrice" type="number" min="0" step="0.01" required></div></div>
 <button class="primary" type="submit">Guardar cambios</button></form>
-<p class="notice">La edición no comprueba resultados ni premios. Revisa siempre los datos con el boleto original.</p>
+<p class="notice">La comprobación se actualiza al guardar los cambios. Revisa siempre los datos con el boleto original.</p>
 </section>
 <section id="addTicket" class="screen">
 <button class="back" onclick="go('tickets')">← Volver a mis boletos</button><div class="eyebrow">ENTRADA MANUAL</div><h1>Añadir décimo.</h1><p class="lead">Introduce los datos impresos en tu décimo de Lotería Nacional.</p>
@@ -223,7 +223,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 
 <button class="primary" type="submit">Guardar en Mis boletos</button>
 </form>
-<p class="notice">Comprueba la combinación, el número de apuestas y la fecha con tu resguardo original. Esta versión no verifica resultados.</p>
+<p class="notice">Comprueba la combinación, el número de apuestas y la fecha con tu resguardo original. Solo se comprueban los sorteos cuyos resultados oficiales están integrados.</p>
 </section>
 
 <section id="draws" class="screen">
@@ -236,9 +236,9 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 </section>
 
 <section id="results" class="screen">
-<button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">COMPROBACIÓN</div><h1>Resultados.</h1><p class="lead">Consulta y contrasta los resultados de tus sorteos.</p>
-<div class="panel"><div class="eyebrow">FUENTE OFICIAL · SELAE</div><h3 style="margin:12px 0">Consulta de resultados</h3><p class="ticketmeta">Selecciona un juego para abrir los resultados publicados por Loterías y Apuestas del Estado. Los premios todavía no se calculan automáticamente en LotoScan.</p><div id="officialResultsList"></div></div>
-<p class="notice">Los resultados se consultan en la web oficial de SELAE. Hasta validar la conexión de datos y el cálculo de categorías, todos los boletos permanecerán pendientes de comprobación.</p>
+<button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">COMPROBACIÓN</div><h1>Resultados.</h1><p class="lead">Comprueba tus boletos con los resultados verificados disponibles.</p>
+<div class="panel"><div class="eyebrow">FUENTE OFICIAL · SELAE</div><h3 style="margin:12px 0">Comprobar mis boletos</h3><p class="ticketmeta">La comprobación se realiza aquí, sin salir de LotoScan. Primera prueba: Euromillones del 13/11/2026; las demás fechas permanecen pendientes.</p><div id="officialResultsList"></div></div>
+<p class="notice">Los datos del sorteo de prueba proceden de los resultados publicados por SELAE. Esta versión aún no descarga automáticamente sorteos posteriores.</p>
 </section>
 <p class="notice" style="text-align:center">LotoScan · Escáner y entrada manual</p>
 </div>
@@ -267,31 +267,56 @@ function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
 function formatDate(value){return new Date(value+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}
 function gameLabel(g){return ({loteria_nacional:'Lotería Nacional',euromillones:'Euromillones',primitiva:'La Primitiva',bonoloto:'Bonoloto',gordo:'El Gordo de la Primitiva',quiniela:'Quiniela',quinigol:'Quinigol',lototurf:'Lototurf',quintuple_plus:'Quíntuple Plus',eurodreams:'EuroDreams'})[g]||'Lotería Nacional'}
-// LotoScan 0.37: navegación a los resultados públicos oficiales, sin simular una comprobación automática.
-const OFFICIAL_RESULTS={
- euromillones:'euromillones',primitiva:'primitiva',bonoloto:'bonoloto',gordo:'gordo',eurodreams:'eurodreams',
- loteria_nacional:'loteria-nacional',quiniela:'quiniela',quinigol:'quinigol',lototurf:'lototurf',quintuple_plus:'quintuple-plus'
+// LotoScan 0.38: comprobador local de resultados oficiales VERIFICADOS.
+// Este primer catálogo contiene un sorteo histórico, NO una conexión en directo.
+// Los importes son premios brutos publicados por SELAE (13/11/2026).
+const VERIFIED_DRAWS={
+ 'euromillones|2026-11-13':{
+  game:'euromillones',date:'2026-11-13',numbers:[16,27,32,41,45],stars:[2,12],million:'HJV00197',
+  prizes:{'5+2':0,'5+1':175411.76,'5+0':20498.31,'4+2':1702.59,'4+1':131.60,'3+2':78.75,'4+0':41.36,'2+2':18.44,'3+1':13.65,'3+0':10.12,'1+2':8.59,'2+1':6.55,'2+0':4.31},
+  source:'SELAE · Sorteo de Euromillones del 13/11/2026'
+ }
 };
-function officialResultsUrl(game){
- const routes={euromillones:'euromillones',primitiva:'primitiva',bonoloto:'bonoloto',gordo:'gordo-primitiva',eurodreams:'eurodreams',loteria_nacional:'loteria-nacional',quiniela:'quiniela',quinigol:'quinigol',lototurf:'lototurf',quintuple_plus:'quintuple-plus'};
- // Página oficial general de resultados: no se asume que admita parámetros de filtrado por fecha.
- return 'https://www.loteriasyapuestas.es/es/resultados'+(game==='euromillones'?'/euromillones':'');
+function money38(n){return Number(n).toLocaleString('es-ES',{style:'currency',currency:'EUR'})}
+function validNumbers38(value,count,max){const a=String(value??'').match(/\d+/g)?.map(Number)||[];return a.length===count&&new Set(a).size===count&&a.every(x=>Number.isInteger(x)&&x>=1&&x<=max)?a:null}
+function checkTicket38(t){
+ if(t.game!=='euromillones'||!t.date)return {state:'pending',message:'Juego o fecha aún sin resultados integrados'};
+ const draw=VERIFIED_DRAWS[t.game+'|'+t.date];
+ if(!draw)return {state:'pending',message:'Todavía no hay resultados verificados de esta fecha dentro de LotoScan'};
+ const entries=ticketEntries(t);
+ if(entries.length!==1)return {state:'pending',message:'Esta versión solo comprueba apuestas sencillas de Euromillones'};
+ const nums=validNumbers38(entries[0],5,50),stars=validNumbers38(t.extra,2,12);
+ if(!nums||!stars)return {state:'pending',message:'Revisa los cinco números y las dos estrellas del boleto'};
+ const hits=nums.filter(n=>draw.numbers.includes(n)).length,starHits=stars.filter(n=>draw.stars.includes(n)).length;
+ const cat=hits+'+'+starHits;
+ let prize=Object.prototype.hasOwnProperty.call(draw.prizes,cat)?draw.prizes[cat]:0;
+ // No afirmar un premio de 1ª categoría sin que existan ganadores oficiales.
+ if(cat==='5+2'&&prize===0)return {state:'pending',message:'Inconsistencia: combinación de primera categoría sin acertantes publicados'};
+ const million=String(t.elMillon||'').trim().toUpperCase();
+ if(!million)return {state:'pending',message:'Falta el código de El Millón. No se puede descartar un premio de El Millón'};
+ if(!/^[A-Z]{3}\d{5}$/.test(million))return {state:'pending',message:'Código de El Millón incompleto o inválido'};
+ const millionWin=million===draw.million;
+ if(millionWin)prize+=1000000;
+ return {state:prize>0?'won':'lost',prize,category:cat,hitNumbers:hits,hitStars:starHits,millionWin,source:draw.source,message:prize>0?'Premio bruto calculado con resultados oficiales verificados':'Sin premio en la apuesta ni en El Millón'};
+}
+function ticketStatus(t){const r=checkTicket38(t);return r.state==='won'?'Premiado · '+money38(r.prize):r.state==='lost'?'No premiado':'Pendiente de comprobar'}
+function renderOfficialResults(){
+ const el=document.getElementById('officialResultsList');if(!el)return;
+ const rows=tickets.map(t=>({t,r:checkTicket38(t)}));
+ const done=rows.filter(x=>x.r.state!=='pending').length;
+ el.innerHTML='<p class="ticketmeta">Comprobación dentro de LotoScan: '+done+' de '+rows.length+' boletos comprobados. Por ahora hay resultados verificados del Euromillones del 13/11/2026.</p>'+
+ '<button class="primary" style="width:100%;margin:12px 0" onclick="renderTickets();renderOfficialResults()">Comprobar mis boletos</button>'+
+ rows.map(({t,r})=>'<div class="detail-line"><span>'+esc(gameLabel(t.game))+' · '+esc(t.date||'Sin fecha')+'</span><strong>'+esc(ticketStatus(t))+'</strong></div>').join('')+
+ '<p class="notice">Solo se emiten resultados definitivos cuando existen números, categorías, importes y código de El Millón verificables. No se consultan resultados nuevos automáticamente en esta versión.</p>';
 }
 function openOfficialForCurrentTicket(){
  const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;
- const message=t.date?'Boleto del '+formatDate(t.date)+'. Busca esa fecha o jornada en los resultados oficiales.':'Comprueba la fecha o jornada en el resguardo original.';
- if(!confirm(message+'\n\nSe abrirá SELAE. LotoScan todavía no calcula ni confirma premios.'))return;
- window.open(officialResultsUrl(t.game),'_blank','noopener,noreferrer');
+ const r=checkTicket38(t);alert(r.state==='pending'?'Pendiente de comprobar: '+r.message:ticketStatus(t)+'\n'+r.source);
 }
-function renderOfficialResults(){
- const el=document.getElementById('officialResultsList');if(!el)return;
- el.innerHTML=Object.keys(OFFICIAL_RESULTS).map(g=>'<a href="'+officialResultsUrl(g)+'" target="_blank" rel="noopener noreferrer" style="display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #e5e1d6;color:#65715c;text-decoration:none"><strong>'+esc(gameLabel(g))+'</strong><span aria-hidden="true">↗</span></a>').join('');
-}
-function ticketStatus(t){return 'Pendiente de comprobar'}
 function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'date_desc';return [...items].sort((a,b)=>{if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ticketCard(t){return `<div class="ticket-entry"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${gameLabel(t.game)} · ${esc(t.code||'')}</div><div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div><div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
-function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=sortedTickets(filter==='all'?tickets:tickets.filter(t=>t.game===filter));document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';document.getElementById('homeTickets').innerHTML=sortedTickets(tickets).slice(0,2).map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos';document.getElementById('portfolioSummary').textContent=shown.length+' boletos · Pendientes de comprobación automática'}
+function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=sortedTickets(filter==='all'?tickets:tickets.filter(t=>t.game===filter));document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';document.getElementById('homeTickets').innerHTML=sortedTickets(tickets).slice(0,2).map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos';document.getElementById('portfolioSummary').textContent=shown.length+' boletos · '+shown.filter(t=>checkTicket38(t).state!=='pending').length+' comprobados'}
 function detailTokens(value){if(Array.isArray(value))return value.flatMap(detailTokens);return String(value??'').trim().split(/[\s,;]+/).filter(Boolean)}
 function detailBubbles(value,kind='main'){return '<div class="detail-bubbles">'+detailTokens(value).map(n=>'<span class="detail-bubble '+(kind==='extra'?'detail-bubble-extra':'')+'">'+esc(n)+'</span>').join('')+'</div>'}
 function detailField(label,value){return '<div class="detail-cell"><small>'+esc(label)+'</small><strong>'+esc(value==null||value===''?'No indicado':value)+'</strong></div>'}
@@ -317,7 +342,7 @@ function detailContent(t){
   const picks=Array.isArray(t.racePicks)&&t.racePicks.length===6?t.racePicks:detailTokens(entries[0]);h+='<div class="detail-subtitle">Pronósticos de carreras</div><div class="sports-detail">';for(let i=0;i<5;i++)h+='<div><small>Carrera '+(i+1)+' · ganador</small><strong>'+esc(picks[i]??'—')+'</strong></div>';h+='<div><small>5.ª · segundo</small><strong>'+esc(picks[5]??'—')+'</strong></div></div>';
  }
  if(t.price!=null&&g!=='loteria_nacional')h+=detailLine('Importe pagado (opcional)',t.price+' €');
- h+='<div class="status-note" style="margin-top:18px">Pendiente de comprobación automática. Consulta el resultado publicado por SELAE con el botón inferior.</div>';return h;
+ const result38=checkTicket38(t);h+='<div class="status-note" style="margin-top:18px"><strong>'+esc(ticketStatus(t))+'</strong><p>'+esc(result38.message)+'</p>'+(result38.source?'<small>'+esc(result38.source)+'</small>':'')+'</div>';return h;
 }
 function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('specificTicketDetail').innerHTML=detailContent(t);go('ticketDetail')}
 function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;if(t.game==='loteria_nacional'){for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket');return}openSpecificEditor(t)}
@@ -362,7 +387,7 @@ function saveEditedGameTicket(event){event.preventDefault();const t=tickets.find
 }
 function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||!Number.isInteger(series)||series<1||!Number.isInteger(fraction)||fraction<1||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}Object.assign(t,{number,series,fraction,date,price,code:document.getElementById('editCode').value.trim()});if(!persistTickets())return;renderTickets();openTicket(t.id)}
 function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);persistTickets();renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
-function go(id){if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
+function go(id){if(id==='results')renderOfficialResults();if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
 let cameraStream=null, selectedImage=null;
 function scanMessage(msg,working=false){document.getElementById('scanStatus').innerHTML=working?'<span class="processing"><span class="spinner"></span>'+msg+'</span>':msg}
 async function startCamera(){
@@ -916,5 +941,6 @@ renderOfficialResults();
 
 function gameInfo(name){const key=Object.keys(GAME_DEFS).find(k=>GAME_DEFS[k].label===name)||({ 'La Primitiva':'primitiva','Bonoloto':'bonoloto','Lotería Nacional':'loteria_nacional' })[name];if(key)openGameForm(key);else go('gameForms')}
 renderTickets();
+renderOfficialResults();
 </script>
 </body></html>
