@@ -91,6 +91,9 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .ticketicon .quinigol-line,.gameicon .quinigol-line{width:25px;height:25px}
 .consistent-gameicon{font-size:23px;font-weight:650;letter-spacing:-.06em}
 .ticketicon{font-weight:650}
+
+/* 0.40 · Calendario táctil de sorteos */
+.lotocal{width:100%;box-sizing:border-box;border:1px solid #e1dfd5;border-radius:18px;background:#fffefa;padding:12px;margin:8px 0 5px}.lotocal-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;text-transform:capitalize;color:#30312e}.lotocal-nav button{border:1px solid #e1dfd5;background:#f5f3ed;border-radius:11px;width:42px;height:40px;font-size:26px;color:#68755f}.lotocal-nav button:disabled{opacity:.22}.lotocal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}.lotocal-week{font-size:12px;color:#7d8174;padding:8px 0}.lotocal-day{appearance:none;border:0;background:#eef0e9;color:#344032;min-width:0;width:100%;aspect-ratio:1;border-radius:10px;font-size:15px;font-weight:600;padding:0;touch-action:manipulation}.lotocal-day.lotocal-muted{background:transparent;color:#c4c5be;opacity:.55;font-weight:400}.lotocal-day.lotocal-selected{background:#68755f;color:white;box-shadow:inset 0 0 0 2px #68755f}.lotocal-day:focus-visible{outline:2px solid #344032;outline-offset:2px}.lotocal-choice{font-size:12px;color:#68755f;padding:12px 3px 2px;min-height:18px}@media(max-width:370px){.lotocal{padding:8px}.lotocal-day{font-size:13px}}
 </style>
 <style>
 .detail-bubbles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.detail-bubble{display:flex;align-items:center;justify-content:center;min-width:43px;height:43px;padding:0 7px;border-radius:50%;background:#65715c;color:white;font-size:16px;font-weight:600}.detail-bubble-extra{background:transparent;border:1.5px solid #65715c;color:#65715c}.detail-subtitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#737b69;font-weight:700;margin:16px 0 8px}.detail-line{display:flex;justify-content:space-between;gap:14px;align-items:baseline;border-top:1px solid #e5e1d7;padding:12px 0;font-size:13px}.detail-line span{color:#777c70}.detail-line strong{text-align:right;overflow-wrap:anywhere}.sports-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 20px}.sports-detail>div{display:flex;justify-content:space-between;gap:6px;background:#f2f0e9;border-radius:12px;padding:12px;align-items:center}.sports-detail small{font-size:11px;color:#737b69}.sports-detail strong{font-size:19px}.review-grid>div{min-width:0}.review-grid input{width:100%;min-width:0;box-sizing:border-box}
@@ -237,8 +240,8 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 
 <section id="results" class="screen">
 <button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">COMPROBACIÓN</div><h1>Resultados.</h1><p class="lead">Comprueba tus boletos con los resultados verificados disponibles.</p>
-<div class="panel"><div class="eyebrow">FUENTE OFICIAL · SELAE</div><h3 style="margin:12px 0">Comprobar mis boletos</h3><p class="ticketmeta">La comprobación se realiza aquí, sin salir de LotoScan. Primera prueba: Euromillones del 13/11/2026; las demás fechas permanecen pendientes.</p><div id="officialResultsList"></div></div>
-<p class="notice">Los datos del sorteo de prueba proceden de los resultados publicados por SELAE. Esta versión aún no descarga automáticamente sorteos posteriores.</p>
+<div class="panel"><div class="eyebrow">FUENTE OFICIAL · SELAE</div><h3 style="margin:12px 0">Comprobar mis boletos</h3><p class="ticketmeta">La comprobación se realiza aquí, sin salir de LotoScan. Euromillones: sorteo de prueba verificado y catálogo histórico, cuando esté publicado y validado.</p><div id="officialResultsList"></div></div>
+<p class="notice">Los datos del sorteo de prueba proceden de los resultados publicados por SELAE. La actualización del histórico depende de publicar datos verificados en el repositorio; no se inventan premios.</p>
 </section>
 <p class="notice" style="text-align:center">LotoScan · Escáner y entrada manual</p>
 </div>
@@ -267,7 +270,7 @@ function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
 function formatDate(value){return new Date(value+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}
 function gameLabel(g){return ({loteria_nacional:'Lotería Nacional',euromillones:'Euromillones',primitiva:'La Primitiva',bonoloto:'Bonoloto',gordo:'El Gordo de la Primitiva',quiniela:'Quiniela',quinigol:'Quinigol',lototurf:'Lototurf',quintuple_plus:'Quíntuple Plus',eurodreams:'EuroDreams'})[g]||'Lotería Nacional'}
-// LotoScan 0.39: comprobador local de resultados oficiales VERIFICADOS.
+// LotoScan 0.41: comprobador local de resultados oficiales VERIFICADOS.
 // Este primer catálogo contiene un sorteo histórico, NO una conexión en directo.
 // Los importes son premios brutos publicados por SELAE (13/11/2026).
 const VERIFIED_DRAWS={
@@ -278,6 +281,36 @@ const VERIFIED_DRAWS={
  }
 };
 
+// 0.41: catálogo remoto verificable, alojado en el propio GitHub Pages.
+// Nunca se aceptan sorteos sin premios completos y código de El Millón.
+let resultsCatalogState41='Cargando histórico…';
+function validDraw41(d){
+ if(!d||d.game!=='euromillones'||!/^2026-\d{2}-\d{2}$/.test(d.date||''))return false;
+ const n=d.numbers,st=d.stars;
+ if(!Array.isArray(n)||n.length!==5||new Set(n).size!==5||!n.every(x=>Number.isInteger(x)&&x>=1&&x<=50))return false;
+ if(!Array.isArray(st)||st.length!==2||new Set(st).size!==2||!st.every(x=>Number.isInteger(x)&&x>=1&&x<=12))return false;
+ if(!/^[A-Z]{3}\d{5}$/.test(d.million||''))return false;
+ const cats=['5+2','5+1','5+0','4+2','4+1','3+2','4+0','2+2','3+1','3+0','1+2','2+1','2+0'];
+ if(!d.prizes||!cats.every(k=>typeof d.prizes[k]==='number'&&Number.isFinite(d.prizes[k])&&d.prizes[k]>=0))return false;
+ return typeof d.source==='string'&&d.source.length>5;
+}
+async function loadDraws41(){
+ try{
+  const response=await fetch('./resultados/euromillones-2026.json?revision=41',{cache:'no-store'});
+  if(!response.ok)throw new Error('Archivo histórico todavía no publicado');
+  const body=await response.json();
+  if(!body||!Array.isArray(body.draws))throw new Error('Formato de histórico inválido');
+  let count=0,ignored=0;
+  for(const d of body.draws){
+   if(!validDraw41(d)){ignored++;continue}
+   const key='euromillones|'+d.date;
+   // El resultado local verificado prevalece ante inconsistencias externas.
+   if(!VERIFIED_DRAWS[key]){VERIFIED_DRAWS[key]=d;count++}
+  }
+  resultsCatalogState41=count+' sorteos históricos adicionales cargados'+(ignored?' · '+ignored+' registros incompletos descartados':'');
+ }catch(err){resultsCatalogState41='Histórico no disponible: '+err.message+'. Se conserva el sorteo verificado de prueba.'}
+ renderOfficialResults();renderTickets();
+}
 // 0.39: selector de jornadas habituales. No equivale a calendario oficial de excepciones.
 const DRAW_WEEKDAYS39={euromillones:[2,5],primitiva:[1,4,6],bonoloto:[0,1,2,3,4,5,6],gordo:[0],eurodreams:[1,4],loteria_nacional:[4,6]};
 function dateAllowed39(game,date){
@@ -289,21 +322,44 @@ function configureDrawDate39(id,game,current){
  const old=document.getElementById(id);if(!old)return;
  const days=DRAW_WEEKDAYS39[game];
  if(!days){old.type='date';old.min='2026-01-01';old.value=current||'';return;}
- const select=document.createElement('select');select.id=id;select.name=old.name||id;select.required=true;
- select.style.cssText='width:100%;max-width:100%;min-width:0;padding:14px;border:1px solid #dedbd0;border-radius:13px;background:#fffefa;color:#30312e;font-size:16px;box-sizing:border-box';
- const now=new Date();const until=new Date(now.getFullYear(),now.getMonth(),now.getDate()+90);
- const start=new Date(2026,0,1);let options='<option value="">Selecciona una fecha de sorteo</option>';
- const fmt=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
- let found=false;
- for(let d=new Date(until);d>=start;d.setDate(d.getDate()-1)){
-  if(!days.includes(d.getDay()))continue;
-  const iso=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
-  options+='<option value="'+iso+'">'+fmt.format(d)+'</option>';
-  if(iso===current)found=true;
+ const input=document.createElement('input');input.type='hidden';input.id=id;input.name=old.name||id;input.value=current||'';
+ const calendar=document.createElement('div');calendar.className='lotocal';calendar.setAttribute('aria-label','Calendario de sorteos');
+ old.replaceWith(input);input.after(calendar);
+ const today=new Date(),limit=new Date(today.getFullYear(),today.getMonth(),today.getDate()+90);
+ const min=new Date(2026,0,1);
+ const initial=current&&/^\d{4}-\d{2}-\d{2}$/.test(current)?new Date(current+'T12:00:00'):today;
+ let year=initial.getFullYear(),month=initial.getMonth();
+ const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+ const titleFmt=new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric'});
+ const fullFmt=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ const help=document.createElement('p');help.className='ticketmeta';help.textContent='Solo se pueden elegir los días habituales de sorteo. Las excepciones se confirmarán con el calendario oficial.';calendar.after(help);
+ function render(){
+  const first=new Date(year,month,1),last=new Date(year,month+1,0);
+  const canPrev=new Date(year,month,0)>=min,canNext=new Date(year,month+1,1)<=limit;
+  calendar.replaceChildren();
+  const nav=document.createElement('div');nav.className='lotocal-nav';
+  const prev=document.createElement('button');prev.type='button';prev.textContent='‹';prev.setAttribute('aria-label','Mes anterior');prev.disabled=!canPrev;
+  const heading=document.createElement('strong');heading.textContent=titleFmt.format(first);
+  const next=document.createElement('button');next.type='button';next.textContent='›';next.setAttribute('aria-label','Mes siguiente');next.disabled=!canNext;
+  prev.onclick=()=>{month--;if(month<0){month=11;year--}render()};
+  next.onclick=()=>{month++;if(month>11){month=0;year++}render()};
+  nav.append(prev,heading,next);calendar.append(nav);
+  const grid=document.createElement('div');grid.className='lotocal-grid';
+  ['L','M','X','J','V','S','D'].forEach(x=>{const el=document.createElement('span');el.className='lotocal-week';el.textContent=x;grid.append(el)});
+  const offset=(first.getDay()+6)%7;
+  for(let i=0;i<offset;i++){const blank=document.createElement('span');blank.className='lotocal-empty';grid.append(blank)}
+  for(let day=1;day<=last.getDate();day++){
+   const d=new Date(year,month,day),value=iso(d),enabled=d>=min&&d<=limit&&days.includes(d.getDay());
+   const btn=document.createElement('button');btn.type='button';btn.className='lotocal-day'+(enabled?'':' lotocal-muted')+(input.value===value?' lotocal-selected':'');
+   btn.textContent=String(day);btn.disabled=!enabled;btn.setAttribute('aria-label',fullFmt.format(d));
+   btn.setAttribute('aria-pressed',input.value===value?'true':'false');
+   if(enabled)btn.onclick=()=>{input.value=value;input.dispatchEvent(new Event('change',{bubbles:true}));render()};
+   grid.append(btn);
+  }
+  calendar.append(grid);
+  const note=document.createElement('div');note.className='lotocal-choice';note.textContent=input.value?'Sorteo seleccionado: '+fullFmt.format(new Date(input.value+'T12:00:00')):'Selecciona un día disponible';calendar.append(note);
  }
- if(current&&!found)options='<option value="'+current+'">'+current+' · fecha del boleto (verificar)</option>'+options;
- select.innerHTML=options;old.replaceWith(select);select.value=current||'';
- const help=document.createElement('p');help.className='ticketmeta';help.textContent='Fechas habituales desde 2026. Los sorteos excepcionales se deben contrastar con el calendario oficial.';select.after(help);
+ render();
 }
 function validateDrawDate39(game,date){
  if(date<'2026-01-01'){alert('LotoScan solo admite comprobación automática de sorteos desde 2026.');return false}
@@ -338,10 +394,10 @@ function renderOfficialResults(){
  const el=document.getElementById('officialResultsList');if(!el)return;
  const rows=tickets.map(t=>({t,r:checkTicket38(t)}));
  const done=rows.filter(x=>x.r.state!=='pending').length;
- el.innerHTML='<p class="ticketmeta">Comprobación dentro de LotoScan: '+done+' de '+rows.length+' boletos comprobados. Por ahora solo hay resultados integrados del Euromillones del 13/11/2026. El histórico de 2026 aún no está conectado.</p>'+
+ el.innerHTML='<p class="ticketmeta">Comprobación dentro de LotoScan: '+done+' de '+rows.length+' boletos comprobados. '+esc(resultsCatalogState41)+' · Las fechas sin resultados completos quedan pendientes.</p>'+
  '<button class="primary" style="width:100%;margin:12px 0" onclick="renderTickets();renderOfficialResults()">Comprobar mis boletos</button>'+
  rows.map(({t,r})=>'<div class="detail-line"><span>'+esc(gameLabel(t.game))+' · '+esc(t.date||'Sin fecha')+'</span><strong>'+esc(ticketStatus(t))+'</strong></div>').join('')+
- '<p class="notice">Solo se emiten resultados definitivos cuando existen números, categorías, importes y código de El Millón verificables. No se consultan resultados nuevos automáticamente en esta versión.</p>';
+ '<p class="notice">Solo se emiten resultados definitivos cuando existen números, categorías, importes y código de El Millón verificables. Se intenta cargar el histórico JSON de este mismo sitio al abrir la aplicación; solo se comprueban sorteos con datos completos.</p>';
 }
 function openOfficialForCurrentTicket(){
  const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;
@@ -972,6 +1028,7 @@ function renderGameChooser(){
 renderGameChooser();
 renderHomeGames();
 renderOfficialResults();
+loadDraws41();
 
 function gameInfo(name){const key=Object.keys(GAME_DEFS).find(k=>GAME_DEFS[k].label===name)||({ 'La Primitiva':'primitiva','Bonoloto':'bonoloto','Lotería Nacional':'loteria_nacional' })[name];if(key)openGameForm(key);else go('gameForms')}
 renderTickets();
