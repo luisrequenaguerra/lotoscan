@@ -1,1 +1,32 @@
 
+name: LotoScan - Monitor de resultados 0.48
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7 0,4,8,12,16 * * *'
+    - cron: '7,27,47 18-23 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: lotoscan-resultados-monitor
+  cancel-in-progress: false
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Consultar sorteos pendientes (solo diagnostico)
+        run: python scripts/monitor_resultados.py
+      - name: Guardar informe
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: informe-lotoscan-048
+          path: informe-lotoscan-048.json
+          if-no-files-found: error
+          retention-days: 7
+
