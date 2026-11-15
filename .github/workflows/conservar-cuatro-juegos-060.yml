@@ -1,1 +1,45 @@
 
+name: LotoScan - Conservar cuatro juegos 0.60
+'on':
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-historico-nuevos
+  cancel-in-progress: false
+jobs:
+  conservar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extraer combinaciones actuales
+        run: python scripts/extraer_combinaciones_059.py
+      - name: Conservar en archivo separado de revisión
+        run: python scripts/conservar_cuatro_juegos_060.py
+      - name: Guardar cambios solo en archivo de revisión
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- datos_revision/historico_nuevos.json
+          if ! git diff --cached --quiet; then
+            git commit -m "LotoScan 0.60: conservar sorteos en revision"
+            git push
+          else
+            echo "Sin sorteos nuevos"
+          fi
+      - name: Adjuntar informe y archivo de revisión
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-lotoscan-060
+          path: |
+            informe-lotoscan-059.json
+            datos_revision/historico_nuevos.json
+          if-no-files-found: warn
+
