@@ -1,0 +1,257 @@
+{
+  "juegos": {
+    "eurodreams": {
+      "2026-11-12": {
+        "combinacion": {
+          "extra": 1,
+          "numeros": [
+            5,
+            10,
+            15,
+            18,
+            19,
+            37
+          ]
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-12",
+        "fuente": "https://comprobarloteria.com/eurodreams/",
+        "publicable": false,
+        "validado_oficialmente": false
+      }
+    },
+    "gordo_primitiva": {
+      "2026-11-08": {
+        "combinacion": {
+          "extra": 4,
+          "numeros": [
+            22,
+            31,
+            39,
+            41,
+            49
+          ]
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-08",
+        "fuente": "https://comprobarloteria.com/el-gordo/",
+        "publicable": false,
+        "validado_oficialmente": false
+      }
+    },
+    "loteria_nacional": {
+      "2026-11-14": {
+        "combinacion": {
+          "primer_premio": "75409",
+          "reintegros": [
+            0,
+            4,
+            9
+          ],
+          "segundo_premio": "38422"
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-14",
+        "fuente": "https://comprobarloteria.com/loteria-nacional/",
+        "publicable": false,
+        "validado_oficialmente": false,
+        "premios_parciales": {
+          "primer_premio_centimos": 6000000,
+          "segundo_premio_centimos": 1200000,
+          "reintegro_centimos": 600,
+          "terminaciones": {
+            "4": {
+              "2004": 15000,
+              "2888": 15000,
+              "4896": 15000,
+              "8274": 15000
+            },
+            "3": {
+              "249": 3000,
+              "491": 3000,
+              "594": 3000,
+              "624": 3000,
+              "640": 3000,
+              "655": 3000,
+              "781": 3000,
+              "824": 3000,
+              "863": 3000,
+              "924": 3000
+            },
+            "2": {
+              "06": 1200,
+              "07": 1200,
+              "14": 1200,
+              "21": 1200,
+              "38": 1200,
+              "48": 1200,
+              "50": 1200,
+              "76": 1200,
+              "98": 1200
+            }
+          }
+        },
+        "premios_completos": false,
+        "premios_nota": "Las extracciones no sustituyen la lista acumulada; faltan aproximaciones, centenas y premios especiales.",
+        "fuente_premios": "https://comprobarloteria.com/loteria-nacional/2026-11-14/"
+      }
+    },
+    "quiniela": {
+      "2026-11-08": {
+        "combinacion": {
+          "advertencia": "Pronósticos derivados de marcadores; falta contraste con signos publicados.",
+          "partidos": [
+            {
+              "equipos": "Málaga (m) — Racing De Santander (m) 1 - 2",
+              "marcador": [
+                1,
+                2
+              ],
+              "posicion": 1
+            },
+            {
+              "equipos": "Osasuna (m) — Athletic Club (m) 1 - 1",
+              "marcador": [
+                1,
+                1
+              ],
+              "posicion": 2
+            },
+            {
+              "equipos": "Valencia (m) — Real Madrid (m) 0 - 3",
+              "marcador": [
+                0,
+                3
+              ],
+              "posicion": 3
+            },
+            {
+              "equipos": "Elche (m) — Betis (m) 0 - 2",
+              "marcador": [
+                0,
+                2
+              ],
+              "posicion": 4
+            },
+            {
+              "equipos": "Real Sociedad (m) — Rayo Vallecano (m) 1 - 0",
+              "marcador": [
+                1,
+                0
+              ],
+              "posicion": 5
+            },
+            {
+              "equipos": "Celta (m) — Levante (m) 0 - 0",
+              "marcador": [
+                0,
+                0
+              ],
+              "posicion": 6
+            },
+            {
+              "equipos": "Villarreal (m) — Getafe (m) 2 - 0",
+              "marcador": [
+                2,
+                0
+              ],
+              "posicion": 7
+            },
+            {
+              "equipos": "Cádiz (m) — R. Oviedo (m) 1 - 2",
+              "marcador": [
+                1,
+                2
+              ],
+              "posicion": 8
+            },
+            {
+              "equipos": "Girona (m) — Almería (m) 0 - 1",
+              "marcador": [
+                0,
+                1
+              ],
+              "posicion": 9
+            },
+            {
+              "equipos": "Sporting (m) — R. Valladolid (m) 1 - 2",
+              "marcador": [
+                1,
+                2
+              ],
+              "posicion": 10
+            },
+            {
+              "equipos": "Athletic Club (f) — Real Madrid (f) 1 - 1",
+              "marcador": [
+                1,
+                1
+              ],
+              "posicion": 11
+            },
+            {
+              "equipos": "Logroño (f) — Sevilla (f) 2 - 2",
+              "marcador": [
+                2,
+                2
+              ],
+              "posicion": 12
+            },
+            {
+              "equipos": "Eibar (f) — Real Sociedad (f) 1 - 2",
+              "marcador": [
+                1,
+                2
+              ],
+              "posicion": 13
+            },
+            {
+              "equipos": "Tenerife (f) — Alavés (f) 1 - 0",
+              "marcador": [
+                1,
+                0
+              ],
+              "posicion": 14
+            },
+            {
+              "equipos": "At. Madrid (m) — Barcelona (m) 1 - 2",
+              "marcador": [
+                1,
+                2
+              ],
+              "posicion": 15
+            }
+          ],
+          "pleno_15_derivado": [
+            "1",
+            "2"
+          ],
+          "signos_14_derivados": [
+            "2",
+            "X",
+            "2",
+            "2",
+            "1",
+            "X",
+            "1",
+            "2",
+            "2",
+            "2",
+            "X",
+            "X",
+            "2",
+            "1"
+          ]
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-08",
+        "fuente": "https://comprobarloteria.com/quiniela/",
+        "publicable": false,
+        "validado_oficialmente": false
+      }
+    }
+  },
+  "publicable": false,
+  "tipo": "revision_no_oficial",
+  "version": "0.60"
+}
