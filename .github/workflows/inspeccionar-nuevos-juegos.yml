@@ -1,1 +1,25 @@
 
+name: LotoScan - Inspeccion nuevos juegos 0.55
+'on':
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspeccionar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspeccionar paginas de resultados
+        run: python scripts/inspeccionar_nuevos_juegos.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-lotoscan-055
+          path: informe-lotoscan-055.json
+          if-no-files-found: warn
+
