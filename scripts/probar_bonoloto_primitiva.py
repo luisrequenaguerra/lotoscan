@@ -34,14 +34,20 @@ class Page(HTMLParser):
             self.row = []
         elif tag in ('td', 'th') and self.row is not None:
             self.cell = []
-    def handle_endtag(self, tag):
-        if tag in ('script', 'style', 'noscript'):
-            self.skip = max(0, self.skip - 1)
-            return
-        if self.skip:
-            return
-        if tag in ('td', 'th') and self.cell is not None and self.row is not None:
-            self.row.append(data.strip())
+    
+def handle_endtag(self, tag):
+    if tag in ('script', 'style', 'noscript'):
+        self.skip = max(0, self.skip - 1)
+        return
+    if self.skip:
+        return
+    if tag in ('td', 'th') and self.cell is not None and self.row is not None:
+        self.row.append(' '.join(' '.join(self.cell).split()))
+        self.cell = None
+    if tag == 'tr' and self.row is not None:
+        self.rows.append(self.row)
+        self.row = None
+
     def handle_data(self, data):
         if self.skip or not data.strip():
             return
