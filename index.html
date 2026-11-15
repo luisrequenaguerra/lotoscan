@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>LotoScan 0.64 — Comprobación prudente</title>
+<title>LotoScan 0.65 — Comprobación prudente</title>
 <style>
 :root{--bg:#f6f4ef;--paper:#fffefa;--ink:#2b2c2a;--muted:#777b70;--line:#e7e2d8;--olive:#7a846b;--olive2:#e8ece3;--gold:#b99a60;--radius:22px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -452,12 +452,27 @@ function checkTicket38(t){
  if(game==='loteria_nacional'){
   const number=String(t.number??'').trim().padStart(5,'0');
   if(!/^\d{5}$/.test(number))return pending('Revisa el número del décimo.');
-  const matches=[];
-  if(number===String(c.primer_premio))matches.push('Primer premio');
-  if(number===String(c.segundo_premio))matches.push('Segundo premio');
-  if(Array.isArray(c.reintegros)&&c.reintegros.includes(Number(number.slice(-1))))matches.push('Reintegro');
-  // El histórico no contiene importes ni todas las categorías: nunca inventar euros.
-  return pending(matches.length?'Coincidencia detectada: '+matches.join(', ')+'. Falta la tabla de importes y premios para calcular cuánto corresponde.':'No hay coincidencias en los premios principales registrados. Faltan categorías para descartar otros premios.');
+  const prizes=draw.premios_parciales;
+  if(!prizes)return pending('Faltan importes de este sorteo.');
+  // Los premios mayores ya incluyen las acumulaciones indicadas en la fuente.
+  // No sumar terminaciones o reintegros sobre esos importes.
+  if(number===String(c.primer_premio)&&Number.isInteger(prizes.primer_premio_centimos))
+   return won(prizes.primer_premio_centimos/100,'Primer premio por décimo · Sin premios especiales de serie y fracción');
+  if(number===String(c.segundo_premio)&&Number.isInteger(prizes.segundo_premio_centimos))
+   return won(prizes.segundo_premio_centimos/100,'Segundo premio por décimo · Sin premios especiales de serie y fracción');
+  // Las extracciones publicadas NO son una lista acumulada completa. Pueden
+  // coexistir con aproximaciones y centenas; no dar un importe definitivo.
+  const hits=[];
+  const endings=prizes.terminaciones||{};
+  for(const len of [4,3,2]){
+   const suffix=number.slice(-len),cents=endings[String(len)]?.[suffix];
+   if(Number.isInteger(cents))hits.push('terminación '+suffix+' ('+money38(cents/100)+' por extracción)');
+  }
+  if(Array.isArray(c.reintegros)&&c.reintegros.includes(Number(number.slice(-1))))
+   hits.push('reintegro ('+money38(prizes.reintegro_centimos/100)+' por extracción)');
+  return pending(hits.length
+   ?'Coincidencia detectada: '+hits.join('; ')+'. Falta la lista acumulada completa para determinar el premio total por décimo.'
+   :'Sin coincidencia en las extracciones almacenadas. Faltan aproximaciones, centenas y la lista acumulada: no se puede descartar un premio.');
  }
  if(!['euromillones','bonoloto','primitiva'].includes(game))return reviewTicket062(t)||pending('Faltan categorías e importes de este sorteo.');
  if(entries.length!==1)return pending('La comprobación de varias apuestas en un mismo boleto todavía está pendiente.');
