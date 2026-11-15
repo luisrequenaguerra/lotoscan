@@ -1,6 +1,133 @@
 {
   "juegos": {
-    "bonoloto": {},
+    "bonoloto": {
+      "2026-11-12": {
+        "categorias": {
+          "3": {
+            "acertantes": 84331,
+            "importe_centimos": 400
+          },
+          "4": {
+            "acertantes": 4451,
+            "importe_centimos": 2480
+          },
+          "5": {
+            "acertantes": 80,
+            "importe_centimos": 91984
+          },
+          "5+C": {
+            "acertantes": 5,
+            "importe_centimos": 2943502
+          },
+          "6": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "R": {
+            "acertantes": 476447,
+            "importe_centimos": 50
+          }
+        },
+        "complementario": 41,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-12",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "numero_sorteo": 316,
+        "numeros": [
+          3,
+          9,
+          25,
+          26,
+          30,
+          34
+        ],
+        "reintegro": 1
+      },
+      "2026-11-13": {
+        "categorias": {
+          "3": {
+            "acertantes": 97738,
+            "importe_centimos": 400
+          },
+          "4": {
+            "acertantes": 5572,
+            "importe_centimos": 2270
+          },
+          "5": {
+            "acertantes": 92,
+            "importe_centimos": 91664
+          },
+          "5+C": {
+            "acertantes": 3,
+            "importe_centimos": 5622083
+          },
+          "6": {
+            "acertantes": 1,
+            "importe_centimos": 124725808
+          },
+          "R": {
+            "acertantes": 550796,
+            "importe_centimos": 50
+          }
+        },
+        "complementario": 33,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-13",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "numero_sorteo": 317,
+        "numeros": [
+          4,
+          8,
+          17,
+          35,
+          42,
+          47
+        ],
+        "reintegro": 7
+      },
+      "2026-11-14": {
+        "categorias": {
+          "3": {
+            "acertantes": 71869,
+            "importe_centimos": 400
+          },
+          "4": {
+            "acertantes": 3659,
+            "importe_centimos": 2853
+          },
+          "5": {
+            "acertantes": 66,
+            "importe_centimos": 316313
+          },
+          "5+C": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "6": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "R": {
+            "acertantes": 436027,
+            "importe_centimos": 50
+          }
+        },
+        "complementario": 13,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-14",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "numero_sorteo": 318,
+        "numeros": [
+          1,
+          12,
+          27,
+          30,
+          36,
+          42
+        ],
+        "reintegro": 3
+      }
+    },
     "eurodreams": {},
     "euromillones": {
       "2026-11-13": {
@@ -39,7 +166,104 @@
     "gordo_primitiva": {},
     "loteria_nacional": {},
     "lototurf": {},
-    "primitiva": {},
+    "primitiva": {
+      "2026-11-12": {
+        "categorias": {
+          "3": {
+            "acertantes": 174393,
+            "importe_centimos": 800
+          },
+          "4": {
+            "acertantes": 9692,
+            "importe_centimos": 5391
+          },
+          "5": {
+            "acertantes": 295,
+            "importe_centimos": 121768
+          },
+          "5+C": {
+            "acertantes": 3,
+            "importe_centimos": 6531198
+          },
+          "6": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "6+R": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "R": {
+            "acertantes": 1003354,
+            "importe_centimos": 100
+          }
+        },
+        "complementario": 24,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-12",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "joker": "6606881",
+        "joker_premios_validados": false,
+        "numero_sorteo": 136,
+        "numeros": [
+          4,
+          10,
+          21,
+          32,
+          33,
+          45
+        ],
+        "reintegro": 9
+      },
+      "2026-11-14": {
+        "categorias": {
+          "3": {
+            "acertantes": 189535,
+            "importe_centimos": 800
+          },
+          "4": {
+            "acertantes": 9793,
+            "importe_centimos": 5077
+          },
+          "5": {
+            "acertantes": 183,
+            "importe_centimos": 186792
+          },
+          "5+C": {
+            "acertantes": 5,
+            "importe_centimos": 3729042
+          },
+          "6": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "6+R": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "R": {
+            "acertantes": 908826,
+            "importe_centimos": 100
+          }
+        },
+        "complementario": 37,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-14",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "joker": "8820777",
+        "joker_premios_validados": false,
+        "numero_sorteo": 137,
+        "numeros": [
+          3,
+          22,
+          24,
+          30,
+          48,
+          49
+        ],
+        "reintegro": 1
+      }
+    },
     "quiniela": {},
     "quinigol": {},
     "quintuple_plus": {}
