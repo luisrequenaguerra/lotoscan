@@ -1,1 +1,29 @@
 
+name: LotoScan - Normalizar cuatro juegos 0.57
+'on':
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  normalizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extraer informe exploratorio actualizado
+        run: python scripts/extraer_cuatro_juegos_prueba.py
+      - name: Normalizar sin modificar historico
+        run: python scripts/normalizar_cuatro_juegos.py
+      - name: Guardar informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-lotoscan-057
+          path: |
+            informe-lotoscan-056.json
+            informe-lotoscan-057.json
+          if-no-files-found: warn
+
