@@ -1,0 +1,49 @@
+{
+  "juegos": {
+    "bonoloto": {},
+    "eurodreams": {},
+    "euromillones": {
+      "2026-11-13": {
+        "categorias": {
+          "1+2": 859,
+          "2+0": 431,
+          "2+1": 655,
+          "2+2": 1844,
+          "3+0": 1012,
+          "3+1": 1365,
+          "3+2": 7875,
+          "4+0": 4136,
+          "4+1": 13160,
+          "4+2": 170259,
+          "5+0": 2049831,
+          "5+1": 17541176,
+          "5+2": null
+        },
+        "el_millon": "HJV00197",
+        "estado": "pendiente_verificacion_independiente",
+        "estrellas": [
+          2,
+          12
+        ],
+        "fecha": "2026-11-13",
+        "fuente": "comprobarloteria.com (informe 0.48)",
+        "numeros": [
+          16,
+          27,
+          32,
+          41,
+          45
+        ]
+      }
+    },
+    "gordo_primitiva": {},
+    "loteria_nacional": {},
+    "lototurf": {},
+    "primitiva": {},
+    "quiniela": {},
+    "quinigol": {},
+    "quintuple_plus": {}
+  },
+  "publicable": false,
+  "version": "0.49"
+}
