@@ -1,1 +1,25 @@
 
+name: LotoScan - Contraste independiente 0.53
+'on':
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contrastar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Contrastar referencias aportadas
+        run: python scripts/verificar_fuente_independiente.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-lotoscan-053
+          path: informe-lotoscan-053.json
+          if-no-files-found: warn
+
