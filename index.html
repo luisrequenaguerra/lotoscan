@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>LotoScan 0.30 — Iconos originales restaurados</title>
+<title>LotoScan 0.64 — Comprobación prudente</title>
 <style>
 :root{--bg:#f6f4ef;--paper:#fffefa;--ink:#2b2c2a;--muted:#777b70;--line:#e7e2d8;--olive:#7a846b;--olive2:#e8ece3;--gold:#b99a60;--radius:22px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -270,16 +270,9 @@ function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
 function formatDate(value){return new Date(value+'T12:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})}
 function gameLabel(g){return ({loteria_nacional:'Lotería Nacional',euromillones:'Euromillones',primitiva:'La Primitiva',bonoloto:'Bonoloto',gordo:'El Gordo de la Primitiva',quiniela:'Quiniela',quinigol:'Quinigol',lototurf:'Lototurf',quintuple_plus:'Quíntuple Plus',eurodreams:'EuroDreams'})[g]||'Lotería Nacional'}
-// LotoScan 0.43: comprobador local de resultados oficiales VERIFICADOS.
-// Este primer catálogo contiene un sorteo histórico, NO una conexión en directo.
-// Los importes son premios brutos publicados por SELAE (13/11/2026).
-const VERIFIED_DRAWS={
- 'euromillones|2026-11-13':{
-  game:'euromillones',date:'2026-11-13',numbers:[16,27,32,41,45],stars:[2,12],million:'HJV00197',
-  prizes:{'5+2':0,'5+1':175411.76,'5+0':20498.31,'4+2':1702.59,'4+1':131.60,'3+2':78.75,'4+0':41.36,'2+2':18.44,'3+1':13.65,'3+0':10.12,'1+2':8.59,'2+1':6.55,'2+0':4.31},
-  source:'SELAE · Sorteo de Euromillones del 13/11/2026'
- }
-};
+// LotoScan 0.64: sin premios oficiales precargados sin prueba documental.
+// Un histórico de revisión NO puede producir un veredicto definitivo.
+const VERIFIED_DRAWS={};
 
 // 0.43: catálogo remoto verificable, alojado en el propio GitHub Pages.
 // Nunca se aceptan sorteos sin premios completos y código de El Millón.
@@ -310,7 +303,7 @@ async function loadDraws41(){
    if(!VERIFIED_DRAWS[key]){VERIFIED_DRAWS[key]=d;count++}
   }
   resultsCatalogState41=count+' sorteos históricos adicionales cargados'+(ignored?' · '+ignored+' registros incompletos descartados':'');
- }catch(err){resultsCatalogState41='Histórico no disponible: '+err.message+'. Se conserva el sorteo verificado de prueba.'}
+ }catch(err){resultsCatalogState41='Catálogo adicional no disponible; se usarán los resultados integrados.'}
  renderOfficialResults();renderTickets();
 }
 // 0.39: selector de jornadas habituales. No equivale a calendario oficial de excepciones.
@@ -374,13 +367,13 @@ function validNumbers38(value,count,max){const a=String(value??'').match(/\d+/g)
 // LotoScan 0.62: cotejo informativo de los históricos NO oficiales.
 // Nunca convierte coincidencias en un veredicto definitivo ni en un importe pagable.
 const REVIEW_DRAWS_062={};
-let reviewState062='Históricos de revisión todavía no cargados';
+let reviewState062='Resultados todavía no cargados';
 async function loadReview062(){
  const paths=['./datos_revision/historico.json','./datos_revision/historico_nuevos.json'];
  let files=0,draws=0,errors=[];
  for(const path of paths){
   try{
-   const r=await fetch(path+'?v=062',{cache:'no-store'});
+   const r=await fetch(path+'?v=063',{cache:'no-store'});
    if(!r.ok)throw new Error('HTTP '+r.status);
    const body=await r.json();if(!body||typeof body.juegos!=='object')throw new Error('JSON sin juegos');
    files++;
@@ -394,7 +387,7 @@ async function loadReview062(){
    }
   }catch(e){errors.push(path+': '+e.message)}
  }
- reviewState062=files+' archivos de revisión · '+draws+' sorteos (no oficiales)'+(errors.length?' · '+errors.join(' · '):'');
+ reviewState062=files+' archivos de resultados · '+draws+' sorteos'+(errors.length?' · '+errors.join(' · '):'');
  renderTickets();renderOfficialResults();
 }
 function reviewNumbers062(v,count,max){
@@ -406,8 +399,8 @@ function reviewTicket062(t){
  const game=t.game==='gordo'?'gordo_primitiva':t.game;
  const draw=REVIEW_DRAWS_062[game+'|'+t.date];if(!draw)return null;
  const c=draw.combinacion||draw;
- const info='Coincidencia orientativa con resultado NO verificado. No permite afirmar si el boleto está premiado. Compruébalo en SELAE.';
- const base={state:'pending',source:'Histórico no oficial · '+(draw.fuente||'fuente no indicada'),message:info};
+ const info='Resultado de fuente no oficial y pendiente de contraste. Esta coincidencia NO confirma un premio ni su importe. Verifica el boleto en SELAE.';
+ const base={state:'pending',source:'Resultados disponibles',message:info};
  if(game==='loteria_nacional'){
   const number=String(t.number??'').trim().padStart(5,'0');
   if(!/^\d{5}$/.test(number)||!/^\d{5}$/.test(String(c.primer_premio||'')))return {...base,message:'Número del décimo o resultado incompleto. '+info};
@@ -440,25 +433,80 @@ function reviewTicket062(t){
  }
  return {...base,message:msg+'. '+info};
 }
+// 0.64: premios calculados con resultados disponibles, sin atribución oficial.
+function prizeRecord064(record){
+ if(typeof record==='number'&&Number.isFinite(record)&&record>=0)return record/100;
+ if(record&&Number.isInteger(record.importe_centimos)&&record.importe_centimos>=0)return record.importe_centimos/100;
+ return null;
+}
 function checkTicket38(t){
- if(t.game!=='euromillones'||!t.date)return reviewTicket062(t)||{state:'pending',message:'Juego o fecha aún sin resultados integrados'};
- const draw=VERIFIED_DRAWS[t.game+'|'+t.date];
- if(!draw)return reviewTicket062(t)||{state:'pending',message:'Todavía no hay resultados verificados de esta fecha dentro de LotoScan'};
- const entries=ticketEntries(t);
- if(entries.length!==1)return {state:'pending',message:'Esta versión solo comprueba apuestas sencillas de Euromillones'};
- const nums=validNumbers38(entries[0],5,50),stars=validNumbers38(t.extra,2,12);
- if(!nums||!stars)return {state:'pending',message:'Revisa los cinco números y las dos estrellas del boleto'};
- const hits=nums.filter(n=>draw.numbers.includes(n)).length,starHits=stars.filter(n=>draw.stars.includes(n)).length;
- const cat=hits+'+'+starHits;
- let prize=Object.prototype.hasOwnProperty.call(draw.prizes,cat)?draw.prizes[cat]:0;
- // No afirmar un premio de 1ª categoría sin que existan ganadores oficiales.
- if(cat==='5+2'&&prize===0)return {state:'pending',message:'Inconsistencia: combinación de primera categoría sin acertantes publicados'};
- const million=String(t.elMillon||'').trim().toUpperCase();
- if(!million)return {state:'pending',message:'Falta el código de El Millón. No se puede descartar un premio de El Millón'};
- if(!/^[A-Z]{3}\d{5}$/.test(million))return {state:'pending',message:'Código de El Millón incompleto o inválido'};
- const millionWin=million===draw.million;
- if(millionWin)prize+=1000000;
- return {state:prize>0?'won':'lost',prize,category:cat,hitNumbers:hits,hitStars:starHits,millionWin,source:draw.source,message:prize>0?'Premio bruto calculado con resultados oficiales verificados':'Sin premio en la apuesta ni en El Millón'};
+ if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};
+ const game=t.game==='gordo'?'gordo_primitiva':t.game;
+ const draw=REVIEW_DRAWS_062[game+'|'+t.date];
+ if(!draw)return {state:'pending',message:'Todavía no hay resultados disponibles para esta fecha.'};
+ const c=draw.combinacion||draw, entries=ticketEntries(t);
+ const note='Importe calculado según los resultados disponibles. Comprueba el resguardo antes de cobrar.';
+ const pending=msg=>({state:'pending',message:msg});
+ const won=(amount,cat)=>({state:'won',prize:amount,category:cat,message:cat+'. '+note});
+ const lost=()=>({state:'lost',prize:0,message:'No se han encontrado premios con los datos completos disponibles. '+note});
+ if(game==='loteria_nacional'){
+  const number=String(t.number??'').trim().padStart(5,'0');
+  if(!/^\d{5}$/.test(number))return pending('Revisa el número del décimo.');
+  const matches=[];
+  if(number===String(c.primer_premio))matches.push('Primer premio');
+  if(number===String(c.segundo_premio))matches.push('Segundo premio');
+  if(Array.isArray(c.reintegros)&&c.reintegros.includes(Number(number.slice(-1))))matches.push('Reintegro');
+  // El histórico no contiene importes ni todas las categorías: nunca inventar euros.
+  return pending(matches.length?'Coincidencia detectada: '+matches.join(', ')+'. Falta la tabla de importes y premios para calcular cuánto corresponde.':'No hay coincidencias en los premios principales registrados. Faltan categorías para descartar otros premios.');
+ }
+ if(!['euromillones','bonoloto','primitiva'].includes(game))return reviewTicket062(t)||pending('Faltan categorías e importes de este sorteo.');
+ if(entries.length!==1)return pending('La comprobación de varias apuestas en un mismo boleto todavía está pendiente.');
+ const count=game==='euromillones'?5:6,max=game==='euromillones'?50:49;
+ const mine=reviewNumbers062(entries[0],count,max),winning=reviewNumbers062(c.numeros,count,max);
+ if(!mine||!winning)return pending('Revisa los números del boleto y del sorteo.');
+ const hits=mine.filter(n=>winning.includes(n)).length;
+ let category='',millionWin=false,millionMissing=false;
+ if(game==='euromillones'){
+  const stars=reviewNumbers062(t.extra,2,12),winStars=reviewNumbers062(c.estrellas,2,12);
+  if(!stars||!winStars)return pending('Revisa las dos estrellas.');
+  category=hits+'+'+stars.filter(n=>winStars.includes(n)).length;
+  const million=String(t.elMillon||'').trim().toUpperCase();
+  millionMissing=!million;
+  if(million&&!/^[A-Z]{3}\d{5}$/.test(million))return pending('Revisa el código de El Millón.');
+  if(!c.el_millon)return pending('Falta el resultado de El Millón.');
+  millionWin=!!million&&million===String(c.el_millon).toUpperCase();
+ }else{
+  const complementary=hits===5&&mine.includes(Number(c.complementario));
+  category=hits===5&&complementary?'5+C':String(hits);
+  const refundRaw=String(t.extra??'').trim();
+  if(!/^\d$/.test(refundRaw))return pending('Falta el reintegro del boleto para comprobar todos los premios.');
+  if(!Number.isInteger(Number(c.reintegro)))return pending('Falta el reintegro del sorteo.');
+  // La Primitiva tiene premio de reintegro adicional en categorías superiores.
+  const refund=Number(refundRaw)===Number(c.reintegro);
+  if(game==='primitiva'&&hits===6&&refund)category='6+R';
+  if(hits<3&&refund)category='R';
+  if(game==='bonoloto'&&hits<3&&refund)category='R';
+  if(game==='primitiva'&&t.joker)return pending('El boleto incluye Joker, pero faltan sus categorías de premios.');
+ }
+ const categories=c.categorias||{};
+ const hasCategory=Object.prototype.hasOwnProperty.call(categories,category);
+ let amount=hasCategory?prizeRecord064(categories[category]):0;
+ if(hasCategory&&amount===null)return pending('Existe coincidencia en la categoría '+category+', pero no consta un importe calculable.');
+ if(game==='euromillones'){
+  if(millionWin)amount+=1000000;
+  if(millionMissing&&!amount)return pending('Falta el código de El Millón: no se puede descartar un premio.');
+  if(!hasCategory&&hits===5&&category==='5+2')return pending('Falta el importe del primer premio.');
+ }else if(game==='primitiva'){
+  // Reintegro acumulable a premios de números cuando figura por separado.
+  const refund=Number(String(t.extra).trim())===Number(c.reintegro);
+  if(refund&&hits>=3&&category!=='6+R'){
+   const r=prizeRecord064(categories.R);
+   if(r===null)return pending('Falta el importe del reintegro adicional.');
+   amount+=r;
+  }
+ }
+ if(amount>0)return won(amount,game==='euromillones'?(millionWin?'El Millón'+(hasCategory&&prizeRecord064(categories[category])>0?' + '+category:''):category):'Categoría '+category);
+ return lost();
 }
 function ticketStatus(t){const r=checkTicket38(t);return r.state==='won'?'Premiado · '+money38(r.prize):r.state==='lost'?'No premiado':'Pendiente de comprobar'}
 function renderOfficialResults(){
@@ -468,11 +516,11 @@ function renderOfficialResults(){
  el.innerHTML='<p class="ticketmeta">Comprobación dentro de LotoScan: '+done+' de '+rows.length+' boletos comprobados. '+esc(resultsCatalogState41)+' · '+esc(reviewState062)+' · Las fechas sin resultados completos quedan pendientes.</p>'+
  '<button class="primary" style="width:100%;margin:12px 0" onclick="renderTickets();renderOfficialResults()">Comprobar mis boletos</button>'+
  rows.map(({t,r})=>'<div class="detail-line"><span>'+esc(gameLabel(t.game))+' · '+esc(t.date||'Sin fecha')+'</span><strong>'+esc(ticketStatus(t))+'</strong></div>').join('')+
- '<p class="notice">Solo se emiten resultados definitivos cuando existen números, categorías, importes y código de El Millón verificables. Se intenta cargar el histórico JSON de este mismo sitio al abrir la aplicación; solo se comprueban sorteos con datos completos.</p>';
+ '<p class="notice">Los premios se calculan con los resultados disponibles y no constituyen confirmación oficial. Si faltan datos esenciales, el boleto queda pendiente.</p>';
 }
 function openOfficialForCurrentTicket(){
  const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;
- const r=checkTicket38(t);alert(r.state==='pending'?'Pendiente de comprobar: '+r.message:ticketStatus(t)+'\n'+r.source);
+ const r=checkTicket38(t);alert(r.state==='pending'?'Pendiente de comprobar: '+r.message:ticketStatus(t)+'\n'+r.message);
 }
 function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'date_desc';return [...items].sort((a,b)=>{if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
