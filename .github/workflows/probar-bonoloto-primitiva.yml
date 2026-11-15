@@ -1,1 +1,26 @@
 
+name: LotoScan - Probar Bonoloto y Primitiva 0.51
+'on':
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Analizar cuatro sorteos sin modificar el historico
+        run: python scripts/probar_bonoloto_primitiva.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-lotoscan-051
+          path: informe-lotoscan-051.json
+          if-no-files-found: error
+          retention-days: 14
+
