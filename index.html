@@ -511,11 +511,14 @@ function checkTicket38(t){
  }else{
   const complementary=hits===5&&mine.includes(Number(c.complementario));
   category=hits===5&&complementary?'5+C':String(hits);
+  // Los selectores visuales guardan el reintegro como '04' (dos cifras).
+  // Aceptar 0-9, 00-09 y los formatos numéricos antiguos, sin inventar valores.
   const refundRaw=String(t.extra??'').trim();
-  if(!/^\d$/.test(refundRaw))return pending('Falta el reintegro del boleto para comprobar todos los premios.');
-  if(!Number.isInteger(Number(c.reintegro)))return pending('Falta el reintegro del sorteo.');
+  if(!/^(?:[0-9]|0[0-9])$/.test(refundRaw))return pending('Falta el reintegro del boleto para comprobar todos los premios.');
+  const ticketRefund=Number(refundRaw);
+  if(!Number.isInteger(Number(c.reintegro))||Number(c.reintegro)<0||Number(c.reintegro)>9)return pending('Falta el reintegro del sorteo.');
   // La Primitiva tiene premio de reintegro adicional en categorías superiores.
-  const refund=Number(refundRaw)===Number(c.reintegro);
+  const refund=ticketRefund===Number(c.reintegro);
   if(game==='primitiva'&&hits===6&&refund)category='6+R';
   if(hits<3&&refund)category='R';
   if(game==='bonoloto'&&hits<3&&refund)category='R';
@@ -531,7 +534,7 @@ function checkTicket38(t){
   if(!hasCategory&&hits===5&&category==='5+2')return pending('Falta el importe del primer premio.');
  }else if(game==='primitiva'){
   // Reintegro acumulable a premios de números cuando figura por separado.
-  const refund=Number(String(t.extra).trim())===Number(c.reintegro);
+  const refund=ticketRefund===Number(c.reintegro);
   if(refund&&hits>=3&&category!=='6+R'){
    const r=prizeRecord064(categories.R);
    if(r===null)return pending('Falta el importe del reintegro adicional.');
