@@ -1,14 +1,15 @@
-
 name: LotoScan - Conservar historico 0.52
 'on':
   workflow_dispatch:
   schedule:
-    - cron: '11 0,4,8,12,16 * * *'
-    - cron: '11,31,51 18-23 * * *'
+    # UTC: cubre tardes/noches en España tanto en verano como en invierno.
+    - cron: '7,22,37,52 16-23 * * *'
+    - cron: '7,22,37,52 0-1 * * *'
+    - cron: '17 5,9,13 * * *'
 permissions:
   contents: write
 concurrency:
-  group: lotoscan-historico-escritura
+  group: lotoscan-historicos-escritura-069
   cancel-in-progress: false
 jobs:
   conservar:
@@ -21,6 +22,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Unificar históricos existentes
+        run: python scripts/unificar_historicos_069.py
       - name: Consultar tres juegos
         run: python scripts/monitor_resultados.py
       - name: Validar y ampliar historico de revision
@@ -49,4 +52,3 @@ jobs:
             informe-lotoscan-050.json
           if-no-files-found: warn
           retention-days: 14
-
