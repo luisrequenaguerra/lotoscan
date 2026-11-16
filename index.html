@@ -237,7 +237,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <section id="gameEntry" class="screen">
 <button class="back" onclick="go('gameForms')">← Elegir otro juego</button><div class="eyebrow">NUEVA APUESTA</div><h1 id="gameEntryTitle">Añadir boleto.</h1>
 <p class="lead" id="gameEntryIntro">Introduce los datos de tu resguardo.</p>
-<form class="panel" id="gameEntryForm" onsubmit="saveGameEntry(event)">
+<form class="panel" id="gameEntryForm" novalidate onsubmit="saveGameEntry(event)">
 <div id="gameEntryFields"></div>
 <label class="formlabel" for="gameEntryDate">Fecha del sorteo</label><input type="date" id="gameEntryDate" required>
 <label class="formlabel" for="gameEntryPrice">Importe pagado (€) · opcional</label><input type="number" id="gameEntryPrice" min="0" step="0.01" placeholder="Solo si deseas registrarlo">
@@ -281,8 +281,8 @@ const STORAGE_KEY='lotoscan_tickets_v010';
 let tickets;
 try { const stored=localStorage.getItem(STORAGE_KEY); tickets=stored===null?sampleTickets.map(t=>({...t})):JSON.parse(stored); if(!Array.isArray(tickets))throw Error('Invalid data'); }
 catch(e){tickets=sampleTickets.map(t=>({...t}));}
-function persistTickets(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(tickets));return true}catch(e){alert('No se han podido guardar los cambios de forma permanente en este navegador.');return false}}
-if(localStorage.getItem(STORAGE_KEY)===null)persistTickets();
+function persistTickets(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(tickets));return true}catch(e){console.error('LotoScan: error al guardar',e);alert('No se han podido guardar los cambios: '+(e?.message||'error de almacenamiento')+'. No borres los datos de Safari.');return false}}
+try{if(localStorage.getItem(STORAGE_KEY)===null)persistTickets()}catch(e){console.warn('Almacenamiento no disponible',e)}
 let currentTicketId=null;
 function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return; if(!confirm('¿Eliminar el boleto '+t.number+'? Esta acción no se puede deshacer.'))return;const idx=tickets.findIndex(x=>x.id===id);if(idx<0)return;tickets.splice(idx,1);persistTickets();renderTickets();if(document.getElementById('ticketDetail').classList.contains('active'))go('tickets')}
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
@@ -333,6 +333,12 @@ function dateAllowed39(game,date){
 }
 function configureDrawDate39(id,game,current){
  const old=document.getElementById(id);if(!old)return;
+ // Remove every calendar belonging to this form, including orphaned ones from earlier games.
+ const scope=old.closest('form')||old.parentElement;
+ scope.querySelectorAll('.lotocal, [data-draw-calendar-help="1"]').forEach(node=>node.remove());
+ // Remove the previous custom calendar and its help text before rebuilding.
+ let sibling=old.nextElementSibling;
+ while(sibling&&(sibling.classList.contains('lotocal')||(sibling.classList.contains('ticketmeta')&&(sibling.dataset.drawCalendarHelp==='1'||sibling.textContent.startsWith('Solo se pueden elegir los días habituales'))))){const next=sibling.nextElementSibling;sibling.remove();sibling=next;}
  const days=DRAW_WEEKDAYS39[game];
  if(!days){old.type='date';old.min='2026-01-01';old.value=current||'';return;}
  const input=document.createElement('input');input.type='hidden';input.id=id;input.name=old.name||id;input.value=current||'';
@@ -345,7 +351,7 @@ function configureDrawDate39(id,game,current){
  const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
  const titleFmt=new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric'});
  const fullFmt=new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
- const help=document.createElement('p');help.className='ticketmeta';help.textContent='Solo se pueden elegir los días habituales de sorteo. Las excepciones se confirmarán con el calendario oficial.';calendar.after(help);
+ const help=document.createElement('p');help.className='ticketmeta';help.dataset.drawCalendarHelp='1';help.textContent='Solo se pueden elegir los días habituales de sorteo. Las excepciones se confirmarán con el calendario oficial.';calendar.after(help);
  function render(){
   const first=new Date(year,month,1),last=new Date(year,month+1,0);
   const canPrev=new Date(year,month,0)>=min,canNext=new Date(year,month+1,1)<=limit;
@@ -566,7 +572,19 @@ function openOfficialForCurrentTicket(){
 function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'prizes';return [...items].sort((a,b)=>{if(mode==='prizes'){const ar=checkTicket38(a),br=checkTicket38(b);const rank=r=>r.state==='won'?0:r.state==='pending'?1:2;return rank(ar)-rank(br)||(ar.state==='won'?(Number(br.prize)||0)-(Number(ar.prize)||0):0)||(b.date||'').localeCompare(a.date||'')||b.id-a.id}if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ticketCard(t){const r=checkTicket38(t),won=r.state==='won'&&Number(r.prize)>0;const title=esc(gameLabel(t.game));const winInfo=won?'<div class="win-banner"><div class="win-banner-label">'+esc(r.category||'Premio calculado')+'</div><div class="win-banner-amount">'+esc(money38(r.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles</div></div>':'';return `<div class="ticket-entry${won?' is-winner':''}"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})" aria-label="${title}: ${esc(t.number||'Apuesta')}${won?', premiado '+esc(money38(r.prize)):''}"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${title} · ${esc(t.code||'')}</div>${won?'<div class="win-badge">★ ¡Premiado!</div>':''}<div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div>${winInfo}<div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
-function renderTickets(){const filter=document.getElementById('gameFilter')?.value||'all';const shown=sortedTickets(filter==='all'?tickets:tickets.filter(t=>t.game===filter));document.getElementById('allTickets').innerHTML=shown.length?shown.map(ticketCard).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';document.getElementById('homeTickets').innerHTML=sortedTickets(tickets).slice(0,2).map(ticketCard).join('');document.getElementById('ticketCount').textContent=tickets.length+' boletos';document.getElementById('portfolioSummary').textContent=shown.length+' boletos · '+shown.filter(t=>checkTicket38(t).state!=='pending').length+' comprobados'}
+function safeTicketCard071(t){try{return ticketCard(t)}catch(error){console.error('LotoScan: boleto no renderizable',t?.id,error);return '<div class="panel"><strong>'+esc(gameLabel(t?.game))+'</strong><p class="ticketmeta">Este boleto está guardado, pero no se puede mostrar su comprobación.</p><button type="button" class="secondary" onclick="openTicket('+Number(t?.id||0)+')">Abrir boleto</button></div>'}}
+function safeTicketStatus071(t){try{return checkTicket38(t).state}catch(error){console.error('LotoScan: error comprobación',t?.id,error);return 'pending'}}
+function renderTickets(){
+ const filter=document.getElementById('gameFilter')?.value||'all';
+ const shown=(filter==='all'?tickets:tickets.filter(t=>t.game===filter)).slice();
+ try{shown.splice(0,shown.length,...sortedTickets(shown))}catch(error){console.error('LotoScan: error ordenación',error)}
+ const all=document.getElementById('allTickets');
+ if(all)all.innerHTML=shown.length?shown.map(safeTicketCard071).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';
+ const home=document.getElementById('homeTickets');
+ if(home){let featured=tickets.slice();try{featured=sortedTickets(featured)}catch(error){console.error(error)}home.innerHTML=featured.slice(0,2).map(safeTicketCard071).join('')}
+ const count=document.getElementById('ticketCount');if(count)count.textContent=tickets.length+' boletos';
+ const summary=document.getElementById('portfolioSummary');if(summary)summary.textContent=shown.length+' boletos · '+shown.filter(t=>safeTicketStatus071(t)!=='pending').length+' comprobados';
+}
 function detailTokens(value){if(Array.isArray(value))return value.flatMap(detailTokens);return String(value??'').trim().split(/[\s,;]+/).filter(Boolean)}
 function detailBubbles(value,kind='main'){return '<div class="detail-bubbles">'+detailTokens(value).map(n=>'<span class="detail-bubble '+(kind==='extra'?'detail-bubble-extra':'')+'">'+esc(n)+'</span>').join('')+'</div>'}
 function detailField(label,value){return '<div class="detail-cell"><small>'+esc(label)+'</small><strong>'+esc(value==null||value===''?'No indicado':value)+'</strong></div>'}
@@ -636,8 +654,8 @@ function saveEditedGameTicket(event){event.preventDefault();const t=tickets.find
  const replacement={...t,number:entries[0],entries,extra,date,price,code:val('editGameCode'),...update};const idx=tickets.indexOf(t);const original=tickets[idx];tickets[idx]=replacement;if(!persistTickets()){tickets[idx]=original;return}renderTickets();openTicket(replacement.id)
 }
 function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||!Number.isInteger(series)||series<1||!Number.isInteger(fraction)||fraction<1||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}const replacement={...t,number,series,fraction,date,price,code:document.getElementById('editCode').value.trim()};const idx=tickets.indexOf(t);tickets[idx]=replacement;if(!persistTickets()){tickets[idx]=t;return}renderTickets();openTicket(replacement.id)}
-function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);persistTickets();renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
-function go(id){if(id==='results')renderOfficialResults();if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
+function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);persistTickets();document.getElementById('gameFilter').value='all';renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
+function go(id){if(id==='tickets'){const f=document.getElementById('gameFilter');if(f){f.value='all';renderTickets()}}if(id==='results'){try{renderOfficialResults()}catch(error){console.error('LotoScan: resultados',error)}}if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
 let cameraStream=null, selectedImage=null;
 function scanMessage(msg,working=false){document.getElementById('scanStatus').innerHTML=working?'<span class="processing"><span class="spinner"></span>'+msg+'</span>':msg}
 async function startCamera(){
@@ -1171,7 +1189,7 @@ const joker=(document.getElementById('entryJoker')?.value||'').trim();if(selecte
 if(selectedGame==='quiniela'&&!/^[012M]-[012M]$/.test(extra)){alert('Completa el Pleno al 15.');return}if(d.kind==='balls'&&extra){const parsed=parseNumbers(extra,d.extraCount,d.extraMax,d.extraCount===2?1:0);if(!parsed){alert('Comprueba los valores de '+d.extraLabel+'.');return}}
 const date=document.getElementById('gameEntryDate').value,priceText=document.getElementById('gameEntryPrice').value.trim(),price=priceText===''?null:Number(priceText);if(!date||!validateDrawDate39(selectedGame,date)||(price!==null&&(!Number.isFinite(price)||price<0))){alert('Comprueba fecha e importe.');return}
 const t={id:Date.now(),modality:['quiniela','quinigol','lototurf','quintuple_plus'].includes(selectedGame)?'simple':undefined,game:selectedGame,number:entries[0],entries,extra,joker,series:null,fraction:null,date,price,code:'',draw:d.label,source:'manual',status:'pending'};
-if(selectedGame==='lototurf'){t.extra=String(turfHorse);t.reintegro=String(turfRefund);t.horse=String(turfHorse)}if(selectedGame==='quintuple_plus'){t.racePicks=quintuplePicks.slice();t.extra=String(quintuplePicks[5])}tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
+if(selectedGame==='lototurf'){t.extra=String(turfHorse);t.reintegro=String(turfRefund);t.horse=String(turfHorse)}if(selectedGame==='quintuple_plus'){t.racePicks=quintuplePicks.slice();t.extra=String(quintuplePicks[5])}tickets.unshift(t);if(!persistTickets()){tickets.shift();return}document.getElementById('gameFilter').value='all';renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
 
 // Mantener exactamente la iconografía de la versión 0.29, salvo Quinigol.
 const GAME_GLYPHS={loteria_nacional:'◉',euromillones:'✦',primitiva:'◯',bonoloto:'●',gordo:'◒',eurodreams:'✧',quiniela:'1 X 2',lototurf:'♞',quintuple_plus:'▥'};
@@ -1185,6 +1203,17 @@ function renderGameChooser(){
  const el=document.getElementById('gameChooser');if(!el)return;
  el.innerHTML=Object.entries(GAME_DEFS).map(([k,v])=>`<button type="button" class="game game-tile" onclick="openGameForm('${k}')" aria-label="Añadir boleto de ${v.label}"><span class="game-tile-icon" aria-hidden="true">${gameIcon(k)}</span><strong>${v.label}</strong></button>`).join('');
 }
+window.addEventListener('error',event=>{console.error('LotoScan error:',event.error||event.message);});
+// Catch failures in form submissions, so Safari never appears to ignore the Save button.
+for(const formId of ['gameEntryForm','editGameForm']){
+ const form=document.getElementById(formId);
+ if(form){form.removeAttribute('onsubmit');form.addEventListener('submit',event=>{
+  event.preventDefault();
+  try{if(formId==='gameEntryForm')saveGameEntry(event);else saveEditedGameTicket(event)}
+  catch(error){console.error('LotoScan: error al guardar boleto',error);alert('No se ha podido guardar el boleto: '+(error?.message||'error desconocido')+'. Tus boletos anteriores no se han borrado.')}
+ })}
+}
+
 renderGameChooser();
 renderHomeGames();
 renderOfficialResults();
