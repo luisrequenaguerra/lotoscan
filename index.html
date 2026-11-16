@@ -387,11 +387,12 @@ function validNumbers38(value,count,max){const a=String(value??'').match(/\d+/g)
 const REVIEW_DRAWS_062={};
 let reviewState062='Resultados todavía no cargados';
 async function loadReview062(){
- const paths=['./datos_revision/historico.json','./datos_revision/historico_nuevos.json'];
+ const paths=['./datos_revision/historico.json'];
  let files=0,draws=0,errors=[];
+ const freshDraws={};
  for(const path of paths){
   try{
-   const r=await fetch(path+'?v=063',{cache:'no-store'});
+   const r=await fetch(path+'?refresh='+Date.now(),{cache:'no-store'});
    if(!r.ok)throw new Error('HTTP '+r.status);
    const body=await r.json();if(!body||typeof body.juegos!=='object')throw new Error('JSON sin juegos');
    files++;
@@ -400,11 +401,12 @@ async function loadReview062(){
     for(const [date,draw] of Object.entries(dates)){
      if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!draw||typeof draw!=='object')continue;
      const key=game+'|'+date;
-     if(!REVIEW_DRAWS_062[key]){REVIEW_DRAWS_062[key]=draw;draws++}
+     if(!freshDraws[key]){freshDraws[key]=draw;draws++}
     }
    }
   }catch(e){errors.push(path+': '+e.message)}
  }
+ if(files){Object.assign(REVIEW_DRAWS_062,freshDraws)}
  reviewState062=files+' archivos de resultados · '+draws+' sorteos'+(errors.length?' · '+errors.join(' · '):'');
  renderTickets();renderOfficialResults();
 }
@@ -525,12 +527,15 @@ function checkTicket38(t){
   if(game==='primitiva'&&t.joker)return pending('El boleto incluye Joker, pero faltan sus categorías de premios.');
  }
  const categories=c.categorias||{};
+ if(!c.categorias||typeof c.categorias!=='object')return pending('Faltan las categorías de premios de este sorteo.');
  const hasCategory=Object.prototype.hasOwnProperty.call(categories,category);
  let amount=hasCategory?prizeRecord064(categories[category]):0;
+ if(game==='euromillones'&&!hasCategory&&hits>=2)return pending('Falta la categoría '+category+' en el histórico.');
+ if(game!=='euromillones'&&!hasCategory&&hits>=3)return pending('Falta la categoría '+category+' en el histórico.');
  if(hasCategory&&amount===null)return pending('Existe coincidencia en la categoría '+category+', pero no consta un importe calculable.');
  if(game==='euromillones'){
   if(millionWin)amount+=1000000;
-  if(millionMissing&&!amount)return pending('Falta el código de El Millón: no se puede descartar un premio.');
+  if(millionMissing)return pending('Falta el código de El Millón para calcular el premio total del boleto.');
   if(!hasCategory&&hits===5&&category==='5+2')return pending('Falta el importe del primer premio.');
  }else if(game==='primitiva'){
   // Reintegro acumulable a premios de números cuando figura por separado.
@@ -1185,6 +1190,16 @@ renderHomeGames();
 renderOfficialResults();
 loadDraws41();
 loadReview062();
+// 0.68: consultar históricos de nuevo sin cerrar Safari.
+let lastRefresh068=Date.now(), refreshing068=false;
+async function refreshResults068(force=false){
+ if(refreshing068||(!force&&Date.now()-lastRefresh068<120000))return;
+ refreshing068=true;lastRefresh068=Date.now();
+ try{await loadReview062()}finally{refreshing068=false}
+}
+setInterval(()=>refreshResults068(),5*60*1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshResults068()});
+window.addEventListener('focus',()=>refreshResults068());
 
 function gameInfo(name){const key=Object.keys(GAME_DEFS).find(k=>GAME_DEFS[k].label===name)||({ 'La Primitiva':'primitiva','Bonoloto':'bonoloto','Lotería Nacional':'loteria_nacional' })[name];if(key)openGameForm(key);else go('gameForms')}
 renderTickets();
