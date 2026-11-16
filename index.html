@@ -506,7 +506,7 @@ function checkTicket38(t){
  const mine=reviewNumbers062(entries[0],count,max),winning=reviewNumbers062(c.numeros,count,max);
  if(!mine||!winning)return pending('Revisa los números del boleto y del sorteo.');
  const hits=mine.filter(n=>winning.includes(n)).length;
- let category='',millionWin=false,millionMissing=false;
+ let category='',millionWin=false,millionMissing=false,ticketRefund=null;
  if(game==='euromillones'){
   const stars=reviewNumbers062(t.extra,2,12),winStars=reviewNumbers062(c.estrellas,2,12);
   if(!stars||!winStars)return pending('Revisa las dos estrellas.');
@@ -523,7 +523,7 @@ function checkTicket38(t){
   // Aceptar 0-9, 00-09 y los formatos numéricos antiguos, sin inventar valores.
   const refundRaw=String(t.extra??'').trim();
   if(!/^(?:[0-9]|0[0-9])$/.test(refundRaw))return pending('Falta el reintegro del boleto para comprobar todos los premios.');
-  const ticketRefund=Number(refundRaw);
+  ticketRefund=Number(refundRaw);
   if(!Number.isInteger(Number(c.reintegro))||Number(c.reintegro)<0||Number(c.reintegro)>9)return pending('Falta el reintegro del sorteo.');
   // La Primitiva tiene premio de reintegro adicional en categorías superiores.
   const refund=ticketRefund===Number(c.reintegro);
@@ -572,7 +572,8 @@ function openOfficialForCurrentTicket(){
 function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'prizes';return [...items].sort((a,b)=>{if(mode==='prizes'){const ar=checkTicket38(a),br=checkTicket38(b);const rank=r=>r.state==='won'?0:r.state==='pending'?1:2;return rank(ar)-rank(br)||(ar.state==='won'?(Number(br.prize)||0)-(Number(ar.prize)||0):0)||(b.date||'').localeCompare(a.date||'')||b.id-a.id}if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ticketCard(t){const r=checkTicket38(t),won=r.state==='won'&&Number(r.prize)>0;const title=esc(gameLabel(t.game));const winInfo=won?'<div class="win-banner"><div class="win-banner-label">'+esc(r.category||'Premio calculado')+'</div><div class="win-banner-amount">'+esc(money38(r.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles</div></div>':'';return `<div class="ticket-entry${won?' is-winner':''}"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})" aria-label="${title}: ${esc(t.number||'Apuesta')}${won?', premiado '+esc(money38(r.prize)):''}"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${title} · ${esc(t.code||'')}</div>${won?'<div class="win-badge">★ ¡Premiado!</div>':''}<div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div>${winInfo}<div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
-function safeTicketCard071(t){try{return ticketCard(t)}catch(error){console.error('LotoScan: boleto no renderizable',t?.id,error);return '<div class="panel"><strong>'+esc(gameLabel(t?.game))+'</strong><p class="ticketmeta">Este boleto está guardado, pero no se puede mostrar su comprobación.</p><button type="button" class="secondary" onclick="openTicket('+Number(t?.id||0)+')">Abrir boleto</button></div>'}}
+function openTicketByIndex072(i){const t=tickets[i];if(t)openTicket(t.id)}
+function safeTicketCard071(t){try{return ticketCard(t)}catch(error){console.error('LotoScan: boleto no renderizable',t?.id,error);return '<div class="panel"><strong>'+esc(gameLabel(t?.game))+'</strong><p class="ticketmeta">Este boleto está guardado, pero no se puede mostrar su comprobación.</p><button type="button" class="secondary" onclick="openTicketByIndex072('+tickets.indexOf(t)+')">Abrir boleto</button></div>'}}
 function safeTicketStatus071(t){try{return checkTicket38(t).state}catch(error){console.error('LotoScan: error comprobación',t?.id,error);return 'pending'}}
 function renderTickets(){
  const filter=document.getElementById('gameFilter')?.value||'all';
