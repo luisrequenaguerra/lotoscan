@@ -1,0 +1,26 @@
+
+name: LotoScan - Auditar premios RTVE 0.85D
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditoria:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
+        run: python3 -m pip install beautifulsoup4==4.12.3
+      - name: Auditar todas las categorias por sorteo
+        run: python3 scripts/validar_rtve_085d.py
+      - name: Guardar diagnostico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-rtve-085d
+          path: |
+            informe_rtve_085d.json
+            informe_rtve_085d.txt
+          if-no-files-found: warn
+          retention-days: 14
