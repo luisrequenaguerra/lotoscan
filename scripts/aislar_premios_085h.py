@@ -80,7 +80,7 @@ def rows(table):
 
 def category(label):
     label=clean(label)
-    m=re.match(r'^(Especial|Reintegro|[1-9]\s*[ªº])\b?',label,re.I)
+    m=re.match(r'^(Especial|Reintegro|[1-9]\s*[ªº])(?=\s|$|\()',label,re.I)
     if m:
         return re.sub(r'\s+','',m.group(1)).lower()
     return None
