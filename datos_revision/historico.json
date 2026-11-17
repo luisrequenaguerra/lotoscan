@@ -230,6 +230,24 @@
         "fuente": "https://comprobarloteria.com/eurodreams/",
         "publicable": false,
         "validado_oficialmente": false
+      },
+      "2026-11-16": {
+        "combinacion": {
+          "extra": 2,
+          "numeros": [
+            2,
+            4,
+            11,
+            14,
+            17,
+            18
+          ]
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-16",
+        "fuente": "https://comprobarloteria.com/eurodreams/",
+        "publicable": false,
+        "validado_oficialmente": false
       }
     },
     "euromillones": {
