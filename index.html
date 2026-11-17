@@ -98,7 +98,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <style>
 .detail-bubbles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.detail-bubble{display:flex;align-items:center;justify-content:center;min-width:43px;height:43px;padding:0 7px;border-radius:50%;background:#65715c;color:white;font-size:16px;font-weight:600}.detail-bubble-extra{background:transparent;border:1.5px solid #65715c;color:#65715c}.detail-subtitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#737b69;font-weight:700;margin:16px 0 8px}.detail-line{display:flex;justify-content:space-between;gap:14px;align-items:baseline;border-top:1px solid #e5e1d7;padding:12px 0;font-size:13px}.detail-line span{color:#777c70}.detail-line strong{text-align:right;overflow-wrap:anywhere}.sports-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 20px}.sports-detail>div{display:flex;justify-content:space-between;gap:6px;background:#f2f0e9;border-radius:12px;padding:12px;align-items:center}.sports-detail small{font-size:11px;color:#737b69}.sports-detail strong{font-size:19px}.review-grid>div{min-width:0}.review-grid input{width:100%;min-width:0;box-sizing:border-box}
 </style><style id="lotoscan-073-status">
-/* LotoScan 0.73: estado comprobado, sin alterar el color de los iconos de cada juego */
+/* LotoScan 0.74: estado comprobado, sin alterar el color de los iconos de cada juego */
 .ticket-state{display:flex;align-items:center;gap:7px}
 .status-dot073{display:inline-block;flex:0 0 auto;width:10px;height:10px;border-radius:50%;background:#C49B43}
 .ticket-state-pending .status-dot073{background:#C49B43}
@@ -123,6 +123,15 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .detail-win-panel .win-banner-amount{font-size:clamp(32px,10vw,48px);margin:9px 0}
 .detail-win-panel .win-banner-caption{font-size:11px;line-height:1.5}
 @media(prefers-reduced-motion:no-preference){.ticket-entry.is-winner>.ticket{transition:box-shadow .2s ease,transform .16s ease}}
+</style><style id="lotoscan-074-status">
+/* Indicador de estado en la lista y en la ficha, sin alterar los iconos de juego. */
+.ticket-entry .ticket-state-pending .status-dot073{background:#C49B43!important}
+.ticket-entry .ticket-state-lost .status-dot073{background:#A33E4B!important}
+.ticket-entry .ticket-state-won .status-dot073,.ticket-entry .win-badge .status-dot073{background:#3F805C!important}
+.ticket-entry .ticketicon{position:relative}
+.ticket-entry .ticketicon::after{content:"";position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;border:2px solid #fffdf9;background:#C49B43}
+.ticket-entry.state-lost .ticketicon::after{background:#A33E4B}
+.ticket-entry.state-won .ticketicon::after{background:#3F805C}
 </style></head>
 <body>
 <div class="app">
@@ -538,7 +547,8 @@ function checkTicket38(t){
   if(game==='primitiva'&&hits===6&&refund)category='6+R';
   if(hits<3&&refund)category='R';
   if(game==='bonoloto'&&hits<3&&refund)category='R';
-  if(game==='primitiva'&&t.joker)return pending('El boleto incluye Joker, pero faltan sus categorías de premios.');
+  // Joker se comprueba independientemente: nunca bloquear los premios de la apuesta principal.
+  // Si el histórico no incluye un desglose verificable, no se inventa su importe.
  }
  const categories=c.categorias||{};
  if(!c.categorias||typeof c.categorias!=='object')return pending('Faltan las categorías de premios de este sorteo.');
@@ -560,6 +570,29 @@ function checkTicket38(t){
    amount+=r;
   }
  }
+ if(game==='primitiva'&&String(t.joker||'').trim()){
+  const jokerCode=String(t.joker).trim();
+  // No deducir categorías del Joker a partir del código ganador sin tabla de premios.
+  const jokerDraw=draw.joker;
+  const jokerKnown=!!(jokerDraw&&typeof jokerDraw==='object'&&jokerDraw.categorias&&typeof jokerDraw.categorias==='object'&&/^\d{7}$/.test(String(jokerDraw.numero||'')));
+  let jokerPrize=null;
+  if(jokerKnown){
+   const target=String(jokerDraw.numero),cats=jokerDraw.categorias;
+   // Solo usar una coincidencia exacta si la categoría correspondiente está publicada.
+   if(jokerCode===target)jokerPrize=prizeRecord064(cats['7']??cats['7_aciertos']??cats['primera']);
+  }
+  if(amount>0){
+   const total=amount+(jokerPrize||0);
+   const result=won(total,'Categoría '+category+(jokerPrize>0?' + Joker':' (apuesta principal)'));
+   result.components=[{label:'Apuesta principal · '+category,amount}];
+   if(jokerPrize>0)result.components.push({label:'Joker',amount:jokerPrize});
+   result.jokerPending=jokerPrize===null;
+   result.message=result.jokerPending?'Premio de la apuesta principal calculado. Joker pendiente de comprobación independiente: no incluido en el importe mostrado. '+note:result.message;
+   return result;
+  }
+  if(jokerPrize>0){const result=won(jokerPrize,'Joker');result.components=[{label:'Joker',amount:jokerPrize}];return result}
+  if(jokerPrize===null)return pending('Apuesta principal sin premio calculado. Joker pendiente de comprobación independiente: faltan categorías completas en el histórico.');
+ }
  if(amount>0)return won(amount,game==='euromillones'?(millionWin?'El Millón'+(hasCategory&&prizeRecord064(categories[category])>0?' + '+category:''):category):'Categoría '+category);
  return lost();
 }
@@ -579,7 +612,7 @@ function openOfficialForCurrentTicket(){
 }
 function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'prizes';return [...items].sort((a,b)=>{if(mode==='prizes'){const ar=checkTicket38(a),br=checkTicket38(b);const rank=r=>r.state==='won'?0:r.state==='pending'?1:2;return rank(ar)-rank(br)||(ar.state==='won'?(Number(br.prize)||0)-(Number(ar.prize)||0):0)||(b.date||'').localeCompare(a.date||'')||b.id-a.id}if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function ticketCard(t){const r=checkTicket38(t),won=r.state==='won'&&Number(r.prize)>0;const title=esc(gameLabel(t.game));const winInfo=won?'<div class="win-banner"><div class="win-banner-label">'+esc(r.category||'Premio calculado')+'</div><div class="win-banner-amount">'+esc(money38(r.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles</div></div>':'';return `<div class="ticket-entry${won?' is-winner':''}"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})" aria-label="${title}: ${esc(t.number||'Apuesta')}${won?', premiado '+esc(money38(r.prize)):''}"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${title} · ${esc(t.code||'')}</div>${won?'<div class="win-badge"><span class="status-dot073" aria-hidden="true"></span> ¡Premiado!</div>':''}<div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div>${winInfo}<div class="ticket-state ticket-state-${r.state}"><span class="status-dot073" aria-hidden="true"></span>${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
+function ticketCard(t){const r=checkTicket38(t),won=r.state==='won'&&Number(r.prize)>0;const title=esc(gameLabel(t.game));const winInfo=won?'<div class="win-banner"><div class="win-banner-label">'+esc(r.category||'Premio calculado')+'</div><div class="win-banner-amount">'+esc(money38(r.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles</div></div>':'';return `<div class="ticket-entry state-${r.state}${won?' is-winner':''}"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})" aria-label="${title}: ${esc(t.number||'Apuesta')}${won?', premiado '+esc(money38(r.prize)):''}"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${title} · ${esc(t.code||'')}</div>${won?'<div class="win-badge"><span class="status-dot073" aria-hidden="true"></span> ¡Premiado!</div>':''}<div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div>${winInfo}<div class="ticket-state ticket-state-${r.state}"><span class="status-dot073" aria-hidden="true"></span>${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
 function openTicketByIndex072(i){const t=tickets[i];if(t)openTicket(t.id)}
 function safeTicketCard071(t){try{return ticketCard(t)}catch(error){console.error('LotoScan: boleto no renderizable',t?.id,error);return '<div class="panel"><strong>'+esc(gameLabel(t?.game))+'</strong><p class="ticketmeta">Este boleto está guardado, pero no se puede mostrar su comprobación.</p><button type="button" class="secondary" onclick="openTicketByIndex072('+tickets.indexOf(t)+')">Abrir boleto</button></div>'}}
 function safeTicketStatus071(t){try{return checkTicket38(t).state}catch(error){console.error('LotoScan: error comprobación',t?.id,error);return 'pending'}}
@@ -619,7 +652,7 @@ function detailContent(t){
   const picks=Array.isArray(t.racePicks)&&t.racePicks.length===6?t.racePicks:detailTokens(entries[0]);h+='<div class="detail-subtitle">Pronósticos de carreras</div><div class="sports-detail">';for(let i=0;i<5;i++)h+='<div><small>Carrera '+(i+1)+' · ganador</small><strong>'+esc(picks[i]??'—')+'</strong></div>';h+='<div><small>5.ª · segundo</small><strong>'+esc(picks[5]??'—')+'</strong></div></div>';
  }
  if(t.price!=null&&g!=='loteria_nacional')h+=detailLine('Importe pagado (opcional)',t.price+' €');
- const result38=checkTicket38(t);if(result38.state==='won'&&Number(result38.prize)>0){h+='<div class="detail-win-panel" role="status"><div class="win-banner-label">★ ¡Boleto premiado! · '+esc(result38.category||'Premio')+'</div><div class="win-banner-amount">'+esc(money38(result38.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles. Comprueba el boleto antes de cobrarlo.</div></div>'}h+='<div class="status-note" style="margin-top:18px"><strong>'+esc(ticketStatus(t))+'</strong><p>'+esc(result38.message)+'</p>'+(result38.source?'<small>'+esc(result38.source)+'</small>':'')+'</div>';return h;
+ const result38=checkTicket38(t);if(result38.state==='won'&&Number(result38.prize)>0){h+='<div class="detail-win-panel" role="status"><div class="win-banner-label">★ ¡Boleto premiado! · '+esc(result38.category||'Premio')+'</div><div class="win-banner-amount">'+esc(money38(result38.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles. Comprueba el boleto antes de cobrarlo.</div></div>'}if(Array.isArray(result38.components)){h+='<div class="detail-subtitle">Desglose del premio calculado</div>'+result38.components.map(x=>detailLine(x.label,money38(x.amount))).join('');if(result38.jokerPending)h+='<p class="notice">Joker pendiente: su posible premio no está incluido en el importe mostrado.</p>'}h+='<div class="status-note" style="margin-top:18px"><strong>'+esc(ticketStatus(t))+'</strong><p>'+esc(result38.message)+'</p>'+(result38.source?'<small>'+esc(result38.source)+'</small>':'')+'</div>';return h;
 }
 function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('specificTicketDetail').innerHTML=detailContent(t);go('ticketDetail')}
 function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;if(t.game==='loteria_nacional'){for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket');return}openSpecificEditor(t)}
