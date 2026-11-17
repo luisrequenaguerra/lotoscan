@@ -1,0 +1,26 @@
+
+name: LotoScan - Contrastar fuentes 0.85F
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contraste:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar analizador HTML
+        run: python3 -m pip install beautifulsoup4==4.12.3
+      - name: Auditar fuentes alternativas sin publicar
+        run: python3 scripts/contrastar_fuentes_085f.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-fuentes-085f
+          path: |
+            informe_fuentes_085f.json
+            informe_fuentes_085f.txt
+          if-no-files-found: warn
+          retention-days: 14
