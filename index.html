@@ -210,6 +210,16 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">TU COLECCIÓN</div><div class="tickets-heading"><h1>Mis boletos.</h1><button type="button" class="add-top" onclick="go('gameForms')" aria-label="Añadir boleto">＋ Añadir</button></div><p class="lead">Todos tus números, organizados y listos para comprobar.</p>
 <div class="row" style="margin:18px 0 4px"><span class="eyebrow">TODOS TUS SORTEOS</span><span class="pill" id="ticketCount">4 boletos</span></div>
 <select id="gameFilter" class="game-filter" onchange="renderTickets()"><option value="all">Todos los juegos</option><option value="loteria_nacional">Lotería Nacional</option><option value="euromillones">Euromillones</option><option value="primitiva">La Primitiva</option><option value="bonoloto">Bonoloto</option><option value="gordo">El Gordo de la Primitiva</option><option value="quiniela">Quiniela</option><option value="quinigol">Quinigol</option><option value="lototurf">Lototurf</option><option value="quintuple_plus">Quíntuple Plus</option><option value="eurodreams">EuroDreams</option></select>
+<div class="panel" style="padding:16px;margin:18px 0;background:#faf9f5">
+ <div class="eyebrow">COPIA DE SEGURIDAD</div>
+ <p class="ticketmeta" style="margin:8px 0 14px">Guarda tus boletos en un archivo JSON en Archivos del iPhone. Puedes recuperarlos después sin borrar los actuales.</p>
+ <div style="display:flex;gap:10px;flex-wrap:wrap">
+  <button class="secondary" type="button" style="flex:1;min-width:140px" onclick="exportTicketsBackup084()">Exportar copia</button>
+  <button class="secondary" type="button" style="flex:1;min-width:140px" onclick="document.getElementById('backupFile084').click()">Importar copia</button>
+ </div>
+ <input id="backupFile084" type="file" accept=".json,application/json" style="display:none" onchange="importTicketsBackup084(this)">
+ <p class="notice" style="margin:10px 0 0">La importación añade boletos que falten; nunca elimina los que ya tienes.</p>
+</div>
 <div class="portfolio-tools"><label for="ticketSort">Ordenar por</label><select id="ticketSort" class="game-filter" onchange="renderTickets()"><option value="prizes" selected>Premiados primero</option><option value="date_desc">Sorteo más reciente</option><option value="date_asc">Sorteo más antiguo</option><option value="added_desc">Añadidos recientemente</option><option value="number">Número</option></select></div><div class="portfolio-summary" id="portfolioSummary"></div><div id="allTickets"></div>
 
 <p class="notice">Los décimos iniciales son datos de muestra. Los históricos no oficiales solo permiten cotejos orientativos. Los boletos se guardan solo en este navegador, sin sincronización.</p>
@@ -304,6 +314,59 @@ try { const stored=localStorage.getItem(STORAGE_KEY); tickets=stored===null?samp
 catch(e){tickets=sampleTickets.map(t=>({...t}));}
 function persistTickets(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(tickets));return true}catch(e){console.error('LotoScan: error al guardar',e);alert('No se han podido guardar los cambios: '+(e?.message||'error de almacenamiento')+'. No borres los datos de Safari.');return false}}
 try{if(localStorage.getItem(STORAGE_KEY)===null)persistTickets()}catch(e){console.warn('Almacenamiento no disponible',e)}
+// LotoScan 0.84: exportación e importación conservadora de boletos.
+function downloadBackup084(data,filename){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function exportTicketsBackup084(){
+ try{
+  const stored=localStorage.getItem(STORAGE_KEY);
+  if(stored===null)throw Error('No hay almacenamiento de boletos disponible.');
+  const saved=JSON.parse(stored);
+  if(!Array.isArray(saved))throw Error('Los datos guardados no tienen el formato esperado.');
+  const backup={format:'lotoscan-backup',version:1,createdAt:new Date().toISOString(),storageKey:STORAGE_KEY,tickets:saved};
+  downloadBackup084(backup,'LotoScan_boletos_'+new Date().toISOString().slice(0,10)+'.json');
+ }catch(e){alert('No se pudo exportar la copia: '+e.message)}
+}
+function safeBackupTickets084(raw){
+ if(!raw||typeof raw!=='object'||Array.isArray(raw)||raw.format!=='lotoscan-backup'||raw.version!==1||raw.storageKey!==STORAGE_KEY||!Array.isArray(raw.tickets))throw Error('Archivo no reconocido como copia de LotoScan compatible.');
+ if(raw.tickets.length>10000)throw Error('El archivo contiene demasiados boletos.');
+ for(const t of raw.tickets){
+  if(!t||typeof t!=='object'||Array.isArray(t)||!Object.prototype.hasOwnProperty.call(t,'id')||typeof t.game!=='string'||!t.game||typeof t.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(t.date))throw Error('La copia contiene boletos con formato inválido.');
+  if(JSON.stringify(t).length>100000)throw Error('Hay un boleto demasiado grande.');
+ }
+ return raw.tickets;
+}
+async function importTicketsBackup084(input){
+ const file=input.files&&input.files[0];if(!file)return;
+ try{
+  if(file.size>10*1024*1024)throw Error('El archivo supera 10 MB.');
+  const incoming=safeBackupTickets084(JSON.parse(await file.text()));
+  // Releer el almacenamiento justo antes de combinar para no pisar cambios recientes.
+  const saved=localStorage.getItem(STORAGE_KEY);
+  if(saved===null)throw Error('El almacenamiento de Safari no está disponible.');
+  const current=JSON.parse(saved);if(!Array.isArray(current))throw Error('El almacenamiento actual no es válido.');
+  const same=(a,b)=>{const clean=t=>{const x={...t};delete x.id;return JSON.stringify(Object.keys(x).sort().map(k=>[k,x[k]]))};return clean(a)===clean(b)};
+  const merged=current.map(t=>({...t}));let added=0,skipped=0;
+  const numericIds=merged.map(t=>Number(t.id)).filter(Number.isFinite);
+  let nextId=Math.max(0,...numericIds)+1;
+  for(const ticket of incoming){
+   if(merged.some(t=>same(t,ticket))){skipped++;continue}
+   const copy={...ticket};
+   if(merged.some(t=>String(t.id)===String(copy.id))){copy.id=nextId++;}
+   merged.push(copy);added++;
+  }
+  if(!added){alert('No hay boletos nuevos para importar. Ya tienes '+skipped+' boleto(s) de esta copia.');return}
+  if(!confirm('Se añadirán '+added+' boleto(s) a los '+current.length+' actuales. No se eliminará ninguno. ¿Continuar?'))return;
+  // Escribir una única vez; si falla, mantener la colección original en memoria.
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(merged));tickets=merged;
+  renderTickets();alert('Importación completada: '+added+' añadidos, '+skipped+' ya existentes. Total: '+merged.length+'.');
+ }catch(e){console.error('LotoScan: importar copia',e);alert('No se ha importado la copia: '+e.message+'\nNo se han borrado tus boletos.');}
+ finally{input.value=''}
+}
 let currentTicketId=null;
 function confirmDeleteTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return; if(!confirm('¿Eliminar el boleto '+t.number+'? Esta acción no se puede deshacer.'))return;const idx=tickets.findIndex(x=>x.id===id);if(idx<0)return;tickets.splice(idx,1);persistTickets();renderTickets();if(document.getElementById('ticketDetail').classList.contains('active'))go('tickets')}
 function deleteCurrentTicket(){if(currentTicketId!==null)confirmDeleteTicket(currentTicketId)}
