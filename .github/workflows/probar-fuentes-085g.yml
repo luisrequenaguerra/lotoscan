@@ -1,0 +1,26 @@
+
+name: LotoScan - Diagnosticar fuentes 0.85G
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar BeautifulSoup
+        run: python3 -m pip install beautifulsoup4==4.12.3
+      - name: Diagnosticar fuentes por fecha sin publicar
+        run: python3 scripts/contrastar_premios_085g.py
+      - name: Subir informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-fuentes-085g
+          path: |
+            informe_fuentes_085g.json
+            informe_fuentes_085g.txt
+          if-no-files-found: warn
+          retention-days: 14
