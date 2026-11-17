@@ -30,6 +30,8 @@ jobs:
         run: python scripts/almacenar_resultados.py
       - name: Verificar estructura y estados
         run: python scripts/verificar_persistencia.py
+      - name: Auditar resultados Joker sin modificar histórico
+        run: python scripts/informe_joker_080.py
       - name: Conservar historico en GitHub
         run: |
           if git diff --quiet -- datos_revision/historico.json && [ -z "$(git ls-files --others --exclude-standard -- datos_revision/historico.json)" ]; then
@@ -50,5 +52,6 @@ jobs:
             informe-lotoscan-048.json
             informe-lotoscan-049.json
             informe-lotoscan-050.json
+            informe-lotoscan-joker-080.json
           if-no-files-found: warn
           retention-days: 14
