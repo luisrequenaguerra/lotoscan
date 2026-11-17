@@ -1,0 +1,26 @@
+
+name: LotoScan - Aislar y contrastar premios 0.85H
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
+        run: python3 -m pip install beautifulsoup4==4.12.3
+      - name: Auditar premios sin modificar historicos
+        run: python3 scripts/aislar_premios_085h.py
+      - name: Guardar informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-premios-085h
+          path: |
+            informe_premios_085h.json
+            informe_premios_085h.txt
+          if-no-files-found: warn
+          retention-days: 14
