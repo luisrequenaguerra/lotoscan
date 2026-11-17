@@ -97,13 +97,21 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 </style>
 <style>
 .detail-bubbles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.detail-bubble{display:flex;align-items:center;justify-content:center;min-width:43px;height:43px;padding:0 7px;border-radius:50%;background:#65715c;color:white;font-size:16px;font-weight:600}.detail-bubble-extra{background:transparent;border:1.5px solid #65715c;color:#65715c}.detail-subtitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#737b69;font-weight:700;margin:16px 0 8px}.detail-line{display:flex;justify-content:space-between;gap:14px;align-items:baseline;border-top:1px solid #e5e1d7;padding:12px 0;font-size:13px}.detail-line span{color:#777c70}.detail-line strong{text-align:right;overflow-wrap:anywhere}.sports-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 20px}.sports-detail>div{display:flex;justify-content:space-between;gap:6px;background:#f2f0e9;border-radius:12px;padding:12px;align-items:center}.sports-detail small{font-size:11px;color:#737b69}.sports-detail strong{font-size:19px}.review-grid>div{min-width:0}.review-grid input{width:100%;min-width:0;box-sizing:border-box}
+</style><style id="lotoscan-073-status">
+/* LotoScan 0.73: estado comprobado, sin alterar el color de los iconos de cada juego */
+.ticket-state{display:flex;align-items:center;gap:7px}
+.status-dot073{display:inline-block;flex:0 0 auto;width:10px;height:10px;border-radius:50%;background:#C49B43}
+.ticket-state-pending .status-dot073{background:#C49B43}
+.ticket-state-lost .status-dot073{background:#A33E4B}
+.ticket-state-won .status-dot073,.win-badge .status-dot073{background:#3F805C}
+.win-badge{display:inline-flex;align-items:center;gap:6px}
 </style><style id="lotoscan-066-prizes">
 /* 0.66 · Jerarquía visual de premios, sin alterar el escáner */
 .ticket-entry.is-winner>.ticket{border:2px solid #b69b59;background:#fffdf7;box-shadow:0 5px 18px rgba(91,77,37,.10);align-items:flex-start;padding:17px 15px}
 .ticket-entry.is-winner .ticketicon{background:#eee8d7;color:#87713d}
 .ticket-entry.is-winner .ticketmain{min-width:0}
 .ticket-entry.is-winner .ticket-number{font-size:31px;margin:7px 0}
-.ticket-entry.is-winner .ticket-state{display:none}
+.ticket-entry.is-winner .ticket-state{display:flex}
 .win-badge{display:inline-flex;align-items:center;gap:5px;background:#eee4c7;color:#725a25;border-radius:30px;padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-top:9px}
 .win-banner{background:#f3eddd;border-radius:14px;padding:13px 14px;margin-top:12px;border:1px solid #e6d7b4}
 .win-banner-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#75613a;font-weight:750;margin-bottom:5px}
@@ -571,7 +579,7 @@ function openOfficialForCurrentTicket(){
 }
 function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'prizes';return [...items].sort((a,b)=>{if(mode==='prizes'){const ar=checkTicket38(a),br=checkTicket38(b);const rank=r=>r.state==='won'?0:r.state==='pending'?1:2;return rank(ar)-rank(br)||(ar.state==='won'?(Number(br.prize)||0)-(Number(ar.prize)||0):0)||(b.date||'').localeCompare(a.date||'')||b.id-a.id}if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function ticketCard(t){const r=checkTicket38(t),won=r.state==='won'&&Number(r.prize)>0;const title=esc(gameLabel(t.game));const winInfo=won?'<div class="win-banner"><div class="win-banner-label">'+esc(r.category||'Premio calculado')+'</div><div class="win-banner-amount">'+esc(money38(r.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles</div></div>':'';return `<div class="ticket-entry${won?' is-winner':''}"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})" aria-label="${title}: ${esc(t.number||'Apuesta')}${won?', premiado '+esc(money38(r.prize)):''}"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${title} · ${esc(t.code||'')}</div>${won?'<div class="win-badge">★ ¡Premiado!</div>':''}<div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div>${winInfo}<div class="ticket-state">● ${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
+function ticketCard(t){const r=checkTicket38(t),won=r.state==='won'&&Number(r.prize)>0;const title=esc(gameLabel(t.game));const winInfo=won?'<div class="win-banner"><div class="win-banner-label">'+esc(r.category||'Premio calculado')+'</div><div class="win-banner-amount">'+esc(money38(r.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles</div></div>':'';return `<div class="ticket-entry${won?' is-winner':''}"><button class="ticket" style="width:100%;text-align:left;color:inherit" onclick="openTicket(${t.id})" aria-label="${title}: ${esc(t.number||'Apuesta')}${won?', premiado '+esc(money38(r.prize)):''}"><div class="ticketicon">${gameIcon(t.game)}</div><div class="ticketmain"><div class="ticket-tag">${title} · ${esc(t.code||'')}</div>${won?'<div class="win-badge"><span class="status-dot073" aria-hidden="true"></span> ¡Premiado!</div>':''}<div class="ticket-number">${esc(t.number||'Apuesta')}</div><div class="ticketmeta">${t.entries?.length?t.entries.length+' apuesta(s) · ':''}${t.series!=null?'Serie '+t.series+' · ':''}${t.fraction!=null?'Fracción '+t.fraction+' · ':''}${t.date?new Date(t.date+'T12:00:00').getFullYear():''}</div>${winInfo}<div class="ticket-state ticket-state-${r.state}"><span class="status-dot073" aria-hidden="true"></span>${ticketStatus(t)}</div></div><span class="chev">›</span></button></div>`}
 function openTicketByIndex072(i){const t=tickets[i];if(t)openTicket(t.id)}
 function safeTicketCard071(t){try{return ticketCard(t)}catch(error){console.error('LotoScan: boleto no renderizable',t?.id,error);return '<div class="panel"><strong>'+esc(gameLabel(t?.game))+'</strong><p class="ticketmeta">Este boleto está guardado, pero no se puede mostrar su comprobación.</p><button type="button" class="secondary" onclick="openTicketByIndex072('+tickets.indexOf(t)+')">Abrir boleto</button></div>'}}
 function safeTicketStatus071(t){try{return checkTicket38(t).state}catch(error){console.error('LotoScan: error comprobación',t?.id,error);return 'pending'}}
@@ -667,7 +675,7 @@ async function startCamera(){
 }
 function stopCamera(){if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null}document.getElementById('cameraVideo').srcObject=null;document.getElementById('cameraWrap').classList.remove('has-camera');document.getElementById('captureButton').style.display='none';document.getElementById('cameraOverlay').hidden=true}
 function capturePhoto(){const video=document.getElementById('cameraVideo');if(!video.videoWidth){scanMessage('La cámara todavía no está preparada.');return}const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;c.getContext('2d').drawImage(video,0,0);c.toBlob(b=>{selectedImage=b;showSelectedImage(URL.createObjectURL(b));stopCamera();},'image/jpeg',.94)}
-function showSelectedImage(url){const wrap=document.getElementById('cameraWrap'),img=document.getElementById('capturedPreview');img.src=url;wrap.classList.remove('has-camera');wrap.classList.add('has-image');document.getElementById('readButton').style.display='block';document.getElementById('scanResult').innerHTML='';document.getElementById('reviewPanel').classList.remove('visible');document.getElementById('qrReviewPanel').style.display='none';scanMessage('Fotografía preparada. Pulsa «Reconocer boleto» para analizarla.')}
+function showSelectedImage(url){pendingEuromillonesQR073='';const wrap=document.getElementById('cameraWrap'),img=document.getElementById('capturedPreview');img.src=url;wrap.classList.remove('has-camera');wrap.classList.add('has-image');document.getElementById('readButton').style.display='block';document.getElementById('scanResult').innerHTML='';document.getElementById('reviewPanel').classList.remove('visible');document.getElementById('qrReviewPanel').style.display='none';scanMessage('Fotografía preparada. Pulsa «Reconocer boleto» para analizarla.')}
 function handlePhoto(e){const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){scanMessage('Selecciona un archivo de imagen.');return}stopCamera();selectedImage=f;showSelectedImage(URL.createObjectURL(f));e.target.value=''}
 // OCR 0.13: interpreta campos por etiquetas y líneas, sin elegir números arbitrarios.
 function parseNationalLotteryOCR(raw){
@@ -967,7 +975,9 @@ function parseEuromillonesQR(raw){
  if(!/(?:^|;)RI=/.test(raw)||!/(?:^|;)A=\d+;/.test(raw))return null;
  return {main,stars,date,draw:m[1],million:million?million[1]:''};
 }
-function showQRReview(data){
+let pendingEuromillonesQR073="";
+function showQRReview(data,raw){
+ pendingEuromillonesQR073=typeof raw==="string"?raw.trim():"";
  document.getElementById('qrNumbers').value=data.main.map(n=>String(n).padStart(2,'0')).join(' ');
  document.getElementById('qrStars').value=data.stars.map(n=>String(n).padStart(2,'0')).join(' ');
  document.getElementById('qrDate').value=data.date;
@@ -977,14 +987,29 @@ function showQRReview(data){
  scanMessage('QR de Euromillones interpretado. Revisa los datos antes de guardar.');
  document.getElementById('qrReviewPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
+function receiptNums073(value){
+ const raw=Array.isArray(value)?value:Array.isArray(value?.[0])?value[0]:String(value??'').split(/[\s,;]+/);
+ return raw.map(Number).filter(Number.isFinite).sort((a,b)=>a-b).join(',');
+}
+function sameEuromillonesReceipt073(oldTicket,newTicket){
+ if(oldTicket?.game!=='euromillones'||oldTicket.date!==newTicket.date)return false;
+ const oldRaw=String(oldTicket.qrPayload073||'').trim(),newRaw=String(newTicket.qrPayload073||'').trim();
+ if(oldRaw&&newRaw)return oldRaw===newRaw;
+ const oldMillion=String(oldTicket.elMillon||'').trim().toUpperCase();
+ const newMillion=String(newTicket.elMillon||'').trim().toUpperCase();
+ if(!oldMillion||!newMillion||oldMillion!==newMillion)return false;
+ const oldMain=receiptNums073(oldTicket.number),newMain=receiptNums073(newTicket.number);
+ const oldStars=receiptNums073(oldTicket.extra),newStars=receiptNums073(newTicket.extra);
+ return oldMain===newMain&&oldStars===newStars;
+}
 function saveQRReview(){
  const main=parseNumbers(document.getElementById('qrNumbers').value,5,50),stars=parseNumbers(document.getElementById('qrStars').value,2,12);
  const date=document.getElementById('qrDate').value,draw=document.getElementById('qrDraw').value.trim(),million=document.getElementById('qrMillion').value.trim().toUpperCase();
  if(!main||!stars||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!validateDrawDate39('euromillones',date)){alert('Comprueba los cinco números, las dos estrellas y la fecha.');return}
  if(draw&&!/^\d{1,3}$/.test(draw)){alert('Comprueba el número de sorteo.');return}
  if(million&&!/^[A-Z]{3}\d{5}$/.test(million)){alert('Comprueba el código de El Millón.');return}
- if(tickets.some(t=>t.game==='euromillones'&&t.date===date&&Array.isArray(t.number)&&t.number.join(',')===main.join(',')&&Array.isArray(t.extra)&&t.extra.join(',')===stars.join(','))){alert('Esta combinación ya figura en Mis boletos para ese sorteo.');return}
- const t={id:Date.now(),game:'euromillones',number:main,entries:[main],extra:stars,date,draw:'Euromillones',code:draw,elMillon:million,price:null,source:'qr_user_confirmed',status:'pending',modality:'simple'};
+ if(tickets.some(t=>sameEuromillonesReceipt073(t,{game:'euromillones',date,number:main,extra:stars,code:draw,elMillon:million,qrPayload073:pendingEuromillonesQR073}))){alert('Este resguardo ya está guardado en LotoScan. No se añadirá otra copia.');return}
+ const t={id:Date.now(),game:'euromillones',number:main,entries:[main],extra:stars,date,draw:'Euromillones',code:draw,elMillon:million,price:null,source:'qr_user_confirmed',qrPayload073:pendingEuromillonesQR073,status:'pending',modality:'simple'};
  tickets.unshift(t);if(!persistTickets()){tickets.shift();return}renderTickets();resetScanner();go('tickets');
 }
 async function tryRecognizeQR(){
@@ -996,7 +1021,7 @@ async function tryRecognizeQR(){
   if(!raw){scanMessage('No se ha detectado un QR legible tras ampliar distintas zonas de la imagen.');return false}
   const parsed=parseEuromillonesQR(raw);
   if(!parsed){scanMessage('Se ha leído un QR, pero su formato todavía no es compatible. No se interpretarán datos sin verificar.');return 'unsupported'}
-  showQRReview(parsed);return true;
+  showQRReview(parsed,raw);return true;
  }catch(e){scanMessage('No se ha podido completar la lectura QR ('+(e?.message||'error desconocido')+'). Se probará el lector de Lotería Nacional.');return false}
 }
 async function recognizeTicket(){
