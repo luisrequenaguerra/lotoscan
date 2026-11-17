@@ -484,6 +484,23 @@ function prizeRecord064(record){
  if(record&&Number.isInteger(record.importe_centimos)&&record.importe_centimos>=0)return record.importe_centimos/100;
  return null;
 }
+// 0.81: Joker se calcula independientemente de los importes de La Primitiva.
+// Premios fijos por longitud de coincidencia desde el inicio o el final.
+function jokerResult081(ticketCode,draw){
+ const code=String(ticketCode??'').trim();
+ const winning=typeof draw?.joker==='string'?draw.joker:draw?.joker?.numero;
+ const target=String(winning??'').trim();
+ if(!/^\d{7}$/.test(code))return {state:'pending',message:'Código Joker del boleto incompleto.'};
+ if(!/^\d{7}$/.test(target))return {state:'pending',message:'Falta el número ganador del Joker en el histórico.'};
+ const amounts=[0,1,5,50,300,1000,10000,1000000];
+ if(code===target)return {state:'won',amount:amounts[7],message:'Joker · 7 cifras'};
+ let first=0,last=0;
+ while(first<7&&code[first]===target[first])first++;
+ while(last<7&&code[6-last]===target[6-last])last++;
+ // Los premios por primera y última cifra son acumulables entre extremos.
+ const amount=amounts[first]+amounts[last];
+ return amount>0?{state:'won',amount,message:'Joker · '+(first?'primeras '+first+' cifras':'')+(first&&last?' y ':'')+(last?'últimas '+last+' cifras':'')}:{state:'lost',amount:0,message:'Joker sin coincidencias premiadas'};
+}
 function checkTicket38(t){
  if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};
  const game=t.game==='gordo'?'gordo_primitiva':t.game;
@@ -558,7 +575,10 @@ function checkTicket38(t){
  let amount=hasCategory?prizeRecord064(categories[category]):0;
  if(game==='euromillones'&&!hasCategory&&hits>=2)return pending('Falta la categoría '+category+' en el histórico.');
  if(game!=='euromillones'&&!hasCategory&&hits>=3)return pending('Falta la categoría '+category+' en el histórico.');
- if(hasCategory&&amount===null)return pending('Existe coincidencia en la categoría '+category+', pero no consta un importe calculable.');
+ // Un premio Joker no debe quedar bloqueado por una categoría principal sin cuantía.
+ const principalUnknown=hasCategory&&amount===null;
+ if(principalUnknown&&game!=='primitiva')return pending('Existe coincidencia en la categoría '+category+', pero no consta un importe calculable.');
+ if(principalUnknown)amount=0;
  if(game==='euromillones'){
   if(millionWin)amount+=1000000;
   if(millionMissing)return pending('Falta el código de El Millón para calcular el premio total del boleto.');
@@ -573,28 +593,24 @@ function checkTicket38(t){
   }
  }
  if(game==='primitiva'&&String(t.joker||'').trim()){
-  const jokerCode=String(t.joker).trim();
-  // No deducir categorías del Joker a partir del código ganador sin tabla de premios.
-  const jokerDraw=draw.joker;
-  const jokerKnown=!!(jokerDraw&&typeof jokerDraw==='object'&&jokerDraw.categorias&&typeof jokerDraw.categorias==='object'&&/^\d{7}$/.test(String(jokerDraw.numero||'')));
-  let jokerPrize=null;
-  if(jokerKnown){
-   const target=String(jokerDraw.numero),cats=jokerDraw.categorias;
-   // Solo usar una coincidencia exacta si la categoría correspondiente está publicada.
-   if(jokerCode===target)jokerPrize=prizeRecord064(cats['7']??cats['7_aciertos']??cats['primera']);
-  }
-  if(amount>0){
-   const total=amount+(jokerPrize||0);
-   const result=won(total,'Categoría '+category+(jokerPrize>0?' + Joker':' (apuesta principal)'));
-   result.components=[{label:'Apuesta principal · '+category,amount}];
-   if(jokerPrize>0)result.components.push({label:'Joker',amount:jokerPrize});
-   result.jokerPending=jokerPrize===null;
-   result.message=result.jokerPending?'Premio de la apuesta principal calculado. Joker pendiente de comprobación independiente: no incluido en el importe mostrado. '+note:result.message;
+  const jr=jokerResult081(t.joker,draw);
+  const mainWon=amount>0, jokerWon=jr.state==='won';
+  const mainPending=principalUnknown;
+  if(mainWon||jokerWon){
+   const result=won(amount+(jokerWon?jr.amount:0),mainWon?'Categoría '+category+(jokerWon?' + Joker':''):'Joker');
+   result.components=[];
+   if(mainWon)result.components.push({label:'La Primitiva · '+category,amount});
+   if(jokerWon)result.components.push({label:jr.message,amount:jr.amount});
+   result.jokerPending=jr.state==='pending';result.mainPending=mainPending;
+   result.message=(mainPending?'La Primitiva: categoría '+category+' identificada, importe pendiente; el total mostrado solo incluye el Joker. ':'')+
+    (jr.state==='pending'?'Joker pendiente: '+jr.message+' ':'Joker: '+jr.message+'. ')+note;
    return result;
   }
-  if(jokerPrize>0){const result=won(jokerPrize,'Joker');result.components=[{label:'Joker',amount:jokerPrize}];return result}
-  if(jokerPrize===null){const result=pending('Apuesta principal sin premio calculado. Joker pendiente de comprobación independiente: faltan categorías completas en el histórico.');result.jokerPending=true;return result;}
+  if(mainPending)return {state:'pending',jokerPending:jr.state==='pending',message:'La Primitiva: categoría '+category+' identificada, importe no disponible. Joker: '+jr.message};
+  if(jr.state==='pending')return {state:'pending',jokerPending:true,message:'La Primitiva sin premio calculado. Joker pendiente: '+jr.message};
+  return lost();
  }
+ if(principalUnknown)return pending('Existe coincidencia en la categoría '+category+', pero no consta un importe calculable.');
  if(amount>0)return won(amount,game==='euromillones'?(millionWin?'El Millón'+(hasCategory&&prizeRecord064(categories[category])>0?' + '+category:''):category):'Categoría '+category);
  return lost();
 }
@@ -654,7 +670,7 @@ function detailContent(t){
   const picks=Array.isArray(t.racePicks)&&t.racePicks.length===6?t.racePicks:detailTokens(entries[0]);h+='<div class="detail-subtitle">Pronósticos de carreras</div><div class="sports-detail">';for(let i=0;i<5;i++)h+='<div><small>Carrera '+(i+1)+' · ganador</small><strong>'+esc(picks[i]??'—')+'</strong></div>';h+='<div><small>5.ª · segundo</small><strong>'+esc(picks[5]??'—')+'</strong></div></div>';
  }
  if(t.price!=null&&g!=='loteria_nacional')h+=detailLine('Importe pagado (opcional)',t.price+' €');
- const result38=checkTicket38(t);if(result38.state==='won'&&Number(result38.prize)>0){h+='<div class="detail-win-panel" role="status"><div class="win-banner-label">★ ¡Boleto premiado! · '+esc(result38.category||'Premio')+'</div><div class="win-banner-amount">'+esc(money38(result38.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles. Comprueba el boleto antes de cobrarlo.</div></div>'}if(Array.isArray(result38.components)){h+='<div class="detail-subtitle">Desglose del premio calculado</div>'+result38.components.map(x=>detailLine(x.label,money38(x.amount))).join('');}if(g==='primitiva'&&String(t.joker||'').trim()&&result38.jokerPending){h+='<div class="status-note" style="margin-top:16px"><strong>Joker · Pendiente de comprobar</strong><p>El premio del Joker todavía no se ha podido verificar con los datos disponibles. Su posible importe no está incluido en el premio mostrado.</p></div>'}h+='<div class="status-note" style="margin-top:18px"><strong>'+esc(ticketStatus(t))+'</strong><p>'+esc(result38.message)+'</p>'+(result38.source?'<small>'+esc(result38.source)+'</small>':'')+'</div>';return h;
+ const result38=checkTicket38(t);if(result38.state==='won'&&Number(result38.prize)>0){h+='<div class="detail-win-panel" role="status"><div class="win-banner-label">★ ¡Boleto premiado! · '+esc(result38.category||'Premio')+'</div><div class="win-banner-amount">'+esc(money38(result38.prize))+'</div><div class="win-banner-caption">Importe bruto calculado según los resultados disponibles. Comprueba el boleto antes de cobrarlo.</div></div>'}if(Array.isArray(result38.components)){h+='<div class="detail-subtitle">Desglose del premio calculado</div>'+result38.components.map(x=>detailLine(x.label,money38(x.amount))).join('');}if(g==='primitiva'&&String(t.joker||'').trim()&&result38.jokerPending){h+='<div class="status-note" style="margin-top:16px"><strong>Joker · Pendiente de comprobar</strong><p>El premio del Joker todavía no se ha podido verificar con los datos disponibles. Su posible importe no está incluido en el premio mostrado.</p></div>'}if(result38.mainPending)h+='<div class="status-note"><strong>La Primitiva · Importe pendiente</strong><p>El importe de la categoría principal no está disponible; el total mostrado es parcial.</p></div>';h+='<div class="status-note" style="margin-top:18px"><strong>'+esc(ticketStatus(t))+'</strong><p>'+esc(result38.message)+'</p>'+(result38.source?'<small>'+esc(result38.source)+'</small>':'')+'</div>';return h;
 }
 function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;currentTicketId=id;document.querySelector('#ticketDetail h1').textContent=gameLabel(t.game)+'.';document.getElementById('specificTicketDetail').innerHTML=detailContent(t);go('ticketDetail')}
 function editCurrentTicket(){const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;if(t.game==='loteria_nacional'){for(const [field,val] of Object.entries({Number:t.number,Series:t.series,Fraction:t.fraction,Date:t.date,Code:t.code||'',Price:t.price}))document.getElementById('edit'+field).value=val;go('editTicket');return}openSpecificEditor(t)}
