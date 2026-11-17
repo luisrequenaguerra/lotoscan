@@ -1,0 +1,26 @@
+
+name: LotoScan - Extraer RTVE 0.85C
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar analizador HTML
+        run: python3 -m pip install beautifulsoup4==4.12.3
+      - name: Extraer muestras RTVE sin publicar
+        run: python3 scripts/extraer_rtve_085c.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-rtve-085c
+          path: |
+            informe_rtve_085c.json
+            informe_rtve_085c.txt
+          if-no-files-found: warn
+          retention-days: 14
