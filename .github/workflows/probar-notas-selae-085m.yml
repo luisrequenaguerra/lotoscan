@@ -1,0 +1,33 @@
+
+name: LotoScan - Probar PDFs oficiales SELAE 0.85M
+on:
+  workflow_dispatch:
+    inputs:
+      quiniela_url:
+        description: 'URL HTTPS exacta de nota de La Quiniela (opcional)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
+        run: python3 -m pip install beautifulsoup4==4.12.3 pypdf==5.4.0
+      - name: Comprobar documentos oficiales
+        env:
+          QUINIELA_URL: ${{ inputs.quiniela_url }}
+        run: python3 scripts/probar_notas_selae_085m.py --quiniela-url "$QUINIELA_URL"
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085m
+          path: |
+            informe_selae_085m.json
+            informe_selae_085m.txt
+          if-no-files-found: warn
+          retention-days: 14
