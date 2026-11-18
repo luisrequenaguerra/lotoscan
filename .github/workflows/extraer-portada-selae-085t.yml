@@ -1,0 +1,29 @@
+
+name: LotoScan - Extraer portada SELAE 0.85T
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar analizador
+        run: python -m pip install beautifulsoup4==4.12.3
+      - name: Extraer candidatos sin publicar
+        run: python scripts/extraer_portada_selae_085t.py
+      - name: Adjuntar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085t
+          path: |
+            informe_selae_085t.json
+            informe_selae_085t.txt
+          if-no-files-found: error
+          retention-days: 14
