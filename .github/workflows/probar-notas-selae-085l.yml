@@ -1,0 +1,33 @@
+
+name: LotoScan - Probar notas SELAE 0.85L
+on:
+  workflow_dispatch:
+    inputs:
+      nota_url:
+        description: 'URL HTTPS de una nota SELAE (opcional)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
+        run: python3 -m pip install beautifulsoup4==4.12.3 pypdf==5.4.0
+      - name: Probar acceso a notas oficiales sin publicar
+        env:
+          NOTA_URL: ${{ inputs.nota_url }}
+        run: python3 scripts/probar_notas_selae_085l.py --nota-url "$NOTA_URL"
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085l
+          path: |
+            informe_selae_085l.json
+            informe_selae_085l.txt
+          if-no-files-found: warn
+          retention-days: 14
