@@ -210,6 +210,48 @@
           48
         ],
         "reintegro": 9
+      },
+      "2026-11-17": {
+        "categorias": {
+          "3": {
+            "acertantes": 89926,
+            "importe_centimos": 400
+          },
+          "4": {
+            "acertantes": 5004,
+            "importe_centimos": 2390
+          },
+          "5": {
+            "acertantes": 91,
+            "importe_centimos": 87602
+          },
+          "5+C": {
+            "acertantes": 2,
+            "importe_centimos": 7971738
+          },
+          "6": {
+            "acertantes": 1,
+            "importe_centimos": 153326218
+          },
+          "R": {
+            "acertantes": 516956,
+            "importe_centimos": 50
+          }
+        },
+        "complementario": 11,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-17",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "numero_sorteo": 321,
+        "numeros": [
+          16,
+          18,
+          22,
+          28,
+          29,
+          34
+        ],
+        "reintegro": 0
       }
     },
     "eurodreams": {
@@ -281,6 +323,38 @@
           32,
           41,
           45
+        ]
+      },
+      "2026-11-17": {
+        "categorias": {
+          "1+2": 939,
+          "2+0": 494,
+          "2+1": 727,
+          "2+2": 2012,
+          "3+0": 1275,
+          "3+1": 1616,
+          "3+2": 8026,
+          "4+0": 5290,
+          "4+1": 19027,
+          "4+2": 177222,
+          "5+0": 2162103,
+          "5+1": 15418277,
+          "5+2": null
+        },
+        "el_millon": "HNL54184",
+        "estado": "pendiente_verificacion_independiente",
+        "estrellas": [
+          1,
+          2
+        ],
+        "fecha": "2026-11-17",
+        "fuente": "comprobarloteria.com (informe 0.48)",
+        "numeros": [
+          35,
+          37,
+          38,
+          46,
+          48
         ]
       }
     },
