@@ -1,0 +1,27 @@
+
+name: LotoScan - Diagnosticar portada SELAE 0.85S
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Leer portada oficial sin publicar
+        run: python scripts/diagnosticar_portada_selae_085s.py
+      - name: Adjuntar informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085s
+          path: |
+            informe_selae_085s.json
+            informe_selae_085s.txt
+          if-no-files-found: error
+          retention-days: 14
