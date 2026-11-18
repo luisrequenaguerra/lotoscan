@@ -1,0 +1,33 @@
+
+name: LotoScan - Diagnosticar notas SELAE 0.85O
+on:
+  workflow_dispatch:
+    inputs:
+      quiniela_url:
+        description: 'URL oficial de la nota o jornada de Quiniela (opcional)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar analizador HTML
+        run: python3 -m pip install beautifulsoup4==4.12.3
+      - name: Investigar referencias sin publicar
+        env:
+          QUINIELA_URL: ${{ inputs.quiniela_url }}
+        run: python3 scripts/diagnosticar_notas_selae_085o.py --quiniela-url "$QUINIELA_URL"
+      - name: Guardar informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085o
+          path: |
+            informe_selae_085o.json
+            informe_selae_085o.txt
+          if-no-files-found: warn
+          retention-days: 14
