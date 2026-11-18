@@ -1,0 +1,41 @@
+
+name: LotoScan - Diagnostico SELAE 0.85X
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install beautifulsoup4==4.12.3
+
+      - name: Ejecutar diagnostico 0.85X
+        run: |
+          python scripts/extraer_resultados_selae_085x.py
+
+      - name: Guardar informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085x
+          path: |
+            informe_selae_085x.json
+            informe_selae_085x.txt
+          if-no-files-found: error
+          retention-days: 14
