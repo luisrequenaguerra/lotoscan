@@ -1,0 +1,26 @@
+
+name: LotoScan - SELAE diez juegos 0.85N
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
+        run: python3 -m pip install beautifulsoup4==4.12.3 pypdf==5.4.0
+      - name: Analizar diez juegos sin publicar
+        run: python3 scripts/diagnosticar_diez_juegos_085n.py
+      - name: Guardar informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085n-10
+          path: |
+            informe_selae_085n_10.json
+            informe_selae_085n_10.txt
+          if-no-files-found: warn
+          retention-days: 14
