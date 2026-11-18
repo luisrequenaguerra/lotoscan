@@ -1,0 +1,31 @@
+
+name: LotoScan - Rastrear resultados SELAE 0.85R
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  rastreo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar navegador
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Capturar peticiones reales y enlaces visibles
+        run: python scripts/rastrear_resultados_selae_085r.py
+      - name: Adjuntar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-085r
+          path: |
+            informe_selae_085r.json
+            informe_selae_085r.txt
+          if-no-files-found: error
+          retention-days: 14
