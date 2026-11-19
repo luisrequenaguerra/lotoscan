@@ -1,0 +1,32 @@
+
+name: LotoScan - Extraer PDF SELAE 0.86B
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extraccion:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar dependencias
+        run: python -m pip install beautifulsoup4==4.12.3 pypdf==5.4.0
+      - name: Extraer resultados candidatos desde PDF
+        run: python scripts/extraer_pdf_selae_086b.py
+      - name: Guardar informes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-pdf-086b
+          path: |
+            informe_pdf_086b.json
+            informe_pdf_086b.txt
+          if-no-files-found: error
+          retention-days: 14
