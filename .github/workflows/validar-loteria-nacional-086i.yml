@@ -1,0 +1,32 @@
+name: LotoScan - Validar 100000 decimos Nacional 0.86I
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar dependencias
+        run: python -m pip install beautifulsoup4==4.12.3 pypdf==5.4.0
+      - name: Comprobar los 100000 numeros de cada sorteo
+        run: python scripts/validar_loteria_nacional_086i.py
+      - name: Subir informes y comprobaciones
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-nacional-086i
+          path: |
+            informe_nacional_086i.json
+            informe_nacional_086i.txt
+            diagnostico_nacional_086i/
+          if-no-files-found: warn
+          retention-days: 14
