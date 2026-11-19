@@ -1,0 +1,46 @@
+name: LotoScan - Sondeo diario oficial SELAE 0.87F
+on:
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: 'Dias naturales a consultar (1-14, por defecto 4)'
+        required: false
+        default: '4'
+        type: string
+      fecha_fin:
+        description: 'Fecha final AAAAMMDD; vacio = hoy en Madrid'
+        required: false
+        type: string
+  # Sondeo diario en modo diagnostico; no publica resultados.
+  schedule:
+    - cron: '20 6,12,18,23 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: lotoscan-sondeo-selae-087f
+  cancel-in-progress: false
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Consultar resultados oficiales (sin publicar)
+        env:
+          DIAS: ${{ inputs.dias || '4' }}
+          FECHA_FIN: ${{ inputs.fecha_fin || '' }}
+        run: python3 scripts/actualizar_resultados_selae_087f.py --dias "$DIAS" --fecha-fin "$FECHA_FIN"
+      - name: Guardar informe y candidatos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087f
+          path: |
+            informe_selae_087f.json
+            informe_selae_087f.txt
+            diagnostico_selae_087f/
+          if-no-files-found: warn
+          retention-days: 14
