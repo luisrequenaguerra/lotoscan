@@ -1,0 +1,35 @@
+name: LotoScan - Probar endpoints oficiales SELAE 0.87E
+on:
+  workflow_dispatch:
+    inputs:
+      fecha:
+        description: 'Fecha AAAAMMDD opcional para todas las consultas historicas (vacio = fecha conocida por juego)'
+        required: false
+        type: string
+  # Sin programacion hasta validar el origen y contenido de los datos.
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Consultar servicios oficiales
+        env:
+          FECHA: ${{ inputs.fecha }}
+        run: python3 scripts/probar_endpoints_selae_087e.py --fecha "$FECHA"
+      - name: Subir informe y respuestas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087e
+          path: |
+            informe_selae_087e.json
+            informe_selae_087e.txt
+            diagnostico_selae_087e/
+          if-no-files-found: warn
+          retention-days: 14
