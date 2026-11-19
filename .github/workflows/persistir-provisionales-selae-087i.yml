@@ -1,0 +1,67 @@
+name: LotoScan - Historico provisional SELAE 0.87I
+on:
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: 'Dias que revisar (1-14)'
+        required: false
+        default: '4'
+        type: string
+      escribir:
+        description: 'Guardar historico PROVISIONAL en repositorio'
+        required: false
+        default: true
+        type: boolean
+  schedule:
+    - cron: '20 6,12,18,23 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-historico-provisional
+  cancel-in-progress: false
+jobs:
+  provisional:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Consultar y validar SELAE
+        env:
+          DIAS: ${{ inputs.dias || '4' }}
+          ESCRIBIR: ${{ github.event_name == 'schedule' || inputs.escribir == true }}
+        run: |
+          if [ "$ESCRIBIR" = 'true' ]; then
+            python3 scripts/persistir_provisionales_selae_087i.py --dias "$DIAS" --escribir
+          else
+            python3 scripts/persistir_provisionales_selae_087i.py --dias "$DIAS"
+          fi
+      - name: Subir informe de auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087i
+          path: |
+            informe_selae_087i.json
+            informe_selae_087i.txt
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Guardar solo historico provisional
+        env:
+          ESCRIBIR: ${{ github.event_name == 'schedule' || inputs.escribir == true }}
+        if: env.ESCRIBIR == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- datos/selae_provisional/historico_provisional.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'LotoScan: actualizar resultados provisionales SELAE [skip ci]'
+            git push
+          else
+            echo 'Sin cambios en el historico provisional'
+          fi
