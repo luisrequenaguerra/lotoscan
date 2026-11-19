@@ -1,0 +1,43 @@
+name: LotoScan - Simular historico oficial SELAE 0.87G
+on:
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: 'Dias a consultar (1-14)'
+        required: false
+        default: '4'
+        type: string
+      fecha_fin:
+        description: 'Fecha final AAAAMMDD (vacio=hoy en Madrid)'
+        required: false
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: lotoscan-simulacion-087g
+  cancel-in-progress: false
+jobs:
+  simulacion:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Consultar SELAE y simular incorporacion (sin escritura)
+        env:
+          DIAS: ${{ inputs.dias || '4' }}
+          FECHA_FIN: ${{ inputs.fecha_fin || '' }}
+        run: python3 scripts/simular_historico_selae_087g.py --dias "$DIAS" --fecha-fin "$FECHA_FIN"
+      - name: Guardar diagnosticos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087g
+          path: |
+            simulacion_selae_087g/
+            informe_selae_087f.json
+            informe_selae_087f.txt
+          if-no-files-found: warn
+          retention-days: 14
