@@ -1,0 +1,40 @@
+name: LotoScan - Auditar JSON oficiales SELAE 0.87H
+on:
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: 'Dias naturales (1-14, incluido hoy)'
+        required: false
+        default: '4'
+        type: string
+      fecha_fin:
+        description: 'Fecha final AAAAMMDD (vacio = hoy en Madrid)'
+        required: false
+        default: ''
+        type: string
+permissions:
+  contents: read
+jobs:
+  auditoria:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Auditar respuestas oficiales sin publicar
+        env:
+          DIAS: ${{ inputs.dias || '4' }}
+          FECHA_FIN: ${{ inputs.fecha_fin || '' }}
+        run: python3 scripts/validar_resultados_selae_087h.py --dias "$DIAS" --fecha-fin "$FECHA_FIN"
+      - name: Guardar auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087h
+          path: |
+            informe_selae_087h.json
+            informe_selae_087h.txt
+          if-no-files-found: warn
+          retention-days: 14
