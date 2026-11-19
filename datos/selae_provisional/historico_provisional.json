@@ -1,0 +1,1253 @@
+{
+  "esquema": 1,
+  "tipo": "archivo_provisional_no_publicable",
+  "registros": [
+    {
+      "juego": "BONO",
+      "id_sorteo": "1328801320",
+      "fecha": "2026-11-16",
+      "revisiones": [
+        {
+          "sha256": "76fd8797abe6b1e1da0ea8dcc2575f92f1f6343160fc1803da7fca925120c81e",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-16 21:32:00",
+            "dia_semana": "lunes",
+            "id_sorteo": "1328801320",
+            "game_id": "BONO",
+            "anyo": "2026",
+            "premio_bote": "1000000",
+            "cdc": "13288",
+            "apuestas": "4691392",
+            "recaudacion": "2345696",
+            "combinacion": "11 - 15 - 25 - 27 - 45 - 48 C(12) R(9)",
+            "premios": "1290132",
+            "fondo_bote": "709982",
+            "escrutinio": [
+              {
+                "tipo": "1ª  (6 Aciertos) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "2ª  (5 Aciertos + C) ",
+                "categoria": 2,
+                "premio": "69969,92",
+                "ganadores": "2"
+              },
+              {
+                "tipo": "3ª  (5 Aciertos) ",
+                "categoria": 3,
+                "premio": "823,18",
+                "ganadores": "85"
+              },
+              {
+                "tipo": "4ª  (4 Aciertos) ",
+                "categoria": 4,
+                "premio": "21,12",
+                "ganadores": "4970"
+              },
+              {
+                "tipo": "5ª  (3 Aciertos) ",
+                "categoria": 5,
+                "premio": "4",
+                "ganadores": "88966"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 6,
+                "premio": "0,5",
+                "ganadores": "470462"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "EDMS",
+      "id_sorteo": "1328814092",
+      "fecha": "2026-11-16",
+      "revisiones": [
+        {
+          "sha256": "02b7b6523cff5f7f91f55ae6443f894703aa41720df840b5df062bc7e4a9a0d4",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-16 21:01:00",
+            "dia_semana": "lunes",
+            "id_sorteo": "1328814092",
+            "game_id": "EDMS",
+            "anyo": "2026",
+            "premio_bote": "50000",
+            "cdc": "13288",
+            "apuestas": null,
+            "recaudacion": null,
+            "combinacion": "02 - 04 - 11 - 14 - 17 - 18 C(2)",
+            "premios": null,
+            "fondo_bote": null,
+            "escrutinio": [
+              {
+                "tipo": "1ª       6      +      1",
+                "premio": "0",
+                "ganadores": "0",
+                "ganadores_eu": "0"
+              },
+              {
+                "tipo": "2ª       6      +      0",
+                "premio": "120000",
+                "ganadores": "0",
+                "ganadores_eu": "1"
+              },
+              {
+                "tipo": "3ª       5      +     0/1",
+                "premio": "475,8",
+                "ganadores": "30",
+                "ganadores_eu": "136"
+              },
+              {
+                "tipo": "4ª       4      +     0/1",
+                "premio": "32,64",
+                "ganadores": "1243",
+                "ganadores_eu": "5557"
+              },
+              {
+                "tipo": "5ª       3      +     0/1",
+                "premio": "4,54",
+                "ganadores": "19047",
+                "ganadores_eu": "83897"
+              },
+              {
+                "tipo": "6ª       2      +     0/1",
+                "premio": "2,5",
+                "ganadores": "111477",
+                "ganadores_eu": "479337"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "LAPR",
+      "id_sorteo": "1328804138",
+      "fecha": "2026-11-16",
+      "revisiones": [
+        {
+          "sha256": "496c29c6e75e226c5d9e2116e31eb253c1f8e1ec6fe67a499140eb7d7d8eefe0",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-16 21:42:00",
+            "dia_semana": "lunes",
+            "id_sorteo": "1328804138",
+            "game_id": "LAPR",
+            "anyo": "2026",
+            "premio_bote": "11300000",
+            "cdc": "13288",
+            "apuestas": "6197289",
+            "recaudacion": "6197289",
+            "combinacion": "08 - 09 - 17 - 34 - 43 - 48 C(29) R(0)",
+            "premios": "3408508",
+            "fondo_bote": "10330468",
+            "joker": {
+              "gameid": "LAJO",
+              "relsorteoid_asociado": "1328810138",
+              "combinacion": "6436393",
+              "bote_joker": 1000000,
+              "activo": "1"
+            },
+            "escrutinio": [
+              {
+                "tipo": "Especial (6 Aciertos + R) ",
+                "categoria": 1,
+                "premio": "10925401,24",
+                "ganadores": "1"
+              },
+              {
+                "tipo": "1ª (6 Aciertos) ",
+                "categoria": 2,
+                "premio": "733749,98",
+                "ganadores": "1"
+              },
+              {
+                "tipo": "2ª (5 Aciertos + C) ",
+                "categoria": 3,
+                "premio": "118986,48",
+                "ganadores": "1"
+              },
+              {
+                "tipo": "3ª (5 Aciertos) ",
+                "categoria": 4,
+                "premio": "2451,03",
+                "ganadores": "89"
+              },
+              {
+                "tipo": "4ª (4 Aciertos) ",
+                "categoria": 5,
+                "premio": "58,06",
+                "ganadores": "5465"
+              },
+              {
+                "tipo": "5ª (3 Aciertos) ",
+                "categoria": 6,
+                "premio": "8",
+                "ganadores": "100709"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 7,
+                "premio": "1",
+                "ganadores": "526031"
+              }
+            ],
+            "escrutinio_joker": [
+              {
+                "tipo": "1ª (todas las cifras)",
+                "ganadores": 0,
+                "premio": "1000000",
+                "orden_escrutinio": "1"
+              },
+              {
+                "tipo": "2ª (6 primeras o últimas cifras)",
+                "ganadores": 0,
+                "premio": "10000",
+                "orden_escrutinio": "2"
+              },
+              {
+                "tipo": "3ª (5 primeras o últimas cifras)",
+                "ganadores": 4,
+                "premio": "1000",
+                "orden_escrutinio": "3"
+              },
+              {
+                "tipo": "4ª (4 primeras o últimas cifras)",
+                "ganadores": 73,
+                "premio": "300",
+                "orden_escrutinio": "4"
+              },
+              {
+                "tipo": "5ª (3 primeras o últimas cifras)",
+                "ganadores": 730,
+                "premio": "50",
+                "orden_escrutinio": "5"
+              },
+              {
+                "tipo": "6ª (2 primeras o últimas cifras)",
+                "ganadores": 7856,
+                "premio": "5",
+                "orden_escrutinio": "6"
+              },
+              {
+                "tipo": "7ª (primera o última cifra)",
+                "ganadores": 78582,
+                "premio": "1",
+                "orden_escrutinio": "7"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "BONO",
+      "id_sorteo": "1328901321",
+      "fecha": "2026-11-17",
+      "revisiones": [
+        {
+          "sha256": "bc213dcfa4d16f68c714b0dca98a5914fba69d2fc61d13cd99302334a61145f8",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-17 21:32:00",
+            "dia_semana": "martes",
+            "id_sorteo": "1328901321",
+            "game_id": "BONO",
+            "anyo": "2026",
+            "premio_bote": "1400000",
+            "cdc": "13289",
+            "apuestas": "5141679",
+            "recaudacion": "2570839",
+            "combinacion": "16 - 18 - 22 - 28 - 29 - 34 C(11) R(0)",
+            "premios": "1413961",
+            "fondo_bote": "1094816",
+            "escrutinio": [
+              {
+                "tipo": "1ª  (6 Aciertos) ",
+                "categoria": 1,
+                "premio": "1533262,18",
+                "ganadores": "1"
+              },
+              {
+                "tipo": "2ª  (5 Aciertos + C) ",
+                "categoria": 2,
+                "premio": "79717,38",
+                "ganadores": "2"
+              },
+              {
+                "tipo": "3ª  (5 Aciertos) ",
+                "categoria": 3,
+                "premio": "876,02",
+                "ganadores": "91"
+              },
+              {
+                "tipo": "4ª  (4 Aciertos) ",
+                "categoria": 4,
+                "premio": "23,9",
+                "ganadores": "5004"
+              },
+              {
+                "tipo": "5ª  (3 Aciertos) ",
+                "categoria": 5,
+                "premio": "4",
+                "ganadores": "89926"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 6,
+                "premio": "0,5",
+                "ganadores": "516956"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "EMIL",
+      "id_sorteo": "1328902092",
+      "fecha": "2026-11-17",
+      "revisiones": [
+        {
+          "sha256": "a9d238d6f0b4fe2cdefb3e912410b657bb12d3685e5d741459adb9953256476e",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-17 21:16:00",
+            "dia_semana": "martes",
+            "id_sorteo": "1328902092",
+            "game_id": "EMIL",
+            "anyo": "2026",
+            "premio_bote": "26000000",
+            "cdc": "13289",
+            "apuestas": "3439504",
+            "recaudacion": "7566908",
+            "recaudacion_europea": "35444314",
+            "combinacion": " 35 - 37 - 38 - 46 - 48 - 01 - 02",
+            "premios": "3783454",
+            "fondo_bote": "17000000",
+            "escrutinio": [
+              {
+                "tipo": "1ª       5      +      2",
+                "premio": "0",
+                "ganadores": "0",
+                "ganadores_eu": "0",
+                "multiplicador": null
+              },
+              {
+                "tipo": "2ª       5      +      1",
+                "premio": "154182,77",
+                "ganadores": "0",
+                "ganadores_eu": "3",
+                "multiplicador": null
+              },
+              {
+                "tipo": "3ª       5      +      0",
+                "premio": "21621,03",
+                "ganadores": "0",
+                "ganadores_eu": "5",
+                "multiplicador": null
+              },
+              {
+                "tipo": "4ª       4      +      2",
+                "premio": "1772,22",
+                "ganadores": "5",
+                "ganadores_eu": "19",
+                "multiplicador": null
+              },
+              {
+                "tipo": "5ª       4      +      1",
+                "premio": "190,27",
+                "ganadores": "71",
+                "ganadores_eu": "326",
+                "multiplicador": null
+              },
+              {
+                "tipo": "6ª       3      +      2",
+                "premio": "80,26",
+                "ganadores": "221",
+                "ganadores_eu": "817",
+                "multiplicador": null
+              },
+              {
+                "tipo": "7ª       4      +      0",
+                "premio": "52,9",
+                "ganadores": "222",
+                "ganadores_eu": "871",
+                "multiplicador": null
+              },
+              {
+                "tipo": "8ª       2      +      2",
+                "premio": "20,12",
+                "ganadores": "2645",
+                "ganadores_eu": "11451",
+                "multiplicador": null
+              },
+              {
+                "tipo": "9ª       3      +      1",
+                "premio": "16,16",
+                "ganadores": "3487",
+                "ganadores_eu": "15904",
+                "multiplicador": null
+              },
+              {
+                "tipo": "10ª       3      +      0",
+                "premio": "12,75",
+                "ganadores": "8142",
+                "ganadores_eu": "37515",
+                "multiplicador": null
+              },
+              {
+                "tipo": "11ª       1      +      2",
+                "premio": "9,39",
+                "ganadores": "13964",
+                "ganadores_eu": "61735",
+                "multiplicador": null
+              },
+              {
+                "tipo": "12ª       2      +      1",
+                "premio": "7,27",
+                "ganadores": "54043",
+                "ganadores_eu": "251063",
+                "multiplicador": null
+              },
+              {
+                "tipo": "13ª       2      +      0",
+                "premio": "4,94",
+                "ganadores": "128220",
+                "ganadores_eu": "595144",
+                "multiplicador": null
+              }
+            ],
+            "millon": {
+              "gameid": "LAMI",
+              "relsorteoid_asociado": "1328911092",
+              "combinacion": "HNL54184",
+              "importe": 1000000,
+              "activo": "1",
+              "contenidosRelacionados": {
+                "noticias": [
+                  {
+                    "tituloRelacion": "Premio Automatico",
+                    "tituloContenido": "Premio El Millón de Euromillones del 17 de noviembre de 2026",
+                    "urlContenido": "/premios/premio-el-millon-de-euromillones-del-17-de-noviembre-de-2026"
+                  }
+                ],
+                "enlaces": [],
+                "puntosDeVenta": [],
+                "documentos": [],
+                "imagenes": [],
+                "preguntasFrecuentes": [],
+                "paginasLibres": []
+              }
+            },
+            "escrutinio_millon": [
+              {
+                "tipo": "El Millón",
+                "ganadores": 1,
+                "premio": "1000000",
+                "orden_escrutinio": "1"
+              }
+            ],
+            "lluvia": null,
+            "escrutinio_lluvia": null,
+            "mw_categoria_inicial": null,
+            "mw_categoria_final": null,
+            "mw_multiplicador": null
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "QGOL",
+      "id_sorteo": "1328907077",
+      "fecha": "2026-11-17",
+      "revisiones": [
+        {
+          "sha256": "9de2a6a090b8a0e7f22bd9d4c00e72ab260e8081aa2b80ad44490f74707e8047",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-17 22:44:00",
+            "dia_semana": "martes",
+            "id_sorteo": "1328907077",
+            "game_id": "QGOL",
+            "anyo": "2026",
+            "premio_bote": "265000",
+            "cdc": "13290",
+            "apuestas": "117806",
+            "recaudacion": "117806",
+            "combinacion": " 21 - 10 - 2M - 11 - 11 - 2M",
+            "premios": "64793",
+            "fondo_bote": "255700",
+            "escrutinio": [
+              {
+                "tipo": "1ª  (6 Aciertos) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "2ª  (5 Aciertos) ",
+                "categoria": 2,
+                "premio": "1767,09",
+                "ganadores": "6"
+              },
+              {
+                "tipo": "3ª  (4 Aciertos) ",
+                "categoria": 3,
+                "premio": "32,95",
+                "ganadores": "286"
+              },
+              {
+                "tipo": "4ª  (3 Aciertos) ",
+                "categoria": 4,
+                "premio": "2,82",
+                "ganadores": "3337"
+              },
+              {
+                "tipo": "5ª  (2 Aciertos) ",
+                "categoria": 5,
+                "premio": "1,33",
+                "ganadores": "17667"
+              }
+            ],
+            "partidos": [
+              {
+                "local": "Bosnia Herzegovina",
+                "visitante": "Rumanía",
+                "signo": "2-1",
+                "marcador": "2 - 1"
+              },
+              {
+                "local": "Ucrania",
+                "visitante": "Georgia",
+                "signo": "1-0",
+                "marcador": "1 - 0"
+              },
+              {
+                "local": "Gales",
+                "visitante": "Portugal",
+                "signo": "2-M",
+                "marcador": "2 - 3"
+              },
+              {
+                "local": "Hungría",
+                "visitante": "Irlanda Del Norte",
+                "signo": "1-1",
+                "marcador": "1 - 1"
+              },
+              {
+                "local": "Polonia",
+                "visitante": "Suecia",
+                "signo": "1-1",
+                "marcador": "1 - 1"
+              },
+              {
+                "local": "Dinamarca",
+                "visitante": "Noruega",
+                "signo": "2-M",
+                "marcador": "2 - 3"
+              }
+            ],
+            "temporada": "2026-2027",
+            "jornada": "24"
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "BONO",
+      "id_sorteo": "1329001322",
+      "fecha": "2026-11-18",
+      "revisiones": [
+        {
+          "sha256": "63b40fb6e8a06d79c04c0538096c9744e5b5f3443c3791cecd01994b0b6c3e3a",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-18 21:33:00",
+            "dia_semana": "miércoles",
+            "id_sorteo": "1329001322",
+            "game_id": "BONO",
+            "anyo": "2026",
+            "premio_bote": "0",
+            "cdc": "13290",
+            "apuestas": "4615924",
+            "recaudacion": "2307962",
+            "combinacion": "04 - 05 - 09 - 15 - 37 - 44 C(24) R(7)",
+            "premios": "1269379",
+            "fondo_bote": "0",
+            "escrutinio": [
+              {
+                "tipo": "1ª  (6 Aciertos) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "2ª  (5 Aciertos + C) ",
+                "categoria": 2,
+                "premio": "141021,38",
+                "ganadores": "1"
+              },
+              {
+                "tipo": "3ª  (5 Aciertos) ",
+                "categoria": 3,
+                "premio": "903,98",
+                "ganadores": "78"
+              },
+              {
+                "tipo": "4ª  (4 Aciertos) ",
+                "categoria": 4,
+                "premio": "23,76",
+                "ganadores": "4452"
+              },
+              {
+                "tipo": "5ª  (3 Aciertos) ",
+                "categoria": 5,
+                "premio": "4",
+                "ganadores": "83369"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 6,
+                "premio": "0,5",
+                "ganadores": "462103"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "LAQU",
+      "id_sorteo": "1329006067",
+      "fecha": "2026-11-18",
+      "revisiones": [
+        {
+          "sha256": "81e182d7d7136aa9be58438ce5eba9e87e490756d451a3fa5ab0c3bbe5b431c9",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-18 22:54:00",
+            "dia_semana": "miércoles",
+            "id_sorteo": "1329006067",
+            "game_id": "LAQU",
+            "anyo": "2026",
+            "premio_bote": "0",
+            "cdc": "13290",
+            "apuestas": "829201",
+            "recaudacion": "621900",
+            "combinacion": "1 - 1 - 2 - X - X - 1 - 1 - 2 - 1 - 1 - 2 - 2 - 1 - 2 - 2M",
+            "premios": "342045",
+            "fondo_bote": "0",
+            "escrutinio": [
+              {
+                "tipo": "Pleno al 15 ",
+                "categoria": 1,
+                "premio": "3331,61",
+                "ganadores": "14"
+              },
+              {
+                "tipo": "1ª (14 Aciertos) ",
+                "categoria": 2,
+                "premio": "372,67",
+                "ganadores": "267"
+              },
+              {
+                "tipo": "2ª (13 Aciertos) ",
+                "categoria": 3,
+                "premio": "9,65",
+                "ganadores": "4832"
+              },
+              {
+                "tipo": "3ª (12 Aciertos) ",
+                "categoria": 4,
+                "premio": "3,07",
+                "ganadores": "30425"
+              },
+              {
+                "tipo": "4ª (11 Aciertos) ",
+                "categoria": 5,
+                "premio": "0",
+                "ganadores": "90814"
+              },
+              {
+                "tipo": "5ª (10 Aciertos) ",
+                "categoria": 6,
+                "premio": "0",
+                "ganadores": "155685"
+              }
+            ],
+            "partidos": [
+              {
+                "local": "Bosnia Herzegovina (m)",
+                "visitante": "Rumanía (m)",
+                "signo": "1 ",
+                "marcador": "2 - 1"
+              },
+              {
+                "local": "Ucrania (m)",
+                "visitante": "Georgia (m)",
+                "signo": "1 ",
+                "marcador": "1 - 0"
+              },
+              {
+                "local": "Gales (m)",
+                "visitante": "Portugal (m)",
+                "signo": "2 ",
+                "marcador": "2 - 3"
+              },
+              {
+                "local": "Hungría (m)",
+                "visitante": "Irlanda Del Norte (m)",
+                "signo": "X ",
+                "marcador": "1 - 1"
+              },
+              {
+                "local": "Polonia (m)",
+                "visitante": "Suecia (m)",
+                "signo": "X ",
+                "marcador": "1 - 1"
+              },
+              {
+                "local": "República De Irlanda (m)",
+                "visitante": "Kosovo (m)",
+                "signo": "1 ",
+                "marcador": "3 - 0"
+              },
+              {
+                "local": "Real Madrid (f)",
+                "visitante": "Inter De Milán (f)",
+                "signo": "1 ",
+                "marcador": "3 - 1"
+              },
+              {
+                "local": "Hacken (f)",
+                "visitante": "Manchester City (f)",
+                "signo": "2 ",
+                "marcador": "0 - 2"
+              },
+              {
+                "local": "Chelsea (f)",
+                "visitante": "Psg (f)",
+                "signo": "1 ",
+                "marcador": "1 - 0"
+              },
+              {
+                "local": "Juventus (f)",
+                "visitante": "Leuven (f)",
+                "signo": "1 ",
+                "marcador": "2 - 0"
+              },
+              {
+                "local": "Austria De Viena (f)",
+                "visitante": "Bayern De Múnich (f)",
+                "signo": "2 ",
+                "marcador": "0 - 4"
+              },
+              {
+                "local": "Arsenal (f)",
+                "visitante": "Ol Lyonnes (f)",
+                "signo": "2 ",
+                "marcador": "0 - 2"
+              },
+              {
+                "local": "Barcelona (f)",
+                "visitante": "Servette (f)",
+                "signo": "1 ",
+                "marcador": "6 - 0"
+              },
+              {
+                "local": "Benfica (f)",
+                "visitante": "Roma (f)",
+                "signo": "2 ",
+                "marcador": "2 - 3"
+              },
+              {
+                "local": "Dinamarca (m)",
+                "visitante": "Noruega (m)",
+                "signo": "2-M",
+                "marcador": "2 - 3"
+              }
+            ],
+            "temporada": "2026-2027",
+            "jornada": "22",
+            "elige8": {
+              "gameid": "ELG8",
+              "relsorteoid_asociado": "1329013067",
+              "activo": "1"
+            },
+            "escrutinioElige8": [
+              {
+                "tipo": "8 Acertados 8 ",
+                "categoria": 1,
+                "premio": "2,85",
+                "ganadores": "5390"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "BONO",
+      "id_sorteo": "1329101323",
+      "fecha": "2026-11-19",
+      "revisiones": [
+        {
+          "sha256": "97127f175a9221c8f298edcf8b904f97fb7b6a0fef43b9b8bef930e843d48914",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-19 21:32:00",
+            "dia_semana": "jueves",
+            "id_sorteo": "1329101323",
+            "game_id": "BONO",
+            "anyo": "2026",
+            "premio_bote": "700000",
+            "cdc": "13291",
+            "apuestas": "4856395",
+            "recaudacion": "2428197",
+            "combinacion": "10 - 24 - 34 - 36 - 41 - 46 C(16) R(2)",
+            "premios": "1335508",
+            "fondo_bote": "387808",
+            "escrutinio": [
+              {
+                "tipo": "1ª  (6 Aciertos) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "2ª  (5 Aciertos + C) ",
+                "categoria": 2,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "3ª  (5 Aciertos) ",
+                "categoria": 3,
+                "premio": "3013,58",
+                "ganadores": "77"
+              },
+              {
+                "tipo": "4ª  (4 Aciertos) ",
+                "categoria": 4,
+                "premio": "27,52",
+                "ganadores": "4216"
+              },
+              {
+                "tipo": "5ª  (3 Aciertos) ",
+                "categoria": 5,
+                "premio": "4",
+                "ganadores": "79801"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 6,
+                "premio": "0,5",
+                "ganadores": "485215"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "EDMS",
+      "id_sorteo": "1329114093",
+      "fecha": "2026-11-19",
+      "revisiones": [
+        {
+          "sha256": "a8bd99ce6ca74aebc35f8326d1735d585d3404be87fd362c4ebe3596f79ab56c",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-19 21:07:00",
+            "dia_semana": "jueves",
+            "id_sorteo": "1329114093",
+            "game_id": "EDMS",
+            "anyo": "2026",
+            "premio_bote": "50000",
+            "cdc": "13291",
+            "apuestas": null,
+            "recaudacion": null,
+            "combinacion": "05 - 08 - 18 - 24 - 27 - 39 C(2)",
+            "premios": null,
+            "fondo_bote": null,
+            "escrutinio": [
+              {
+                "tipo": "1ª       6      +      1",
+                "premio": "0",
+                "ganadores": "0",
+                "ganadores_eu": "0"
+              },
+              {
+                "tipo": "2ª       6      +      0",
+                "premio": "120000",
+                "ganadores": "0",
+                "ganadores_eu": "2"
+              },
+              {
+                "tipo": "3ª       5      +     0/1",
+                "premio": "421,85",
+                "ganadores": "36",
+                "ganadores_eu": "161"
+              },
+              {
+                "tipo": "4ª       4      +     0/1",
+                "premio": "28,53",
+                "ganadores": "1695",
+                "ganadores_eu": "6674"
+              },
+              {
+                "tipo": "5ª       3      +     0/1",
+                "premio": "4,49",
+                "ganadores": "22510",
+                "ganadores_eu": "88987"
+              },
+              {
+                "tipo": "6ª       2      +     0/1",
+                "premio": "2,5",
+                "ganadores": "126662",
+                "ganadores_eu": "494813"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "LAPR",
+      "id_sorteo": "1329104139",
+      "fecha": "2026-11-19",
+      "revisiones": [
+        {
+          "sha256": "e3b12580360ff22bdd120b807c7796f0f89d4ecb6729a89c4803a54e565aaa06",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-19 21:42:00",
+            "dia_semana": "jueves",
+            "id_sorteo": "1329104139",
+            "game_id": "LAPR",
+            "anyo": "2026",
+            "premio_bote": "0",
+            "cdc": "13291",
+            "apuestas": "9726491",
+            "recaudacion": "9726491",
+            "combinacion": "20 - 23 - 36 - 41 - 44 - 49 C(34) R(3)",
+            "premios": "5349570",
+            "fondo_bote": "0",
+            "joker": {
+              "gameid": "LAJO",
+              "relsorteoid_asociado": "1329110139",
+              "combinacion": "0452653",
+              "bote_joker": 1000000,
+              "activo": "1"
+            },
+            "escrutinio": [
+              {
+                "tipo": "Especial (6 Aciertos + R) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "1ª (6 Aciertos) ",
+                "categoria": 2,
+                "premio": "1204847,63",
+                "ganadores": "1"
+              },
+              {
+                "tipo": "2ª (5 Aciertos + C) ",
+                "categoria": 3,
+                "premio": "97690,35",
+                "ganadores": "2"
+              },
+              {
+                "tipo": "3ª (5 Aciertos) ",
+                "categoria": 4,
+                "premio": "2960,31",
+                "ganadores": "121"
+              },
+              {
+                "tipo": "4ª (4 Aciertos) ",
+                "categoria": 5,
+                "premio": "73,23",
+                "ganadores": "7115"
+              },
+              {
+                "tipo": "5ª (3 Aciertos) ",
+                "categoria": 6,
+                "premio": "8",
+                "ganadores": "140072"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 7,
+                "premio": "1",
+                "ganadores": "997301"
+              }
+            ],
+            "escrutinio_joker": [
+              {
+                "tipo": "1ª (todas las cifras)",
+                "ganadores": 0,
+                "premio": "1000000",
+                "orden_escrutinio": "1"
+              },
+              {
+                "tipo": "2ª (6 primeras o últimas cifras)",
+                "ganadores": 0,
+                "premio": "10000",
+                "orden_escrutinio": "2"
+              },
+              {
+                "tipo": "3ª (5 primeras o últimas cifras)",
+                "ganadores": 16,
+                "premio": "1000",
+                "orden_escrutinio": "3"
+              },
+              {
+                "tipo": "4ª (4 primeras o últimas cifras)",
+                "ganadores": 102,
+                "premio": "300",
+                "orden_escrutinio": "4"
+              },
+              {
+                "tipo": "5ª (3 primeras o últimas cifras)",
+                "ganadores": 1099,
+                "premio": "50",
+                "orden_escrutinio": "5"
+              },
+              {
+                "tipo": "6ª (2 primeras o últimas cifras)",
+                "ganadores": 10621,
+                "premio": "5",
+                "orden_escrutinio": "6"
+              },
+              {
+                "tipo": "7ª (primera o última cifra)",
+                "ganadores": 106706,
+                "premio": "1",
+                "orden_escrutinio": "7"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "LNAC",
+      "id_sorteo": "1329109093",
+      "fecha": "2026-11-19",
+      "revisiones": [
+        {
+          "sha256": "00f65e6b32977484322ceb7715fbf51b9ec5985235403d3908622b44cc02c2ae",
+          "detectado_utc": "2026-11-19T22:38:53.794538+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-19 21:00:00",
+            "dia_semana": "jueves",
+            "id_sorteo": "1329109093",
+            "game_id": "LNAC",
+            "anyo": "2026",
+            "nombre": "SORTEO DEL JUEVES",
+            "lugar": "Madrid Sede Central",
+            "num_sorteo": "93",
+            "premio_bote": "0",
+            "cdc": "13291",
+            "apuestas": "0",
+            "recaudacion": "0",
+            "combinacion": {
+              "primer_premio": "51664",
+              "Segundo_premio": "68523"
+            },
+            "fraccion": null,
+            "serie": null,
+            "reintegros": [
+              "4",
+              "0",
+              "6"
+            ],
+            "premios": "0",
+            "fondo_bote": "0",
+            "escrutinio": [
+              {
+                "tipo": "Primer Premio",
+                "premio": "30000",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Segundo Premio",
+                "premio": "6000",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Reintegro",
+                "premio": "3",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "75",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "75",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "75",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "75",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "15",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "15",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "15",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "15",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "15",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "15",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "15",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "6",
+                "ganadores": 1
+              }
+            ],
+            "tenthPrice": 3.0,
+            "apertura": "2026-11-06 00:00:00",
+            "cierre": "2026-11-19 20:30:00",
+            "estado": "cerrado"
+          },
+          "advertencias": [
+            "nacional_sin_lista_exhaustiva_de_premios_por_numero",
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    }
+  ]
+}
