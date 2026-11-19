@@ -1,0 +1,36 @@
+name: LotoScan - Probar servicio oficial SELAE 0.87C
+on:
+  workflow_dispatch:
+    inputs:
+      fecha:
+        description: 'Fecha AAAAMMDD opcional (vacio = fechas historicas por juego)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Consultar servicio oficial de resultados
+        env:
+          FECHA: ${{ inputs.fecha }}
+        run: |
+          if [ -n "$FECHA" ]; then
+            python scripts/probar_servicio_selae_087c.py --fecha "$FECHA"
+          else
+            python scripts/probar_servicio_selae_087c.py
+          fi
+      - name: Guardar diagnostico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087c
+          path: diagnostico_selae_087c/
+          if-no-files-found: warn
+          retention-days: 14
