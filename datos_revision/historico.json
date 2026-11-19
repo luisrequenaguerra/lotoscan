@@ -252,6 +252,48 @@
           34
         ],
         "reintegro": 0
+      },
+      "2026-11-18": {
+        "categorias": {
+          "3": {
+            "acertantes": 83369,
+            "importe_centimos": 400
+          },
+          "4": {
+            "acertantes": 4452,
+            "importe_centimos": 2376
+          },
+          "5": {
+            "acertantes": 78,
+            "importe_centimos": 90398
+          },
+          "5+C": {
+            "acertantes": 1,
+            "importe_centimos": 14102138
+          },
+          "6": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "R": {
+            "acertantes": 462103,
+            "importe_centimos": 50
+          }
+        },
+        "complementario": 24,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-18",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "numero_sorteo": 322,
+        "numeros": [
+          4,
+          5,
+          9,
+          15,
+          37,
+          44
+        ],
+        "reintegro": 7
       }
     },
     "eurodreams": {
