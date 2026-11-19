@@ -1,0 +1,36 @@
+name: LotoScan - Inspeccionar HTML y JS SELAE 0.87D
+on:
+  workflow_dispatch:
+    inputs:
+      fecha:
+        description: 'Fecha historica opcional AAAAMMDD (vacio = referencias por juego)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspeccionar recursos oficiales SELAE
+        env:
+          FECHA: ${{ inputs.fecha }}
+        run: |
+          if [ -n "$FECHA" ]; then
+            python scripts/inspeccionar_servicio_selae_087d.py --fecha "$FECHA"
+          else
+            python scripts/inspeccionar_servicio_selae_087d.py
+          fi
+      - name: Guardar informe y recursos de diagnostico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087d
+          path: diagnostico_selae_087d/
+          if-no-files-found: warn
+          retention-days: 14
