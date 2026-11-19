@@ -1,0 +1,44 @@
+name: LotoScan - Probar URLs directas SELAE 0.87B
+on:
+  workflow_dispatch:
+    inputs:
+      fecha:
+        description: 'Fecha final YYYY-MM-DD (vacio = hoy UTC)'
+        required: false
+        type: string
+      dias:
+        description: 'Dias hacia atras (1-7)'
+        required: false
+        default: '3'
+        type: string
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar dependencias
+        run: python -m pip install requests==2.32.3 pypdf==5.4.0
+      - name: Comprobar URLs directas
+        env:
+          FECHA: ${{ inputs.fecha }}
+          DIAS: ${{ inputs.dias }}
+        run: |
+          if [ -n "$FECHA" ]; then
+            python scripts/descubrir_pdf_selae_087b.py --dias "${DIAS:-3}" --fecha "$FECHA"
+          else
+            python scripts/descubrir_pdf_selae_087b.py --dias "${DIAS:-3}"
+          fi
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087b
+          path: diagnostico_selae_087b/
+          if-no-files-found: warn
+          retention-days: 14
