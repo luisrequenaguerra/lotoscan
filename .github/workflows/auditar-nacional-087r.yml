@@ -1,0 +1,22 @@
+name: LotoScan - Auditar fuentes Nacional 0.87R
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Auditar suficiencia de fuentes LNAC
+        run: python scripts/auditar_nacional_087r.py
+      - name: Guardar informe incluso si falla la prueba
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087r
+          path: informe_nacional_087r.json
+          if-no-files-found: warn
