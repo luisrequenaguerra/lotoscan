@@ -1,0 +1,32 @@
+name: LotoScan - Recuperar historico Nacional 0.87Y
+on:
+  workflow_dispatch:
+    inputs:
+      cantidad:
+        description: 'Numero de sorteos anteriores a recuperar (1-12)'
+        required: true
+        default: '5'
+      ancla:
+        description: 'ID de sorteo de partida (oficial)'
+        required: true
+        default: '1329109093'
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar SELAE y normalizar resultados sin modificar repositorio
+        run: python scripts/recuperar_historico_nacional_087y.py --cantidad "${{ inputs.cantidad }}" --ancla "${{ inputs.ancla }}" --salida informes/lnac_087y
+      - name: Guardar informe de auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087y
+          path: informes/lnac_087y/
+          if-no-files-found: warn
