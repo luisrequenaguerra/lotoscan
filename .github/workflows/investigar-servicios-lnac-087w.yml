@@ -1,0 +1,25 @@
+name: LotoScan - Investigar servicios Nacional 0.87W
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  investigar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar recursos publicos SELAE
+        run: python scripts/investigar_servicios_lnac_087w.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087w
+          path: informes/087w/
+          if-no-files-found: warn
