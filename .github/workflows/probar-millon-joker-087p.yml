@@ -1,0 +1,24 @@
+name: LotoScan - El Millon y Joker 0.87P
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pruebas:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Comprobar El Millon y Joker con muestras oficiales
+        run: python3 scripts/probar_millon_joker_087p.py
+      - name: Subir informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087p
+          path: informe_especiales_087p.json
+          if-no-files-found: warn
+          retention-days: 14
