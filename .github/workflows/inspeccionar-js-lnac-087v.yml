@@ -1,0 +1,25 @@
+name: LotoScan - Inspeccionar JS Nacional 0.87V
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Auditar JS publico de SELAE
+        run: python scripts/inspeccionar_js_lnac_087v.py
+      - name: Guardar informe incluso si falla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087v
+          path: informes/087v/
+          if-no-files-found: warn
