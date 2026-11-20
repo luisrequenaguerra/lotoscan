@@ -294,6 +294,48 @@
           44
         ],
         "reintegro": 7
+      },
+      "2026-11-19": {
+        "categorias": {
+          "3": {
+            "acertantes": 79801,
+            "importe_centimos": 400
+          },
+          "4": {
+            "acertantes": 4216,
+            "importe_centimos": 2752
+          },
+          "5": {
+            "acertantes": 77,
+            "importe_centimos": 301358
+          },
+          "5+C": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "6": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "R": {
+            "acertantes": 485215,
+            "importe_centimos": 50
+          }
+        },
+        "complementario": 16,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-19",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "numero_sorteo": 323,
+        "numeros": [
+          10,
+          24,
+          34,
+          36,
+          41,
+          46
+        ],
+        "reintegro": 2
       }
     },
     "eurodreams": {
@@ -638,6 +680,54 @@
           48
         ],
         "reintegro": 0
+      },
+      "2026-11-19": {
+        "categorias": {
+          "3": {
+            "acertantes": 140072,
+            "importe_centimos": 800
+          },
+          "4": {
+            "acertantes": 7115,
+            "importe_centimos": 7323
+          },
+          "5": {
+            "acertantes": 121,
+            "importe_centimos": 296031
+          },
+          "5+C": {
+            "acertantes": 2,
+            "importe_centimos": 9769035
+          },
+          "6": {
+            "acertantes": 1,
+            "importe_centimos": 120484763
+          },
+          "6+R": {
+            "acertantes": 0,
+            "importe_centimos": null
+          },
+          "R": {
+            "acertantes": 997301,
+            "importe_centimos": 100
+          }
+        },
+        "complementario": 34,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-19",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "joker": "0452653",
+        "joker_premios_validados": false,
+        "numero_sorteo": 139,
+        "numeros": [
+          20,
+          23,
+          36,
+          41,
+          44,
+          49
+        ],
+        "reintegro": 3
       }
     },
     "quiniela": {
