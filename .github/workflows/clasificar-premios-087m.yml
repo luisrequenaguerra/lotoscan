@@ -1,0 +1,26 @@
+name: LotoScan - Clasificar categorias de premios 0.87M
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Auditar categorias oficiales y ejecutar pruebas internas
+        run: python3 scripts/clasificar_premios_087m.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087m
+          path: |
+            informe_categorias_087m.json
+            informe_categorias_087m.txt
+          if-no-files-found: warn
+          retention-days: 14
