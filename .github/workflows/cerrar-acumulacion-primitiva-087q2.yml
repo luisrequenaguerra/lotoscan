@@ -1,0 +1,24 @@
+name: LotoScan - Cerrar acumulacion Primitiva 0.87Q2
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verificar acumulacion y reintegros
+        run: python3 scripts/cerrar_acumulacion_primitiva_087q2.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087q2
+          path: informe_acumulacion_primitiva_087q2.json
+          if-no-files-found: warn
+          retention-days: 14
