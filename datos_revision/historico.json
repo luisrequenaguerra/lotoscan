@@ -374,6 +374,24 @@
         "fuente": "https://comprobarloteria.com/eurodreams/",
         "publicable": false,
         "validado_oficialmente": false
+      },
+      "2026-11-19": {
+        "combinacion": {
+          "extra": 2,
+          "numeros": [
+            5,
+            8,
+            18,
+            24,
+            27,
+            39
+          ]
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-19",
+        "fuente": "https://comprobarloteria.com/eurodreams/",
+        "publicable": false,
+        "validado_oficialmente": false
       }
     },
     "euromillones": {
@@ -531,6 +549,22 @@
             }
           }
         },
+        "publicable": false,
+        "validado_oficialmente": false
+      },
+      "2026-11-19": {
+        "combinacion": {
+          "primer_premio": "51664",
+          "reintegros": [
+            0,
+            4,
+            6
+          ],
+          "segundo_premio": "68523"
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-19",
+        "fuente": "https://comprobarloteria.com/loteria-nacional/",
         "publicable": false,
         "validado_oficialmente": false
       }
@@ -1031,6 +1065,158 @@
         },
         "estado": "pendiente_verificacion_oficial",
         "fecha": "2026-11-15",
+        "fuente": "https://comprobarloteria.com/quiniela/",
+        "publicable": false,
+        "validado_oficialmente": false
+      },
+      "2026-11-18": {
+        "combinacion": {
+          "advertencia": "Pronósticos derivados de marcadores; falta contraste con signos publicados.",
+          "partidos": [
+            {
+              "equipos": "Bosnia Herzegovina (m) — Rumanía (m) 2 - 1",
+              "marcador": [
+                2,
+                1
+              ],
+              "posicion": 1
+            },
+            {
+              "equipos": "Ucrania (m) — Georgia (m) 1 - 0",
+              "marcador": [
+                1,
+                0
+              ],
+              "posicion": 2
+            },
+            {
+              "equipos": "Gales (m) — Portugal (m) 2 - 3",
+              "marcador": [
+                2,
+                3
+              ],
+              "posicion": 3
+            },
+            {
+              "equipos": "Hungría (m) — Irlanda Del Norte (m) 1 - 1",
+              "marcador": [
+                1,
+                1
+              ],
+              "posicion": 4
+            },
+            {
+              "equipos": "Polonia (m) — Suecia (m) 1 - 1",
+              "marcador": [
+                1,
+                1
+              ],
+              "posicion": 5
+            },
+            {
+              "equipos": "República De Irlanda (m) — Kosovo (m) 3 - 0",
+              "marcador": [
+                3,
+                0
+              ],
+              "posicion": 6
+            },
+            {
+              "equipos": "Real Madrid (f) — Inter De Milán (f) 3 - 1",
+              "marcador": [
+                3,
+                1
+              ],
+              "posicion": 7
+            },
+            {
+              "equipos": "Hacken (f) — Manchester City (f) 0 - 2",
+              "marcador": [
+                0,
+                2
+              ],
+              "posicion": 8
+            },
+            {
+              "equipos": "Chelsea (f) — Psg (f) 1 - 0",
+              "marcador": [
+                1,
+                0
+              ],
+              "posicion": 9
+            },
+            {
+              "equipos": "Juventus (f) — Leuven (f) 2 - 0",
+              "marcador": [
+                2,
+                0
+              ],
+              "posicion": 10
+            },
+            {
+              "equipos": "Austria De Viena (f) — Bayern De Múnich (f) 0 - 4",
+              "marcador": [
+                0,
+                4
+              ],
+              "posicion": 11
+            },
+            {
+              "equipos": "Arsenal (f) — Ol Lyonnes (f) 0 - 2",
+              "marcador": [
+                0,
+                2
+              ],
+              "posicion": 12
+            },
+            {
+              "equipos": "Barcelona (f) — Servette (f) 6 - 0",
+              "marcador": [
+                6,
+                0
+              ],
+              "posicion": 13
+            },
+            {
+              "equipos": "Benfica (f) — Roma (f) 2 - 3",
+              "marcador": [
+                2,
+                3
+              ],
+              "posicion": 14
+            },
+            {
+              "equipos": "Dinamarca (m) — Noruega (m) 2 - 3",
+              "marcador": [
+                2,
+                3
+              ],
+              "posicion": 15
+            }
+          ],
+          "pleno_15_derivado": [
+            "2",
+            "M"
+          ],
+          "signos_14_derivados": [
+            "1",
+            "1",
+            "2",
+            "X",
+            "X",
+            "1",
+            "1",
+            "2",
+            "1",
+            "1",
+            "2",
+            "2",
+            "1",
+            "2"
+          ]
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-18",
         "fuente": "https://comprobarloteria.com/quiniela/",
         "publicable": false,
         "validado_oficialmente": false
