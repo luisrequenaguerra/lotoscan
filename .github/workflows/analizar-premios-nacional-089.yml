@@ -1,0 +1,25 @@
+name: LotoScan - Analizar coincidencias Nacional 0.89
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["LotoScan - Auditar premios Nacional 0.88"]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  analizar:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Analizar coincidencias directas sin calcular premios
+        run: python scripts/analizar_premios_nacional_089.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-089
+          path: informes/lnac_089/analisis.json
+          if-no-files-found: warn
