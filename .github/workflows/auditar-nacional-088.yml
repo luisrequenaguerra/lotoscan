@@ -1,0 +1,28 @@
+name: LotoScan - Auditar premios Nacional 0.88
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["LotoScan - Actualizar Nacional 0.87Z"]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  auditar:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Auditar historico archivado sin publicar premios
+        run: python scripts/auditar_nacional_088.py
+      - name: Subir informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-088
+          path: informes/lnac_088/auditoria.json
+          if-no-files-found: warn
