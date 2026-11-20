@@ -1,0 +1,26 @@
+name: LotoScan - Contrato SELAE boleto y premios 0.87K
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contrato:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Auditar histórico y generar contrato de datos
+        run: python scripts/contrato_premios_087k.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087k
+          path: |
+            informe_contrato_087k.json
+            informe_contrato_087k.txt
+          if-no-files-found: warn
+          retention-days: 14
