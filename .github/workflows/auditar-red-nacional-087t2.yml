@@ -1,0 +1,31 @@
+name: LotoScan - Auditar JSON Nacional 0.87T
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Crear carpeta de informes
+        run: mkdir -p informes/087t
+      - name: Instalar navegador para inspeccionar peticiones reales
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install chromium
+      - name: Auditar páginas oficiales de SELAE
+        run: python scripts/auditar_red_nacional_087t.py
+      - name: Adjuntar informe incluso si falla la auditoría
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087t
+          path: informes/087t/
+          if-no-files-found: warn
