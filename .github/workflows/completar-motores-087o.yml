@@ -1,0 +1,26 @@
+name: LotoScan - Cinco motores pendientes 0.87O
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probar cinco motores sin publicar resultados
+        run: python3 scripts/completar_motores_087o.py
+      - name: Descargar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087o
+          path: |
+            informe_motores_087o.json
+            informe_motores_087o.txt
+          if-no-files-found: warn
+          retention-days: 14
