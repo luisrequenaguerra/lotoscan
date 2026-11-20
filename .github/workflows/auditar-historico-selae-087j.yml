@@ -1,0 +1,26 @@
+name: LotoScan - Auditar histórico provisional SELAE 0.87J
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditoria:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Auditar histórico provisional (sin publicar ni modificar)
+        run: python3 scripts/auditar_historico_selae_087j.py --fallar-si-errores
+      - name: Subir informe incluso si falla la auditoría
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087j
+          path: |
+            informe_selae_087j.json
+            informe_selae_087j.txt
+          if-no-files-found: warn
+          retention-days: 14
