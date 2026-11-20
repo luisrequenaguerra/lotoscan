@@ -1,0 +1,24 @@
+name: LotoScan - Auditar reglas Primitiva 0.87Q
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Auditar premios y acumulaciones sin publicar
+        run: python3 scripts/auditar_primitiva_087q.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087q
+          path: informe_primitiva_087q.json
+          if-no-files-found: warn
+          retention-days: 14
