@@ -1,0 +1,55 @@
+name: LotoScan - Actualizar Nacional 0.87Z
+on:
+  workflow_dispatch:
+    inputs:
+      solo_lectura:
+        description: 'Probar sin guardar el sorteo'
+        required: false
+        type: boolean
+        default: true
+  schedule:
+    # Comprobaciones diarias (UTC); incluye margen para resultados publicados con retraso.
+    - cron: '17 12,20,22 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-lnac-historico
+  cancel-in-progress: false
+jobs:
+  actualizar:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar SELAE y archivar ultimo sorteo validado
+        env:
+          READ_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.solo_lectura && 'true' || 'false' }}
+        run: |
+          if [ "$READ_ONLY" = 'true' ]; then
+            python scripts/actualizar_nacional_087z.py --solo-lectura
+          else
+            python scripts/actualizar_nacional_087z.py
+          fi
+      - name: Subir informe de auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087z
+          path: informes/lnac_087z/informe.json
+          if-no-files-found: warn
+      - name: Guardar nuevo sorteo en repositorio
+        if: success() && (github.event_name == 'schedule' || inputs.solo_lectura == false)
+        run: |
+          if [ -n "$(git status --porcelain -- datos/loteria_nacional/historico/)" ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add datos/loteria_nacional/historico/
+            git commit -m 'LotoScan: archivar nuevo sorteo LNAC'
+            git push
+          else
+            echo 'Sin sorteos nuevos para guardar'
+          fi
