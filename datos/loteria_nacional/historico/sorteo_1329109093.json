@@ -1,0 +1,153 @@
+{
+  "version_esquema": "lnac-087z",
+  "id_sorteo": "1329109093",
+  "fecha_sorteo": "2026-11-19",
+  "tipo_sorteo": "J",
+  "nombre_sorteo": "SORTEO DEL JUEVES",
+  "precio_decimo_fuente": 3.0,
+  "principales": {
+    "primerPremio": {
+      "numero": "51664",
+      "premio_fuente": 3000000,
+      "tipo": "G"
+    },
+    "segundoPremio": {
+      "numero": "68523",
+      "premio_fuente": 600000,
+      "tipo": "Z"
+    }
+  },
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      {
+        "numero": "2316",
+        "premio_fuente": 7500,
+        "tipo": "P4"
+      },
+      {
+        "numero": "4388",
+        "premio_fuente": 7500,
+        "tipo": "P4"
+      },
+      {
+        "numero": "7198",
+        "premio_fuente": 7500,
+        "tipo": "P4"
+      },
+      {
+        "numero": "8580",
+        "premio_fuente": 7500,
+        "tipo": "P4"
+      }
+    ],
+    "extraccionesDeTresCifras": [
+      {
+        "numero": "017",
+        "premio_fuente": 1500,
+        "tipo": "P3"
+      },
+      {
+        "numero": "379",
+        "premio_fuente": 1500,
+        "tipo": "P3"
+      },
+      {
+        "numero": "448",
+        "premio_fuente": 1500,
+        "tipo": "P3"
+      },
+      {
+        "numero": "545",
+        "premio_fuente": 1500,
+        "tipo": "P3"
+      },
+      {
+        "numero": "684",
+        "premio_fuente": 1500,
+        "tipo": "P3"
+      },
+      {
+        "numero": "725",
+        "premio_fuente": 1500,
+        "tipo": "P3"
+      },
+      {
+        "numero": "904",
+        "premio_fuente": 1500,
+        "tipo": "P3"
+      }
+    ],
+    "extraccionesDeDosCifras": [
+      {
+        "numero": "25",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "27",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "28",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "55",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "70",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "72",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "78",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "82",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      },
+      {
+        "numero": "87",
+        "premio_fuente": 600,
+        "tipo": "P2"
+      }
+    ],
+    "extraccionesDeCincoCifras": [],
+    "reintegros": [
+      {
+        "numero": "0",
+        "premio_fuente": 300,
+        "tipo": "1"
+      },
+      {
+        "numero": "4",
+        "premio_fuente": 300,
+        "tipo": "1"
+      },
+      {
+        "numero": "6",
+        "premio_fuente": 300,
+        "tipo": "1"
+      }
+    ]
+  },
+  "sha256_respuesta": "cd029d47711a8a2e2077b335f54cdc0dcddc451219a2a534c86388cd81de3373",
+  "validacion": {
+    "estructura_minima_completa": true,
+    "incidencias": []
+  },
+  "publicable": false,
+  "nota": "Importes originales SELAE; sin conversion a euros ni calculo de premios; requiere validacion normativa."
+}
