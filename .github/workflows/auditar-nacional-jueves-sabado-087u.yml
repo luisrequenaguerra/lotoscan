@@ -1,0 +1,25 @@
+name: LotoScan - Auditar Nacional jueves y sabado 0.87U
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Auditar JSON y HTML oficiales de jueves y sabado
+        run: python scripts/auditar_nacional_jueves_sabado_087u.py
+      - name: Adjuntar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087u
+          path: informes/087u/
+          if-no-files-found: warn
