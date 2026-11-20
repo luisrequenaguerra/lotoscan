@@ -1,0 +1,24 @@
+name: LotoScan - Revalidar listas Nacional 0.87S
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar lector PDF
+        run: python -m pip install 'pypdf>=5,<7'
+      - name: Comparar PDF oficiales y reglas historicas
+        run: python scripts/revalidar_nacional_087s.py
+      - name: Guardar informe incluso con incidencias
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-087s
+          path: informe_nacional_087s.json
+          if-no-files-found: warn
