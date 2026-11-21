@@ -1,0 +1,22 @@
+name: LotoScan - Evaluar jueves Nacional 0.92
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evaluar:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Analizar sorteos archivados sin publicar premios
+        run: python scripts/evaluar_nacional_092.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-092
+          path: informes/lnac_092/analisis.json
+          if-no-files-found: error
