@@ -641,6 +641,22 @@
         "fuente": "https://comprobarloteria.com/loteria-nacional/",
         "publicable": false,
         "validado_oficialmente": false
+      },
+      "2026-11-21": {
+        "combinacion": {
+          "primer_premio": "23641",
+          "reintegros": [
+            0,
+            1,
+            7
+          ],
+          "segundo_premio": "26323"
+        },
+        "estado": "pendiente_verificacion_oficial",
+        "fecha": "2026-11-21",
+        "fuente": "https://comprobarloteria.com/loteria-nacional/",
+        "publicable": false,
+        "validado_oficialmente": false
       }
     },
     "lototurf": {},
