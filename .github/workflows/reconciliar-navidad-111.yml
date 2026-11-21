@@ -1,0 +1,22 @@
+name: LotoScan - Reconciliar terminaciones Navidad 1.11
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Reconciliar referencias historicas sin red
+        run: python scripts/reconciliar_navidad_111.py
+      - name: Subir informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-111
+          path: salida_111/
+          if-no-files-found: error
