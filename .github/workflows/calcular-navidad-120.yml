@@ -1,0 +1,41 @@
+name: LotoScan - Calculo experimental Navidad 1.20
+on:
+  workflow_dispatch:
+    inputs:
+      anio:
+        description: Ano historico (2024 o 2025)
+        required: true
+        default: '2024'
+      numero:
+        description: Numero de cinco cifras para consultar
+        required: false
+        default: '72480'
+jobs:
+  calcular:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install 'pymupdf>=1.24,<1.28'
+      - name: Calcular premios experimentales
+        env:
+          ANIO: ${{ inputs.anio }}
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          test -f scripts/auditar_integracion_navidad_117.py
+          test -f scripts/consultar_navidad_119.py
+          if [ -n "$NUMERO" ]; then
+            python scripts/calcular_navidad_120.py --anio "$ANIO" --numero "$NUMERO" --salida salida_120
+          else
+            python scripts/calcular_navidad_120.py --anio "$ANIO" --salida salida_120
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-120-${{ inputs.anio }}
+          path: salida_120/
+          if-no-files-found: warn
