@@ -1475,6 +1475,197 @@
       ]
     },
     {
+      "juego": "BONO",
+      "id_sorteo": "1329301325",
+      "fecha": "2026-11-21",
+      "revisiones": [
+        {
+          "sha256": "ebbafd329f6c93c2da1b01da9279e494166ffaf72cadf7be1a489b02aec2cbc7",
+          "detectado_utc": "2026-11-21T23:52:28.539390+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-21 21:32:00",
+            "dia_semana": "sábado",
+            "id_sorteo": "1329301325",
+            "game_id": "BONO",
+            "anyo": "2026",
+            "premio_bote": "0",
+            "cdc": "13293",
+            "apuestas": "4332323",
+            "recaudacion": "2166161",
+            "combinacion": "02 - 06 - 07 - 08 - 13 - 46 C(30) R(8)",
+            "premios": "1191388",
+            "fondo_bote": "0",
+            "escrutinio": [
+              {
+                "tipo": "1ª  (6 Aciertos) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "2ª  (5 Aciertos + C) ",
+                "categoria": 2,
+                "premio": "17558,08",
+                "ganadores": "7"
+              },
+              {
+                "tipo": "3ª  (5 Aciertos) ",
+                "categoria": 3,
+                "premio": "614,53",
+                "ganadores": "100"
+              },
+              {
+                "tipo": "4ª  (4 Aciertos) ",
+                "categoria": 4,
+                "premio": "17,16",
+                "ganadores": "5372"
+              },
+              {
+                "tipo": "5ª  (3 Aciertos) ",
+                "categoria": 5,
+                "premio": "4",
+                "ganadores": "90060"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 6,
+                "premio": "0,5",
+                "ganadores": "433092"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
+      "juego": "LAPR",
+      "id_sorteo": "1329304140",
+      "fecha": "2026-11-21",
+      "revisiones": [
+        {
+          "sha256": "3f1b122f1f5db921e54142a32b2e66215356b78b3f21707e8fd160ccc7280beb",
+          "detectado_utc": "2026-11-21T23:52:28.539390+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-21 21:42:00",
+            "dia_semana": "sábado",
+            "id_sorteo": "1329304140",
+            "game_id": "LAPR",
+            "anyo": "2026",
+            "premio_bote": "2300000",
+            "cdc": "13293",
+            "apuestas": "9831160",
+            "recaudacion": "9831160",
+            "combinacion": "07 - 12 - 13 - 22 - 29 - 39 C(15) R(2)",
+            "premios": "5407138",
+            "fondo_bote": "976903",
+            "joker": {
+              "gameid": "LAJO",
+              "relsorteoid_asociado": "1329310140",
+              "combinacion": "0031430",
+              "bote_joker": 1000000,
+              "activo": "1"
+            },
+            "escrutinio": [
+              {
+                "tipo": "Especial (6 Aciertos + R) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "1ª (6 Aciertos) ",
+                "categoria": 2,
+                "premio": "1022726,62",
+                "ganadores": "1"
+              },
+              {
+                "tipo": "2ª (5 Aciertos + C) ",
+                "categoria": 3,
+                "premio": "20730,95",
+                "ganadores": "8"
+              },
+              {
+                "tipo": "3ª (5 Aciertos) ",
+                "categoria": 4,
+                "premio": "1434,22",
+                "ganadores": "212"
+              },
+              {
+                "tipo": "4ª (4 Aciertos) ",
+                "categoria": 5,
+                "premio": "37,98",
+                "ganadores": "11645"
+              },
+              {
+                "tipo": "5ª (3 Aciertos) ",
+                "categoria": 6,
+                "premio": "8",
+                "ganadores": "207487"
+              },
+              {
+                "tipo": "Reintegro",
+                "categoria": 7,
+                "premio": "1",
+                "ganadores": "931618"
+              }
+            ],
+            "escrutinio_joker": [
+              {
+                "tipo": "1ª (todas las cifras)",
+                "ganadores": 0,
+                "premio": "1000000",
+                "orden_escrutinio": "1"
+              },
+              {
+                "tipo": "2ª (6 primeras o últimas cifras)",
+                "ganadores": 2,
+                "premio": "10000",
+                "orden_escrutinio": "2"
+              },
+              {
+                "tipo": "3ª (5 primeras o últimas cifras)",
+                "ganadores": 10,
+                "premio": "1000",
+                "orden_escrutinio": "3"
+              },
+              {
+                "tipo": "4ª (4 primeras o últimas cifras)",
+                "ganadores": 118,
+                "premio": "300",
+                "orden_escrutinio": "4"
+              },
+              {
+                "tipo": "5ª (3 primeras o últimas cifras)",
+                "ganadores": 1091,
+                "premio": "50",
+                "orden_escrutinio": "5"
+              },
+              {
+                "tipo": "6ª (2 primeras o últimas cifras)",
+                "ganadores": 11035,
+                "premio": "5",
+                "orden_escrutinio": "6"
+              },
+              {
+                "tipo": "7ª (primera o última cifra)",
+                "ganadores": 111122,
+                "premio": "1",
+                "orden_escrutinio": "7"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
+    },
+    {
       "juego": "LNAC",
       "id_sorteo": "1329309094",
       "fecha": "2026-11-21",
