@@ -1,0 +1,18 @@
+{
+  "combinacion": null,
+  "complementos": {},
+  "escrutinio": [],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "pendiente",
+  "fecha_sorteo": "2026-11-22 00:00:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "ELGR",
+  "id_sorteo": "1329405047",
+  "incidencias": [
+    "combinacion_ausente_o_no_interpretable",
+    "escrutinio_ausente"
+  ],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

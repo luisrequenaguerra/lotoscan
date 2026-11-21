@@ -1,0 +1,185 @@
+{
+  "combinacion": {
+    "partidos": [
+      {
+        "local": "R. Valladolid (m)",
+        "marcador": "0 - 1",
+        "signo": "2 ",
+        "visitante": "Castellón (m)"
+      },
+      {
+        "local": "Real Sociedad B (m)",
+        "marcador": "2 - 2",
+        "signo": "X ",
+        "visitante": "Sporting (m)"
+      },
+      {
+        "local": "Almería (m)",
+        "marcador": "2 - 1",
+        "signo": "1 ",
+        "visitante": "Andorra (m)"
+      },
+      {
+        "local": "Mallorca (m)",
+        "marcador": "3 - 3",
+        "signo": "X ",
+        "visitante": "Córdoba (m)"
+      },
+      {
+        "local": "R. Oviedo (m)",
+        "marcador": "1 - 2",
+        "signo": "2 ",
+        "visitante": "Girona (m)"
+      },
+      {
+        "local": "Tenerife (m)",
+        "marcador": "2 - 0",
+        "signo": "1 ",
+        "visitante": "Ceuta (m)"
+      },
+      {
+        "local": "Granada (m)",
+        "marcador": "1 - 0",
+        "signo": "1 ",
+        "visitante": "Las Palmas (m)"
+      },
+      {
+        "local": "Eibar (m)",
+        "marcador": "1 - 1",
+        "signo": "X ",
+        "visitante": "Cádiz (m)"
+      },
+      {
+        "local": "Eldense (m)",
+        "marcador": "2 - 0",
+        "signo": "1 ",
+        "visitante": "Sabadell (m)"
+      },
+      {
+        "local": "Bélgica (m)",
+        "marcador": "4 - 1",
+        "signo": "1 ",
+        "visitante": "Italia (m)"
+      },
+      {
+        "local": "Alavés (f)",
+        "marcador": "2 - 1",
+        "signo": "1 ",
+        "visitante": "Eibar (f)"
+      },
+      {
+        "local": "Real Sociedad (f)",
+        "marcador": "1 - 4",
+        "signo": "2 ",
+        "visitante": "Athletic Club (f)"
+      },
+      {
+        "local": "Sevilla (f)",
+        "marcador": "1 - 2",
+        "signo": "2 ",
+        "visitante": "At. Madrid (f)"
+      },
+      {
+        "local": "Valencia (f)",
+        "marcador": "0 - 0",
+        "signo": "X ",
+        "visitante": "Granada (f)"
+      },
+      {
+        "local": "España (m)",
+        "marcador": "2 - 3",
+        "signo": "2-M",
+        "visitante": "Inglaterra (m)"
+      }
+    ],
+    "signos": [
+      "2",
+      "X",
+      "1",
+      "X",
+      "2",
+      "1",
+      "1",
+      "X",
+      "1",
+      "1",
+      "1",
+      "2",
+      "2",
+      "X",
+      "2M"
+    ]
+  },
+  "complementos": {
+    "elige8": {
+      "activo": "1",
+      "gameid": "ELG8",
+      "relsorteoid_asociado": "1328713066"
+    },
+    "escrutinio_elige8": [
+      {
+        "categoria": 1,
+        "ganadores": "49",
+        "ganadores_eu": null,
+        "premio_eur": "666.36",
+        "tipo": "8 Acertados 8 "
+      }
+    ],
+    "jornada": "21",
+    "temporada": "2026-2027"
+  },
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "Pleno al 15 "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "4",
+      "ganadores_eu": null,
+      "premio_eur": "63449.01",
+      "tipo": "1ª (14 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "40",
+      "ganadores_eu": null,
+      "premio_eur": "2974.17",
+      "tipo": "2ª (13 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "459",
+      "ganadores_eu": null,
+      "premio_eur": "259.19",
+      "tipo": "3ª (12 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "3831",
+      "ganadores_eu": null,
+      "premio_eur": "31.05",
+      "tipo": "4ª (11 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "21762",
+      "ganadores_eu": null,
+      "premio_eur": "6.56",
+      "tipo": "5ª (10 Aciertos) "
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-15 22:47:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "LAQU",
+  "id_sorteo": "1328706066",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

@@ -1,0 +1,136 @@
+{
+  "combinacion": {
+    "complementario": 34,
+    "numeros": [
+      20,
+      23,
+      36,
+      41,
+      44,
+      49
+    ],
+    "reintegro_o_clave": 3,
+    "texto_original": "20 - 23 - 36 - 41 - 44 - 49 C(34) R(3)"
+  },
+  "complementos": {
+    "escrutinio_joker": [
+      {
+        "categoria": null,
+        "ganadores": 0,
+        "ganadores_eu": null,
+        "premio_eur": "1000000",
+        "tipo": "1ª (todas las cifras)"
+      },
+      {
+        "categoria": null,
+        "ganadores": 0,
+        "ganadores_eu": null,
+        "premio_eur": "10000",
+        "tipo": "2ª (6 primeras o últimas cifras)"
+      },
+      {
+        "categoria": null,
+        "ganadores": 16,
+        "ganadores_eu": null,
+        "premio_eur": "1000",
+        "tipo": "3ª (5 primeras o últimas cifras)"
+      },
+      {
+        "categoria": null,
+        "ganadores": 102,
+        "ganadores_eu": null,
+        "premio_eur": "300",
+        "tipo": "4ª (4 primeras o últimas cifras)"
+      },
+      {
+        "categoria": null,
+        "ganadores": 1099,
+        "ganadores_eu": null,
+        "premio_eur": "50",
+        "tipo": "5ª (3 primeras o últimas cifras)"
+      },
+      {
+        "categoria": null,
+        "ganadores": 10621,
+        "ganadores_eu": null,
+        "premio_eur": "5",
+        "tipo": "6ª (2 primeras o últimas cifras)"
+      },
+      {
+        "categoria": null,
+        "ganadores": 106706,
+        "ganadores_eu": null,
+        "premio_eur": "1",
+        "tipo": "7ª (primera o última cifra)"
+      }
+    ],
+    "joker": {
+      "activo": "1",
+      "bote_joker": 1000000,
+      "combinacion": "0452653",
+      "gameid": "LAJO",
+      "relsorteoid_asociado": "1329110139"
+    }
+  },
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "Especial (6 Aciertos + R) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "1",
+      "ganadores_eu": null,
+      "premio_eur": "1204847.63",
+      "tipo": "1ª (6 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "2",
+      "ganadores_eu": null,
+      "premio_eur": "97690.35",
+      "tipo": "2ª (5 Aciertos + C) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "121",
+      "ganadores_eu": null,
+      "premio_eur": "2960.31",
+      "tipo": "3ª (5 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "7115",
+      "ganadores_eu": null,
+      "premio_eur": "73.23",
+      "tipo": "4ª (4 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "140072",
+      "ganadores_eu": null,
+      "premio_eur": "8",
+      "tipo": "5ª (3 Aciertos) "
+    },
+    {
+      "categoria": 7,
+      "ganadores": "997301",
+      "ganadores_eu": null,
+      "premio_eur": "1",
+      "tipo": "Reintegro"
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-19 21:42:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "LAPR",
+  "id_sorteo": "1329104139",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

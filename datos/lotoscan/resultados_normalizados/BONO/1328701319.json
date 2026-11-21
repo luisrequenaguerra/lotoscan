@@ -1,0 +1,70 @@
+{
+  "combinacion": {
+    "complementario": 47,
+    "numeros": [
+      2,
+      13,
+      19,
+      26,
+      36,
+      42
+    ],
+    "reintegro_o_clave": 7,
+    "texto_original": "02 - 13 - 19 - 26 - 36 - 42 C(47) R(7)"
+  },
+  "complementos": {},
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "1",
+      "ganadores_eu": null,
+      "premio_eur": "118997.41",
+      "tipo": "2ª  (5 Aciertos + C) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "68",
+      "ganadores_eu": null,
+      "premio_eur": "874.98",
+      "tipo": "3ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "3600",
+      "ganadores_eu": null,
+      "premio_eur": "24.79",
+      "tipo": "4ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "69128",
+      "ganadores_eu": null,
+      "premio_eur": "4",
+      "tipo": "5ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "389990",
+      "ganadores_eu": null,
+      "premio_eur": "0.5",
+      "tipo": "Reintegro"
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-15 21:32:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "BONO",
+  "id_sorteo": "1328701319",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

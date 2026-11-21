@@ -1,0 +1,72 @@
+{
+  "combinacion": {
+    "complementario": 2,
+    "numeros": [
+      2,
+      4,
+      11,
+      14,
+      17,
+      18
+    ],
+    "reintegro_o_clave": null,
+    "texto_original": "02 - 04 - 11 - 14 - 17 - 18 C(2)"
+  },
+  "complementos": {
+    "numero_sueno_incluido_en_combinacion": true
+  },
+  "escrutinio": [
+    {
+      "categoria": null,
+      "ganadores": "0",
+      "ganadores_eu": "0",
+      "premio_eur": "0",
+      "tipo": "1ª       6      +      1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "0",
+      "ganadores_eu": "1",
+      "premio_eur": "120000",
+      "tipo": "2ª       6      +      0"
+    },
+    {
+      "categoria": null,
+      "ganadores": "30",
+      "ganadores_eu": "136",
+      "premio_eur": "475.8",
+      "tipo": "3ª       5      +     0/1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "1243",
+      "ganadores_eu": "5557",
+      "premio_eur": "32.64",
+      "tipo": "4ª       4      +     0/1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "19047",
+      "ganadores_eu": "83897",
+      "premio_eur": "4.54",
+      "tipo": "5ª       3      +     0/1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "111477",
+      "ganadores_eu": "479337",
+      "premio_eur": "2.5",
+      "tipo": "6ª       2      +     0/1"
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-16 21:01:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "EDMS",
+  "id_sorteo": "1328814092",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

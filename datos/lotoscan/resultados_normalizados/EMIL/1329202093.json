@@ -1,0 +1,152 @@
+{
+  "combinacion": {
+    "complementario": null,
+    "numeros": [
+      8,
+      21,
+      24,
+      36,
+      49,
+      1,
+      8
+    ],
+    "reintegro_o_clave": null,
+    "texto_original": " 08 - 21 - 24 - 36 - 49 - 01 - 08"
+  },
+  "complementos": {
+    "el_millon": {
+      "activo": "1",
+      "combinacion": "HPB41745",
+      "contenidosRelacionados": {
+        "documentos": [],
+        "enlaces": [],
+        "imagenes": [],
+        "noticias": [
+          {
+            "tituloContenido": "Premio El Millón de Euromillones del 20 de noviembre de 2026",
+            "tituloRelacion": "Premio Automatico",
+            "urlContenido": "/premios/premio-el-millon-de-euromillones-del-20-de-noviembre-de-2026"
+          }
+        ],
+        "paginasLibres": [],
+        "preguntasFrecuentes": [],
+        "puntosDeVenta": []
+      },
+      "gameid": "LAMI",
+      "importe": 1000000,
+      "relsorteoid_asociado": "1329211093"
+    },
+    "escrutinio_el_millon": [
+      {
+        "categoria": null,
+        "ganadores": 1,
+        "ganadores_eu": null,
+        "premio_eur": "1000000",
+        "tipo": "El Millón"
+      }
+    ]
+  },
+  "escrutinio": [
+    {
+      "categoria": null,
+      "ganadores": "0",
+      "ganadores_eu": "0",
+      "premio_eur": "0",
+      "tipo": "1ª       5      +      2"
+    },
+    {
+      "categoria": null,
+      "ganadores": "0",
+      "ganadores_eu": "2",
+      "premio_eur": "312267.03",
+      "tipo": "2ª       5      +      1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "3",
+      "ganadores_eu": "13",
+      "premio_eur": "11227.99",
+      "tipo": "3ª       5      +      0"
+    },
+    {
+      "categoria": null,
+      "ganadores": "6",
+      "ganadores_eu": "33",
+      "premio_eur": "1377.7",
+      "tipo": "4ª       4      +      2"
+    },
+    {
+      "categoria": null,
+      "ganadores": "149",
+      "ganadores_eu": "665",
+      "premio_eur": "125.94",
+      "tipo": "5ª       4      +      1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "296",
+      "ganadores_eu": "1430",
+      "premio_eur": "61.91",
+      "tipo": "6ª       3      +      2"
+    },
+    {
+      "categoria": null,
+      "ganadores": "374",
+      "ganadores_eu": "1603",
+      "premio_eur": "38.81",
+      "tipo": "7ª       4      +      0"
+    },
+    {
+      "categoria": null,
+      "ganadores": "4282",
+      "ganadores_eu": "20722",
+      "premio_eur": "15.01",
+      "tipo": "8ª       2      +      2"
+    },
+    {
+      "categoria": null,
+      "ganadores": "6194",
+      "ganadores_eu": "29279",
+      "premio_eur": "11.85",
+      "tipo": "9ª       3      +      1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "14205",
+      "ganadores_eu": "66220",
+      "premio_eur": "9.76",
+      "tipo": "10ª       3      +      0"
+    },
+    {
+      "categoria": null,
+      "ganadores": "21132",
+      "ganadores_eu": "109013",
+      "premio_eur": "7.18",
+      "tipo": "11ª       1      +      2"
+    },
+    {
+      "categoria": null,
+      "ganadores": "88554",
+      "ganadores_eu": "426509",
+      "premio_eur": "5.78",
+      "tipo": "12ª       2      +      1"
+    },
+    {
+      "categoria": null,
+      "ganadores": "198747",
+      "ganadores_eu": "967097",
+      "premio_eur": "4.1",
+      "tipo": "13ª       2      +      0"
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-20 21:20:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "EMIL",
+  "id_sorteo": "1329202093",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

@@ -1,0 +1,101 @@
+{
+  "combinacion": {
+    "partidos": [
+      {
+        "local": "R. Valladolid",
+        "marcador": "0 - 1",
+        "signo": "0-1",
+        "visitante": "Castellón"
+      },
+      {
+        "local": "Almería",
+        "marcador": "2 - 1",
+        "signo": "2-1",
+        "visitante": "Andorra"
+      },
+      {
+        "local": "R. Oviedo",
+        "marcador": "1 - 2",
+        "signo": "1-2",
+        "visitante": "Girona"
+      },
+      {
+        "local": "Granada",
+        "marcador": "1 - 0",
+        "signo": "1-0",
+        "visitante": "Las Palmas"
+      },
+      {
+        "local": "Eldense",
+        "marcador": "2 - 0",
+        "signo": "2-0",
+        "visitante": "Sabadell"
+      },
+      {
+        "local": "España",
+        "marcador": "2 - 3",
+        "signo": "2-M",
+        "visitante": "Inglaterra"
+      }
+    ],
+    "signos": [
+      "01",
+      "21",
+      "12",
+      "10",
+      "20",
+      "2M"
+    ]
+  },
+  "complementos": {
+    "jornada": "23",
+    "temporada": "2026-2027"
+  },
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "1",
+      "ganadores_eu": null,
+      "premio_eur": "9879.3",
+      "tipo": "2ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "52",
+      "ganadores_eu": null,
+      "premio_eur": "168.88",
+      "tipo": "3ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "953",
+      "ganadores_eu": null,
+      "premio_eur": "9.21",
+      "tipo": "4ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "8860",
+      "ganadores_eu": null,
+      "premio_eur": "2.48",
+      "tipo": "5ª  (2 Aciertos) "
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-15 22:47:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "QGOL",
+  "id_sorteo": "1328707076",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

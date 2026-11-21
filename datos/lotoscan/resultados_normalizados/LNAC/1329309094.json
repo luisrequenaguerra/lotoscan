@@ -1,0 +1,208 @@
+{
+  "combinacion": {
+    "primer_premio": "23641",
+    "reintegros": [
+      "1",
+      "0",
+      "7"
+    ],
+    "segundo_premio": "26323"
+  },
+  "complementos": {},
+  "escrutinio": [
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "60000",
+      "tipo": "Primer Premio"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12000",
+      "tipo": "Segundo Premio"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "6",
+      "tipo": "Reintegro"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "categoria": null,
+      "ganadores": 1,
+      "ganadores_eu": null,
+      "premio_eur": "12",
+      "tipo": "Extracción de 2 cifras"
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "pendiente",
+  "fecha_sorteo": "2026-11-21 13:00:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "LNAC",
+  "id_sorteo": "1329309094",
+  "incidencias": [
+    "premios_loteria_nacional_no_calculados"
+  ],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

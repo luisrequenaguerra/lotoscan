@@ -1,0 +1,90 @@
+{
+  "combinacion": {
+    "complementario": null,
+    "numeros": [
+      15,
+      22,
+      23,
+      28,
+      45
+    ],
+    "reintegro_o_clave": 1,
+    "texto_original": "15 - 22 - 23 - 28 - 45 R(1)"
+  },
+  "complementos": {},
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "1ª   (5 + 1) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "1",
+      "ganadores_eu": null,
+      "premio_eur": "159646.61",
+      "tipo": "2ª   (5 + 0) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "31",
+      "ganadores_eu": null,
+      "premio_eur": "936.34",
+      "tipo": "3ª   (4 + 1) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "266",
+      "ganadores_eu": null,
+      "premio_eur": "127.31",
+      "tipo": "4ª   (4 + 0) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "1063",
+      "ganadores_eu": null,
+      "premio_eur": "36.41",
+      "tipo": "5ª   (3 + 1) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "12087",
+      "ganadores_eu": null,
+      "premio_eur": "10.41",
+      "tipo": "6ª   (3 + 0) "
+    },
+    {
+      "categoria": 7,
+      "ganadores": "15768",
+      "ganadores_eu": null,
+      "premio_eur": "6.14",
+      "tipo": "7ª   (2 + 1) "
+    },
+    {
+      "categoria": 8,
+      "ganadores": "173883",
+      "ganadores_eu": null,
+      "premio_eur": "3",
+      "tipo": "8ª   (2 + 0) "
+    },
+    {
+      "categoria": 9,
+      "ganadores": "251817",
+      "ganadores_eu": null,
+      "premio_eur": "1.5",
+      "tipo": "Reintegro"
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-15 21:41:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "ELGR",
+  "id_sorteo": "1328705046",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

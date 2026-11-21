@@ -1,0 +1,21 @@
+{
+  "combinacion": null,
+  "complementos": {
+    "jornada": "25",
+    "temporada": "2026-2027"
+  },
+  "escrutinio": [],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "pendiente",
+  "fecha_sorteo": "2026-11-22 00:00:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "QGOL",
+  "id_sorteo": "1329407078",
+  "incidencias": [
+    "combinacion_ausente_o_no_interpretable",
+    "escrutinio_ausente"
+  ],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

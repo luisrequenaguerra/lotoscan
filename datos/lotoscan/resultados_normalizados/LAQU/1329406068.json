@@ -1,0 +1,24 @@
+{
+  "combinacion": null,
+  "complementos": {
+    "elige8": null,
+    "escrutinio_elige8": [],
+    "jornada": "23",
+    "temporada": "2026-2027"
+  },
+  "escrutinio": [],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "pendiente",
+  "fecha_sorteo": "2026-11-22 00:00:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "LAQU",
+  "id_sorteo": "1329406068",
+  "incidencias": [
+    "combinacion_ausente_o_no_interpretable",
+    "escrutinio_ausente",
+    "elige8_incompleto"
+  ],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}

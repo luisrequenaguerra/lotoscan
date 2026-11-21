@@ -1,0 +1,65 @@
+{
+  "combinacion": {
+    "complementario": 1,
+    "numeros": [
+      6,
+      2,
+      7,
+      6,
+      6
+    ],
+    "reintegro_o_clave": null,
+    "texto_original": "6 - 2 - 7 - 6 - 6 C(1)"
+  },
+  "complementos": {
+    "jornada": null,
+    "temporada": null
+  },
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "Especial (1 solo resguardo de 1ª Cat) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "1ª (5 Caballos Gan+2º de 5ªCarrera) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "2ª (5 Caballos Ganadores) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "5",
+      "ganadores_eu": null,
+      "premio_eur": "148.57",
+      "tipo": "3ª (4 Caballos Gan+2º de 5ªCarrera) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "9",
+      "ganadores_eu": null,
+      "premio_eur": "82.54",
+      "tipo": "4ª (4 Caballos Ganadores) "
+    }
+  ],
+  "esquema": "lotoscan.resultado.normalizado.v1",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-15 16:16:00",
+  "fuente": "historico oficial SELAE fechav3/fecha2",
+  "game_id": "QUPL",
+  "id_sorteo": "1328708072",
+  "incidencias": [],
+  "origen": "actual.json",
+  "premios_verificados": false,
+  "publicable": false
+}
