@@ -1,0 +1,56 @@
+name: LotoScan - Motor Navidad experimental 1.04
+on:
+  workflow_dispatch:
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar lector PDF
+        run: python -m pip install 'PyMuPDF==1.26.5'
+      - name: Obtener artefacto 1.03 y PDF oficiales
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download --name lotoscan-selae-103 --dir origen_103
+          python - <<'PY'
+          import pathlib, shutil
+          for y in (2024,2025):
+              p=pathlib.Path(f'lista_oficial_navidad_{y}.pdf')
+              if not p.exists():
+                  matches=list(pathlib.Path('origen_103').rglob(p.name))
+                  if matches:shutil.copy2(matches[0],p)
+          PY
+          python - <<'PY'
+          import pathlib, zipfile
+          files=list(pathlib.Path('origen_103').rglob('catalogo_candidatos_navidad_*_103.json'))
+          with zipfile.ZipFile('lotoscan-selae-103.zip','w') as z:
+              for p in files:z.write(p,p.name)
+          PY
+          python - <<'PY'
+          import json, pathlib, urllib.parse, urllib.request
+          for year,draw in [(2024,'1259409102'),(2025,'1295909102')]:
+              p=pathlib.Path(f'lista_oficial_navidad_{year}.pdf')
+              if p.exists():continue
+              u=f'https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo={draw}'
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=40) as r:data=r.read().decode('utf-8-sig')
+              obj=json.loads(data)
+              if isinstance(obj,list):obj=obj[0]
+              link=obj['urlListadoOficial']
+              url=urllib.parse.urljoin('https://www.loteriasyapuestas.es',urllib.parse.quote(link,safe='/:?=&%'))
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'}),timeout=50) as r:p.write_bytes(r.read())
+          PY
+      - name: Ejecutar auditoría económica
+        run: python scripts/validar_motor_navidad_104.py --entrada lotoscan-selae-103.zip --salida salida_104
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-104
+          path: salida_104/
