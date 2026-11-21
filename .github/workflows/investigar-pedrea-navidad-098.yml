@@ -1,0 +1,24 @@
+name: LotoScan - Investigar pedrea Navidad 0.98
+on:
+  workflow_dispatch:
+jobs:
+  investigar-pedrea:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar extractor PDF
+        run: sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+      - name: Auditar listas oficiales de Navidad
+        run: python scripts/investigar_pedrea_navidad_098.py
+      - name: Subir informe y listas oficiales
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-098
+          path: salida_098/
+          if-no-files-found: error
