@@ -1,0 +1,27 @@
+name: LotoScan - Analizar sabado Nacional 0.93
+on:
+  workflow_dispatch:
+    inputs:
+      idsorteo:
+        description: 'ID oficial de un sorteo de sabado (por defecto 14/11/2026)'
+        required: true
+        default: '1328609092'
+permissions:
+  contents: read
+jobs:
+  analizar-sabado:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar y auditar resultados de sabado
+        run: python scripts/analizar_sabado_nacional_093.py --idsorteo '${{ inputs.idsorteo }}'
+      - name: Guardar informe de auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-093
+          path: informes/093/
+          if-no-files-found: warn
