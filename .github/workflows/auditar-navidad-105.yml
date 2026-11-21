@@ -1,0 +1,24 @@
+name: LotoScan - Auditoria masiva Navidad 1.05
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar lector PDF
+        run: sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+      - name: Ejecutar auditoria sin red
+        run: python scripts/auditar_navidad_105.py
+      - name: Subir informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-105
+          path: salida_105/
+          if-no-files-found: warn
