@@ -1473,6 +1473,185 @@
           "publicable": false
         }
       ]
+    },
+    {
+      "juego": "LNAC",
+      "id_sorteo": "1329309094",
+      "fecha": "2026-11-21",
+      "revisiones": [
+        {
+          "sha256": "06721d0b9f8043ddaf012f92f63fcc4f8c0c39973c755817ddb6a177fb674288",
+          "detectado_utc": "2026-11-21T13:16:00.911355+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-21 13:00:00",
+            "dia_semana": "sábado",
+            "id_sorteo": "1329309094",
+            "game_id": "LNAC",
+            "anyo": "2026",
+            "nombre": "SORTEO DE LOTERÍA NACIONAL",
+            "lugar": "Madrid Sede Central",
+            "num_sorteo": "94",
+            "premio_bote": "0",
+            "cdc": "13293",
+            "apuestas": "0",
+            "recaudacion": "0",
+            "combinacion": {
+              "primer_premio": "23641",
+              "Segundo_premio": "26323"
+            },
+            "fraccion": null,
+            "serie": null,
+            "reintegros": [
+              "1",
+              "0",
+              "7"
+            ],
+            "premios": "0",
+            "fondo_bote": "0",
+            "escrutinio": [
+              {
+                "tipo": "Primer Premio",
+                "premio": "60000",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Segundo Premio",
+                "premio": "12000",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Reintegro",
+                "premio": "6",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "150",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "150",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "150",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 4 cifras",
+                "premio": "150",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 3 cifras",
+                "premio": "30",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              },
+              {
+                "tipo": "Extracción de 2 cifras",
+                "premio": "12",
+                "ganadores": 1
+              }
+            ],
+            "tenthPrice": 6.0,
+            "apertura": "2026-11-08 00:00:00",
+            "cierre": "2026-11-21 12:30:00",
+            "estado": "cerrado"
+          },
+          "advertencias": [
+            "nacional_sin_lista_exhaustiva_de_premios_por_numero",
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
     }
   ]
 }
