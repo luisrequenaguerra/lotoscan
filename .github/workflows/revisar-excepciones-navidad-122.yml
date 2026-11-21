@@ -1,0 +1,39 @@
+name: LotoScan - Excepciones Navidad 1.22
+on:
+  workflow_dispatch:
+    inputs:
+      anio:
+        description: Año histórico (2024 o 2025)
+        required: true
+        default: '2024'
+      numero:
+        description: Número de cinco cifras (opcional)
+        required: false
+        default: '72480'
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install 'pymupdf>=1.24,<1.28'
+      - name: Revisar excepciones y acumulaciones
+        env:
+          ANIO: ${{ inputs.anio }}
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          test -f scripts/auditar_integracion_navidad_117.py
+          test -f scripts/consultar_navidad_119.py
+          test -f scripts/calcular_navidad_120.py
+          test -f scripts/conciliar_navidad_121.py
+          python scripts/revisar_excepciones_navidad_122.py --anio "$ANIO" --numero "$NUMERO" --salida salida_122
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-122-${{ inputs.anio }}
+          path: salida_122/
+          if-no-files-found: warn
