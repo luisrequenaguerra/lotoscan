@@ -336,6 +336,48 @@
           46
         ],
         "reintegro": 2
+      },
+      "2026-11-20": {
+        "categorias": {
+          "3": {
+            "acertantes": 101153,
+            "importe_centimos": 400
+          },
+          "4": {
+            "acertantes": 5847,
+            "importe_centimos": 2113
+          },
+          "5": {
+            "acertantes": 110,
+            "importe_centimos": 74878
+          },
+          "5+C": {
+            "acertantes": 1,
+            "importe_centimos": 16473247
+          },
+          "6": {
+            "acertantes": 1,
+            "importe_centimos": 126623976
+          },
+          "R": {
+            "acertantes": 544686,
+            "importe_centimos": 50
+          }
+        },
+        "complementario": 43,
+        "estado": "pendiente_verificacion_independiente",
+        "fecha": "2026-11-20",
+        "fuente": "comprobarloteria.com (informe 0.52)",
+        "numero_sorteo": 324,
+        "numeros": [
+          4,
+          11,
+          17,
+          25,
+          37,
+          48
+        ],
+        "reintegro": 8
       }
     },
     "eurodreams": {
@@ -457,6 +499,38 @@
           38,
           46,
           48
+        ]
+      },
+      "2026-11-20": {
+        "categorias": {
+          "1+2": 718,
+          "2+0": 410,
+          "2+1": 578,
+          "2+2": 1501,
+          "3+0": 976,
+          "3+1": 1185,
+          "3+2": 6191,
+          "4+0": 3881,
+          "4+1": 12594,
+          "4+2": 137770,
+          "5+0": 1122799,
+          "5+1": 31226703,
+          "5+2": null
+        },
+        "el_millon": "HPB41745",
+        "estado": "pendiente_verificacion_independiente",
+        "estrellas": [
+          1,
+          8
+        ],
+        "fecha": "2026-11-20",
+        "fuente": "comprobarloteria.com (informe 0.48)",
+        "numeros": [
+          8,
+          21,
+          24,
+          36,
+          49
         ]
       }
     },
