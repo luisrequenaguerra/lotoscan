@@ -1,0 +1,24 @@
+name: LotoScan - Motor experimental de aciertos 1.32
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["LotoScan - Normalizar historico SELAE 1.31"]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  comprobar:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Inspeccionar histórico normalizado y preparar motor
+        run: python scripts/comprobar_boletos_132.py --informe salida_132
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-132
+          path: salida_132/
