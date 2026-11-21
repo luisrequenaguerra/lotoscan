@@ -1,0 +1,56 @@
+name: LotoScan - Historico oficial 10 juegos 1.29
+on:
+  workflow_dispatch:
+    inputs:
+      solo_lectura:
+        description: 'Diagnostico sin escribir historico'
+        type: boolean
+        default: true
+      dias:
+        description: 'Dias naturales a revisar (1-21)'
+        type: number
+        default: 8
+  schedule:
+    - cron: '23 8,14,20 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-historico-oficial
+  cancel-in-progress: false
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar diez juegos SELAE
+        env:
+          READ_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.solo_lectura || false }}
+          DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.dias || 8 }}
+        run: |
+          if [ "$READ_ONLY" = "true" ]; then
+            python scripts/actualizar_resultados_129.py --dias "$DAYS" --solo-lectura
+          else
+            python scripts/actualizar_resultados_129.py --dias "$DAYS"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-129
+          path: salida_129/
+          if-no-files-found: warn
+      - name: Guardar historico incremental
+        if: ${{ success() && (github.event_name == 'schedule' || inputs.solo_lectura == false) }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add datos/lotoscan/historico_129/
+          if ! git diff --cached --quiet; then
+            git commit -m 'LotoScan: nuevos resultados oficiales 1.29'
+            git pull --rebase
+            git push
+          fi
