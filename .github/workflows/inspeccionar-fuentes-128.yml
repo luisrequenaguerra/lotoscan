@@ -1,0 +1,21 @@
+name: LotoScan - Inspeccionar fuentes SELAE terceros 1.28
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspeccionar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspeccionar diez fichas oficiales (sin alterar historico)
+        run: python scripts/inspeccionar_fuentes_128.py --out salida_128
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-128
+          path: salida_128/
+          if-no-files-found: warn
