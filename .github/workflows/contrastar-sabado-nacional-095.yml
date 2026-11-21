@@ -1,0 +1,26 @@
+name: LotoScan - Contrastar sabado Nacional 0.95
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contraste:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar extractor PDF
+        run: sudo apt-get update -qq && sudo apt-get install -y poppler-utils
+      - name: Contrastar lista oficial con motor 0.94
+        run: python scripts/contrastar_sabado_nacional_095.py
+      - name: Descargar informe y evidencia
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-095
+          path: informes/lnac_095/
+          if-no-files-found: warn
