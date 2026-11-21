@@ -1,0 +1,41 @@
+name: LotoScan - Columnas completas Navidad 1.13
+on:
+  workflow_dispatch:
+    inputs:
+      anio:
+        description: 'Año histórico 2024 o 2025 (o año futuro con URL)'
+        required: true
+        default: '2024'
+      pdf_url:
+        description: 'URL HTTPS oficial SELAE; dejar vacío para 2024/2025'
+        required: false
+        default: ''
+permissions:
+  contents: read
+jobs:
+  analizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar lector PDF
+        run: python -m pip install 'PyMuPDF==1.26.6'
+      - name: Analizar columnas completas
+        env:
+          ANIO: ${{ inputs.anio }}
+          PDF_URL: ${{ inputs.pdf_url }}
+        run: |
+          if [ -n "$PDF_URL" ]; then
+            python scripts/auditar_columnas_navidad_113.py --anio "$ANIO" --url "$PDF_URL"
+          else
+            python scripts/auditar_columnas_navidad_113.py --historico "$ANIO"
+          fi
+      - name: Subir resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-113
+          path: salida_113/
+          if-no-files-found: warn
