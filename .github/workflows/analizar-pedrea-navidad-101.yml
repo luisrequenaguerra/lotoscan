@@ -1,0 +1,30 @@
+name: LotoScan - Contrastar hipotesis pedrea Navidad 1.01
+on:
+  workflow_dispatch:
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Recuperar registros originales de la version 0.99
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p entrada_099
+          gh run download --repo "$GITHUB_REPOSITORY" --name lotoscan-selae-099 --dir entrada_099
+          test -n "$(find entrada_099 -name registros_navidad_2024.json -print -quit)"
+          test -n "$(find entrada_099 -name registros_navidad_2025.json -print -quit)"
+      - name: Analizar marcas y solapamientos sin publicar premios
+        run: python scripts/analizar_pedrea_navidad_101.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-101
+          path: salida_101/
+          if-no-files-found: warn
