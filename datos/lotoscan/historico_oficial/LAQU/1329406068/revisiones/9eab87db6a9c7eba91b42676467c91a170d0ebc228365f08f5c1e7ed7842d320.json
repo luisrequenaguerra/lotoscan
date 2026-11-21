@@ -1,0 +1,94 @@
+{
+  "anyo": "2026",
+  "apuestas": "0",
+  "cdc": "13294",
+  "combinacion": null,
+  "dia_semana": "domingo",
+  "escrutinio": [],
+  "fecha_sorteo": "2026-11-22 00:00:00",
+  "fondo_bote": "220379",
+  "game_id": "LAQU",
+  "id_sorteo": "1329406068",
+  "jornada": "23",
+  "partidos": [
+    {
+      "fecha": "2026\\/11\\/21 14:00:00",
+      "local": "Alavés (m)",
+      "visitante": "Deportivo (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/21 16:15:00",
+      "local": "Rayo Vallecano (m)",
+      "visitante": "Valencia (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/21 21:00:00",
+      "local": "Real Madrid (m)",
+      "visitante": "Celta (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 14:00:00",
+      "local": "Barcelona (m)",
+      "visitante": "Villarreal (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 16:15:00",
+      "local": "Racing Santander (m)",
+      "visitante": "Real Sociedad (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 18:30:00",
+      "local": "Osasuna (m)",
+      "visitante": "Málaga (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 21:00:00",
+      "local": "Getafe (m)",
+      "visitante": "At. Madrid (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/21 21:00:00",
+      "local": "Tenerife (m)",
+      "visitante": "Mallorca (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 16:15:00",
+      "local": "Sporting (m)",
+      "visitante": "Las Palmas (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 18:30:00",
+      "local": "Girona (m)",
+      "visitante": "Eibar (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/21 17:00:00",
+      "local": "Eibar (f)",
+      "visitante": "At. Madrid (f)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 12:00:00",
+      "local": "Granada (f)",
+      "visitante": "Real Madrid (f)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 12:00:00",
+      "local": "Real Sociedad (f)",
+      "visitante": "Sevilla (f)"
+    },
+    {
+      "fecha": "2026\\/11\\/22 17:00:00",
+      "local": "Tenerife (f)",
+      "visitante": "Madrid Cff (f)"
+    },
+    {
+      "fecha": "2026\\/11\\/21 18:30:00",
+      "local": "Sevilla (m)",
+      "visitante": "Betis (m)"
+    }
+  ],
+  "premio_bote": "1000000",
+  "premios": "0",
+  "recaudacion": null,
+  "temporada": "2026-2027"
+}

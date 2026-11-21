@@ -1,0 +1,109 @@
+{
+  "anyo": "2026",
+  "apuestas": "6197289",
+  "cdc": "13288",
+  "combinacion": "08 - 09 - 17 - 34 - 43 - 48 C(29) R(0)",
+  "dia_semana": "lunes",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "1",
+      "premio": "10925401,24",
+      "tipo": "Especial (6 Aciertos + R) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "1",
+      "premio": "733749,98",
+      "tipo": "1ª (6 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "1",
+      "premio": "118986,48",
+      "tipo": "2ª (5 Aciertos + C) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "89",
+      "premio": "2451,03",
+      "tipo": "3ª (5 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "5465",
+      "premio": "58,06",
+      "tipo": "4ª (4 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "100709",
+      "premio": "8",
+      "tipo": "5ª (3 Aciertos) "
+    },
+    {
+      "categoria": 7,
+      "ganadores": "526031",
+      "premio": "1",
+      "tipo": "Reintegro"
+    }
+  ],
+  "escrutinio_joker": [
+    {
+      "ganadores": 0,
+      "orden_escrutinio": "1",
+      "premio": "1000000",
+      "tipo": "1ª (todas las cifras)"
+    },
+    {
+      "ganadores": 0,
+      "orden_escrutinio": "2",
+      "premio": "10000",
+      "tipo": "2ª (6 primeras o últimas cifras)"
+    },
+    {
+      "ganadores": 4,
+      "orden_escrutinio": "3",
+      "premio": "1000",
+      "tipo": "3ª (5 primeras o últimas cifras)"
+    },
+    {
+      "ganadores": 73,
+      "orden_escrutinio": "4",
+      "premio": "300",
+      "tipo": "4ª (4 primeras o últimas cifras)"
+    },
+    {
+      "ganadores": 730,
+      "orden_escrutinio": "5",
+      "premio": "50",
+      "tipo": "5ª (3 primeras o últimas cifras)"
+    },
+    {
+      "ganadores": 7856,
+      "orden_escrutinio": "6",
+      "premio": "5",
+      "tipo": "6ª (2 primeras o últimas cifras)"
+    },
+    {
+      "ganadores": 78582,
+      "orden_escrutinio": "7",
+      "premio": "1",
+      "tipo": "7ª (primera o última cifra)"
+    }
+  ],
+  "fecha_sorteo": "2026-11-16 21:42:00",
+  "fondo_bote": "10330468",
+  "game_id": "LAPR",
+  "id_sorteo": "1328804138",
+  "joker": {
+    "activo": "1",
+    "bote_joker": 1000000,
+    "combinacion": "6436393",
+    "gameid": "LAJO",
+    "relsorteoid_asociado": "1328810138"
+  },
+  "premio_bote": "11300000",
+  "premios": "3408508",
+  "recaudacion": "6197289"
+}
