@@ -1,0 +1,41 @@
+name: LotoScan - Consulta manual Navidad 1.23
+on:
+  workflow_dispatch:
+    inputs:
+      anio:
+        description: Año del sorteo
+        required: true
+        default: '2024'
+      numero:
+        description: Número de cinco cifras
+        required: true
+        default: '72480'
+jobs:
+  consulta:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install 'pymupdf>=1.24,<1.28'
+      - name: Calcular tabla base desde SELAE
+        env:
+          ANIO: ${{ inputs.anio }}
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          test -f scripts/auditar_integracion_navidad_117.py
+          test -f scripts/consultar_navidad_119.py
+          test -f scripts/calcular_navidad_120.py
+          test -f scripts/conciliar_navidad_121.py
+          test -f scripts/revisar_excepciones_navidad_122.py
+          python scripts/revisar_excepciones_navidad_122.py --anio "$ANIO" --numero "$NUMERO" --salida salida_122
+          python scripts/publicar_consulta_navidad_123.py --anio "$ANIO" --numero "$NUMERO" --entrada salida_122 --salida salida_123
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-123-${{ inputs.anio }}
+          path: salida_123/
+          if-no-files-found: warn
