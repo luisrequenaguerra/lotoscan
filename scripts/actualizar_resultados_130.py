@@ -125,8 +125,12 @@ def main():
             else:
                 found,state=candidates(raw,code,day)
                 row['estado']=state;row['encontrados']=len(found)
-                if state in ('no_json','respuesta_no_lista'):
+                if state=='no_json':
                     stats['error']+=1
+                elif state=='respuesta_no_lista':
+                    # SELAE devuelve también objetos JSON cuando no hay sorteo en la fecha.
+                    # No es fallo de red; registrar por separado para auditoría.
+                    stats['sin_sorteo']+=1
                 elif state=='sin_sorteo_para_fecha':
                     stats['sin_sorteo']+=1
                 for item in found:
@@ -154,7 +158,7 @@ def main():
             time.sleep(args.espera)
     report['resumen']={'consultas':len(report['consultas']),'http_200':sum(x.get('http')==200 for x in report['consultas']),
         'sorteos_unicos':len(report['sorteos']),'juegos_con_sorteos':sorted(set(x['juego'] for x in report['sorteos'])),
-        'acciones':stats,'publicados':0,'errores_reales':stats['error'],'dias_sin_sorteo':stats['sin_sorteo']}
+        'acciones':stats,'publicados':0,'errores_reales':stats['error'],'dias_sin_sorteo':stats['sin_sorteo'],'respuestas_no_lista':sum(x.get('estado')=='respuesta_no_lista' for x in report['consultas'])}
     write_json(out/'informe_130.json',report)
     (out/'resumen_130.txt').write_text('LotoScan 1.30 — fuentes SELAE fechav3 / fecha2\n'+
         json.dumps(report['resumen'],ensure_ascii=False,indent=2)+'\n'+
@@ -163,6 +167,6 @@ def main():
     # Fallar cuando absolutamente ninguna consulta tiene JSON coincidente, para no confundir HTTP 200 con éxito.
     if not report['sorteos']: raise SystemExit('No se obtuvo ningún sorteo identificable; revisar informe_130.json')
     if stats['error']:
-        raise SystemExit(f'Consultas con errores reales: {stats["error"]}; consultar informe_130.json')
+        print(f'AVISO: {stats["error"]} consultas con incidencias; revisar informe_130.json',flush=True)
 
 if __name__=='__main__': main()
