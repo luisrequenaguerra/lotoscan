@@ -32,6 +32,9 @@ jobs:
           READ_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.solo_lectura || false }}
           DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.dias || 8 }}
         run: |
+          # GitHub puede entregar el input numerico como "8.0".
+          # argparse requiere un entero: normalizar antes de invocar Python.
+          DAYS="${DAYS%%.*}"
           if [ "$READ_ONLY" = "true" ]; then
             python scripts/actualizar_resultados_129.py --dias "$DAYS" --solo-lectura
           else
