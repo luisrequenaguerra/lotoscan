@@ -1,4 +1,4 @@
-name: LotoScan - Historico oficial 10 juegos 1.30
+name: LotoScan - Historico oficial 10 juegos 1.30.1
 on:
   workflow_dispatch:
     inputs:
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: lotoscan-selae-130
+          name: lotoscan-selae-1301
           path: salida_130/
           if-no-files-found: warn
       - name: Guardar historico incremental en GitHub
@@ -51,7 +51,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add datos/lotoscan/historico_oficial/
           if ! git diff --cached --quiet; then
-            git commit -m 'LotoScan: actualizar historico oficial 1.30'
+            git commit -m 'LotoScan: actualizar historico oficial 1.30.1'
             git pull --rebase
             git push
           fi
