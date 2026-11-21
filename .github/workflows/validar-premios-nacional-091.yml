@@ -1,0 +1,22 @@
+name: LotoScan - Validar premios Nacional 0.91
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validar:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Contrastar importes con lista oficial 93-26
+        run: python scripts/validar_premios_nacional_091.py
+      - name: Guardar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-091
+          path: informes/lnac_091/validacion.json
+          if-no-files-found: error
