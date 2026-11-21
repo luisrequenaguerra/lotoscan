@@ -1,0 +1,48 @@
+name: LotoScan - Resultados1 diez juegos 1.27
+on:
+  workflow_dispatch:
+    inputs:
+      solo_lectura:
+        description: 'No guardar historico (diagnostico)'
+        type: boolean
+        default: true
+  schedule:
+    - cron: '23 8,14,20 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-historico-127
+  cancel-in-progress: false
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar resultados1 por juego
+        env:
+          SOLO_LECTURA: ${{ inputs.solo_lectura }}
+        run: |
+          if [ "$SOLO_LECTURA" = 'true' ]; then
+            python scripts/consolidar_resultados_127.py --solo-lectura
+          else
+            python scripts/consolidar_resultados_127.py
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-127
+          path: salida_127/
+          if-no-files-found: error
+      - name: Persistir historico
+        if: ${{ success() && (github.event_name == 'schedule' || inputs.solo_lectura == false) }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add datos/lotoscan/historico_127/
+          if ! git diff --cached --quiet; then
+            git commit -m 'LotoScan 1.27: resultados1'
+            git push
+          fi
