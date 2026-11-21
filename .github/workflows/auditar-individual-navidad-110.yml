@@ -1,0 +1,22 @@
+name: LotoScan - Auditoria individual Navidad 1.10
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Auditar sin conexion externa
+        run: python scripts/auditar_individual_navidad_110.py
+      - name: Descargar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-110
+          path: salida_110/
+          if-no-files-found: warn
