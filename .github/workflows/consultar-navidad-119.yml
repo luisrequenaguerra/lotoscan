@@ -1,0 +1,40 @@
+name: LotoScan - Consulta documental Navidad 1.19
+on:
+  workflow_dispatch:
+    inputs:
+      anio:
+        description: Ano del sorteo (2024/2025 historico)
+        required: true
+        default: '2024'
+      numero:
+        description: Numero de cinco cifras (opcional)
+        required: false
+        default: '72480'
+jobs:
+  consulta:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install 'pymupdf>=1.24,<1.28'
+      - name: Ejecutar consulta
+        env:
+          ANIO: ${{ inputs.anio }}
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          test -f scripts/auditar_integracion_navidad_117.py
+          if [ -n "$NUMERO" ]; then
+            python scripts/consultar_navidad_119.py --anio "$ANIO" --numero "$NUMERO" --salida salida_119
+          else
+            python scripts/consultar_navidad_119.py --anio "$ANIO" --salida salida_119
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-119-${{ inputs.anio }}
+          path: salida_119/
+          if-no-files-found: warn
