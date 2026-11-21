@@ -1,0 +1,23 @@
+name: LotoScan - Investigar Navidad Nacional 0.97
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  investigar-navidad:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Investigar JSON oficial de Navidad
+        run: python scripts/investigar_navidad_nacional_097.py
+      - name: Guardar informe y respuestas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-097
+          path: salida_097/
+          if-no-files-found: warn
