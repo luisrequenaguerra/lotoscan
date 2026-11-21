@@ -1,0 +1,37 @@
+name: LotoScan - Diagnostico 10 juegos SELAE 1.24
+on:
+  workflow_dispatch:
+    inputs:
+      quiniela_id:
+        description: 'ID oficial de sorteo de La Quiniela (opcional; no inventar)'
+        required: false
+        default: ''
+      max_por_juego:
+        description: 'IDs recientes que se comprueban por juego'
+        required: false
+        default: '2'
+  schedule:
+    - cron: '17 8 * * *'
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Diagnosticar diez juegos sin modificar historicos
+        env:
+          QUINIELA_ID: ${{ github.event.inputs.quiniela_id }}
+          MAX_POR_JUEGO: ${{ github.event.inputs.max_por_juego || '2' }}
+        run: |
+          python scripts/consolidar_selae_124.py --root . --out salida_124 --quiniela-id "$QUINIELA_ID" --max-por-juego "$MAX_POR_JUEGO"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-124
+          path: salida_124/
+          if-no-files-found: warn
