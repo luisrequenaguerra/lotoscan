@@ -1,0 +1,40 @@
+name: LotoScan - Auditar pedrea Navidad 0.99
+on:
+  workflow_dispatch:
+jobs:
+  auditoria:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Descargar artefacto 0.98 desde ejecución anterior
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download --repo "$GITHUB_REPOSITORY" --name lotoscan-selae-098 --dir entrada_098
+          find entrada_098 -maxdepth 2 -type f -print
+          python - <<'PY'
+          import pathlib,zipfile
+          root=pathlib.Path('entrada_098')
+          files=list(root.rglob('*.zip'))
+          if files:
+              pathlib.Path('fuente_098.zip').write_bytes(files[0].read_bytes())
+          else:
+              candidates=list(root.rglob('lista_oficial_navidad_2024.txt'))
+              if not candidates: raise SystemExit('No se encuentran los TXT oficiales de 0.98')
+              with zipfile.ZipFile('fuente_098.zip','w',zipfile.ZIP_DEFLATED) as z:
+                  for y in (2024,2025):
+                      f=list(root.rglob(f'lista_oficial_navidad_{y}.txt'))
+                      if not f: raise SystemExit(f'Falta texto {y}')
+                      z.write(f[0],f[0].name)
+          PY
+      - name: Extraer y auditar sin publicar premios
+        run: python scripts/extraer_pedrea_navidad_099.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-099
+          path: salida_099/
+          if-no-files-found: warn
