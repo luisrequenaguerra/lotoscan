@@ -1,0 +1,36 @@
+name: LotoScan - Motor Navidad 1.04 corregido (sin HTTP 403)
+on:
+  workflow_dispatch:
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Instalar lector PDF
+        run: python -m pip install 'PyMuPDF==1.26.5'
+      - name: Recuperar catalogos 1.03 desde GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download --name lotoscan-selae-103 --dir origen_103
+          python - <<'PYTHON'
+          import pathlib,zipfile
+          files=list(pathlib.Path('origen_103').rglob('catalogo_candidatos_navidad_*_103.json'))
+          if len(files)!=2: raise SystemExit('ERROR: faltan catalogos 2024 y 2025 del artefacto 1.03')
+          with zipfile.ZipFile('lotoscan-selae-103.zip','w') as z:
+              for p in files:z.write(p,p.name)
+          PYTHON
+      - name: Auditar con referencias oficiales conservadas (sin descargar SELAE)
+        run: python scripts/validar_motor_navidad_104_corregido.py --entrada lotoscan-selae-103.zip --salida salida_104
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-104-corregido
+          path: salida_104/
+          if-no-files-found: warn
