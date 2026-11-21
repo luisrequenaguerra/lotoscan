@@ -1,0 +1,23 @@
+{
+  "adicionales": {},
+  "combinacion": [
+    "M-1",
+    "21:00",
+    "14:00",
+    "16:15",
+    "21:00",
+    "1-1"
+  ],
+  "errores": [
+    "Fecha futura",
+    "Categorías: esperadas 5, recibidas 0",
+    "Validación semántica de pronósticos pendiente"
+  ],
+  "fecha": "22/11/2026",
+  "fecha_original": "Jornada 25ª - domingo - dom - 22/11/2026",
+  "fuente": "SELAE /es/resultados (extractor reutilizado 0.85W)",
+  "juego": "quinigol",
+  "premios": [],
+  "publicable": false,
+  "validado": false
+}

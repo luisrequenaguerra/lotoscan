@@ -1,0 +1,75 @@
+{
+  "adicionales": {},
+  "combinacion": [
+    "15",
+    "22",
+    "23",
+    "28",
+    "45"
+  ],
+  "errores": [
+    "Clave de El Gordo pendiente de selector confirmado"
+  ],
+  "fecha": "15/11/2026",
+  "fecha_original": "domingo - dom - 15/11/2026",
+  "fuente": "SELAE /es/resultados (extractor reutilizado 0.85W)",
+  "juego": "gordo-primitiva",
+  "premios": [
+    [
+      "1ª (5 + 1)",
+      "0",
+      "0,00 €",
+      ""
+    ],
+    [
+      "2ª (5 + 0)",
+      "1",
+      "159.646,61 €",
+      ""
+    ],
+    [
+      "3ª (4 + 1)",
+      "31",
+      "936,34 €",
+      ""
+    ],
+    [
+      "4ª (4 + 0)",
+      "266",
+      "127,31 €",
+      ""
+    ],
+    [
+      "5ª (3 + 1)",
+      "1.063",
+      "36,41 €",
+      ""
+    ],
+    [
+      "6ª (3 + 0)",
+      "12.087",
+      "10,41 €",
+      ""
+    ],
+    [
+      "7ª (2 + 1)",
+      "15.768",
+      "6,14 €",
+      ""
+    ],
+    [
+      "8ª (2 + 0)",
+      "173.883",
+      "3,00 €",
+      ""
+    ],
+    [
+      "Reintegro",
+      "251.817",
+      "1,50 €",
+      ""
+    ]
+  ],
+  "publicable": false,
+  "validado": false
+}

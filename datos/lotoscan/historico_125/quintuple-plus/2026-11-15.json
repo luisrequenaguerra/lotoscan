@@ -1,0 +1,47 @@
+{
+  "adicionales": {},
+  "combinacion": [
+    "06",
+    "02",
+    "07",
+    "06",
+    "06",
+    "01"
+  ],
+  "errores": [
+    "Validación semántica de pronósticos pendiente"
+  ],
+  "fecha": "15/11/2026",
+  "fecha_original": "Jornada 72ª - domingo - dom - 15/11/2026",
+  "fuente": "SELAE /es/resultados (extractor reutilizado 0.85W)",
+  "juego": "quintuple-plus",
+  "premios": [
+    [
+      "Especial (1 solo resguardo de 1ª Cat)",
+      "0",
+      "0,00 €"
+    ],
+    [
+      "1ª (5 Caballos Gan+2º de 5ªCarrera)",
+      "0",
+      "0,00 €"
+    ],
+    [
+      "2ª (5 Caballos Ganadores)",
+      "0",
+      "0,00 €"
+    ],
+    [
+      "3ª (4 Caballos Gan+2º de 5ªCarrera)",
+      "5",
+      "148,57 €"
+    ],
+    [
+      "4ª (4 Caballos Ganadores)",
+      "9",
+      "82,54 €"
+    ]
+  ],
+  "publicable": false,
+  "validado": false
+}

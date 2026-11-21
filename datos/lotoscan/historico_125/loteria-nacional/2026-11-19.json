@@ -1,0 +1,39 @@
+{
+  "adicionales": {
+    "primer_premio": "51664",
+    "reintegros": [
+      "R 0",
+      "R 4",
+      "R 6"
+    ],
+    "segundo_premio": "68523"
+  },
+  "combinacion": [],
+  "errores": [
+    "Reintegros incompletos",
+    "Lotería Nacional: resumen insuficiente para comprobar todas las terminaciones y aproximaciones"
+  ],
+  "fecha": "19/11/2026",
+  "fecha_original": "jueves - jue - 19/11/2026",
+  "fuente": "SELAE /es/resultados (extractor reutilizado 0.85W)",
+  "juego": "loteria-nacional",
+  "premios": [
+    [
+      "1er Premio",
+      "30.000 €",
+      ""
+    ],
+    [
+      "2º Premio",
+      "6.000 €",
+      ""
+    ],
+    [
+      "Reintegro",
+      "3 €",
+      ""
+    ]
+  ],
+  "publicable": false,
+  "validado": false
+}
