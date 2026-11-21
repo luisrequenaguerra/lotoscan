@@ -1,0 +1,44 @@
+name: LotoScan - Reconstruccion columnas Navidad 1.15
+on:
+  workflow_dispatch:
+    inputs:
+      anio:
+        description: 'Año a analizar (2024, 2025 o 2026)'
+        required: true
+        default: '2024'
+        type: string
+      pdf_url:
+        description: 'URL HTTPS oficial SELAE para PDF nuevo; vacio para historico'
+        required: false
+        default: ''
+        type: string
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --disable-pip-version-check pymupdf==1.26.5
+      - name: Auditar PDF
+        env:
+          YEAR: ${{ inputs.anio }}
+          PDF_URL: ${{ inputs.pdf_url }}
+        run: |
+          if [ -n "$PDF_URL" ]; then
+            python scripts/auditar_columnas_navidad_115.py --anio "$YEAR" --url "$PDF_URL"
+          elif [ "$YEAR" = '2024' ] || [ "$YEAR" = '2025' ]; then
+            python scripts/auditar_columnas_navidad_115.py --historico "$YEAR"
+          else
+            echo 'Para 2026 debe indicarse la URL del PDF oficial' >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-115
+          path: salida_115/
+          if-no-files-found: warn
