@@ -1,0 +1,23 @@
+name: LotoScan - Calcular sabado Nacional 0.94
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar-sabado:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Ejecutar diagnostico economico experimental
+        run: python scripts/calcular_sabado_nacional_094.py
+      - name: Descargar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-094
+          path: informes/lnac_094/analisis_sabado_094.json
+          if-no-files-found: warn
