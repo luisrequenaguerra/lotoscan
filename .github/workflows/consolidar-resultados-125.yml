@@ -1,0 +1,51 @@
+name: LotoScan - Recuperacion 10 juegos SELAE 1.25
+on:
+  workflow_dispatch:
+    inputs:
+      quiniela_pdf_url:
+        description: 'URL de nota PDF oficial de Quiniela (opcional)'
+        required: false
+        default: ''
+      solo_lectura:
+        description: 'No guardar historico (true/false)'
+        required: false
+        default: 'false'
+  schedule:
+    - cron: '23 8,14,20 * * *'
+permissions:
+  contents: write
+jobs:
+  recuperar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Dependencias
+        run: python -m pip install beautifulsoup4 pypdf
+      - name: Recuperar resultados SELAE
+        env:
+          QUINIELA_PDF_URL: ${{ inputs.quiniela_pdf_url }}
+          SOLO_LECTURA: ${{ inputs.solo_lectura }}
+        run: |
+          CMD=(python scripts/consolidar_resultados_125.py --out salida_125)
+          if [ -n "$QUINIELA_PDF_URL" ]; then CMD+=(--quiniela-pdf-url "$QUINIELA_PDF_URL"); fi
+          if [ "$SOLO_LECTURA" = 'true' ]; then CMD+=(--solo-lectura); fi
+          "${CMD[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-125
+          path: salida_125/
+          if-no-files-found: warn
+      - name: Guardar histórico incremental en repositorio
+        if: ${{ github.event_name == 'schedule' || inputs.solo_lectura != 'true' }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add datos/lotoscan/historico_125/ || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'LotoScan: incorporar resultados SELAE 1.25'
+            git push
+          fi
