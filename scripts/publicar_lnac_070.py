@@ -10,11 +10,13 @@ WIDTHS = {"extraccionesDeCuatroCifras":4, "extraccionesDeTresCifras":3,
           "extraccionesDeDosCifras":2, "reintegros":1}
 
 def valid(d):
-    if not isinstance(d, dict) or d.get("tipoSorteoGeneral") not in ("J","S"):
+    if not isinstance(d, dict) or d.get("tipoSorteoGeneral") not in ("J","S") or d.get("premioEspecial") is not None:
         return False
     if not re.fullmatch(r"\d{6,20}", str(d.get("drawIdSorteo",""))):
         return False
     if not re.match(r"^20\d\d-\d\d-\d\dT", str(d.get("fechaSorteo",""))):
+        return False
+    if d.get("precioDecimo") != (3 if d["tipoSorteoGeneral"]=="J" else 6):
         return False
     for key in ("primerPremio","segundoPremio"):
         x=d.get(key)
