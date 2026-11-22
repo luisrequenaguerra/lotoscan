@@ -1,0 +1,52 @@
+{
+  "anyo": "2026",
+  "apuestas": "3835912",
+  "cdc": "13294",
+  "combinacion": "03 - 04 - 12 - 20 - 26 - 36 C(01) R(5)",
+  "dia_semana": "domingo",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "1",
+      "premio": "116699,24",
+      "tipo": "2ª  (5 Aciertos + C) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "66",
+      "premio": "884,09",
+      "tipo": "3ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "3718",
+      "premio": "23,54",
+      "tipo": "4ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "69896",
+      "premio": "4",
+      "tipo": "5ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "383707",
+      "premio": "0,5",
+      "tipo": "Reintegro"
+    }
+  ],
+  "fecha_sorteo": "2026-11-22 21:32:00",
+  "fondo_bote": "337992",
+  "game_id": "BONO",
+  "id_sorteo": "1329401326",
+  "premio_bote": "600000",
+  "premios": "1054875",
+  "recaudacion": "1917956"
+}
