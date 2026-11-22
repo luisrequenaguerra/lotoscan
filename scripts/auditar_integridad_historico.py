@@ -11,12 +11,22 @@ CODES={"EMIL","LAPR","BONO","ELGR","EDMS","LAQU","QGOL","LOTU","QUPL"}
 def digest(obj):
     return hashlib.sha256(json.dumps(obj,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode("utf-8")).hexdigest()
 
+def estado_publicacion(item,code):
+    """Estado estructural; no certifica carácter definitivo ni premios."""
+    combinacion=bool(item.get("combinacion"))
+    escrutinio=isinstance(item.get("escrutinio"),list) and bool(item["escrutinio"])
+    elige8=(code!="LAQU" or (isinstance(item.get("escrutinioElige8"),list) and bool(item["escrutinioElige8"])))
+    if not combinacion: return "sin_combinacion"
+    if not escrutinio or not elige8: return "combinacion_sin_escrutinio_completo"
+    return "completo_estructural_no_certificado"
+
 def audit(root):
     report={"fecha_utc":dt.datetime.now(dt.timezone.utc).isoformat(),
             "juegos":{},"errores":[],"avisos":[],"total_sorteos":0}
     for code in sorted(CODES):
         folder=root/code
         entries=[]
+        estados={}
         completos=0
         pendientes=0
         if folder.exists():
@@ -29,6 +39,8 @@ def audit(root):
                     if item.get("game_id")!=code: raise ValueError("Juego no coincide")
                     date=str(item.get("fecha_sorteo") or "")[:10]
                     dt.date.fromisoformat(date)
+                    estado=estado_publicacion(item,code)
+                    estados[estado]=estados.get(estado,0)+1
                     has_combination=bool(item.get("combinacion"))
                     has_scrutiny=isinstance(item.get("escrutinio"),list) and bool(item["escrutinio"])
                     has_elige8=(code!="LAQU" or (isinstance(item.get("escrutinioElige8"),list) and bool(item["escrutinioElige8"])))
@@ -54,12 +66,12 @@ def audit(root):
                                 report["errores"].append(f"{code}/{draw_id}: identidad incorrecta en {old_revision.name}")
                         except (OSError,ValueError,TypeError) as exc:
                             report["errores"].append(f"{code}/{draw_id}: revisión ilegible {old_revision.name}: {exc}")
-                    entries.append({"id_sorteo":draw_id,"fecha":date,"sha256":current_hash,
+                    entries.append({"id_sorteo":draw_id,"fecha":date,"estado":estado,"sha256":current_hash,
                                     "revisiones":len(list((file.parent/"revisiones").glob("*.json")))})
                 except (OSError,ValueError,TypeError) as exc:
                     report["errores"].append(f"{code}/{draw_id}: {exc}")
         report["juegos"][code]={"total":len(entries),"ultimo":max((x["fecha"] for x in entries),default=None),
-                                "completos_estructurales":completos,"pendientes":pendientes}
+                                "completos_estructurales":completos,"pendientes":pendientes,"estados":estados}
         if not entries: report["errores"].append(f"{code}: sin sorteos archivados")
         report["total_sorteos"]+=len(entries)
     report["resumen"]={"juegos_con_historico":sum(bool(v["total"]) for v in report["juegos"].values()),
