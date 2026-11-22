@@ -27,6 +27,11 @@ jobs:
           python-version: '3.11'
       - name: Regresion LNAC offline
         run: python tests/test_publicacion_lnac_070.py
+      - name: Consulta real SELAE resultados1 (sin publicar)
+        run: |
+          python scripts/actualizar_lnac_resultados1_070.py
+          python scripts/publicar_lnac_070.py
+          python -c "import json; p=json.load(open('resultados/lnac/manifest.json')); assert p['draws']; print('Sorteos:',len(p['draws']))"
   actualizar:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
