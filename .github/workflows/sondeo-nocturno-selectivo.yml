@@ -11,8 +11,8 @@ on:
         type: boolean
         default: false
   schedule:
-    # UTC amplio para cubrir horario de verano e invierno.
-    - cron: '0,30 18-22 * * *'
+    # Minutos 07 y 37 para evitar saturación del inicio de hora.\n    # UTC amplio para cubrir horario de verano e invierno.
+    - cron: '7,37 18-22 * * *'
 permissions:
   contents: write
 concurrency:
