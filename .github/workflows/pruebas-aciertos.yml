@@ -1,0 +1,20 @@
+name: LotoScan - Pruebas de aciertos
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/comprobar_aciertos.py'
+      - 'tests/test_comprobar_aciertos.py'
+      - '.github/workflows/pruebas-aciertos.yml'
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Ejecutar pruebas
+        run: python -m unittest discover -s tests -p 'test_comprobar_aciertos.py' -v
