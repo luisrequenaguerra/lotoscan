@@ -1,0 +1,148 @@
+{
+  "anyo": "2026",
+  "apertura": "2026-11-06 00:00:00",
+  "apuestas": "0",
+  "cdc": "13291",
+  "cierre": "2026-11-19 20:30:00",
+  "combinacion": {
+    "Segundo_premio": "68523",
+    "primer_premio": "51664"
+  },
+  "dia_semana": "jueves",
+  "escrutinio": [
+    {
+      "ganadores": 1,
+      "premio": "30000",
+      "tipo": "Primer Premio"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6000",
+      "tipo": "Segundo Premio"
+    },
+    {
+      "ganadores": 1,
+      "premio": "3",
+      "tipo": "Reintegro"
+    },
+    {
+      "ganadores": 1,
+      "premio": "75",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "75",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "75",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "75",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "15",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "15",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "15",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "15",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "15",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "15",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "15",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Extracción de 2 cifras"
+    }
+  ],
+  "estado": "cerrado",
+  "fecha_sorteo": "2026-11-19 21:00:00",
+  "fondo_bote": "0",
+  "fraccion": null,
+  "game_id": "LNAC",
+  "id_sorteo": "1329109093",
+  "lugar": "Madrid Sede Central",
+  "nombre": "SORTEO DEL JUEVES",
+  "num_sorteo": "93",
+  "premio_bote": "0",
+  "premios": "0",
+  "recaudacion": "0",
+  "reintegros": [
+    "4",
+    "0",
+    "6"
+  ],
+  "serie": null,
+  "tenthPrice": 3.0
+}

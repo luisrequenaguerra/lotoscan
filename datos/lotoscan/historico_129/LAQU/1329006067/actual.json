@@ -1,0 +1,159 @@
+{
+  "anyo": "2026",
+  "apuestas": "829201",
+  "cdc": "13290",
+  "combinacion": "1 - 1 - 2 - X - X - 1 - 1 - 2 - 1 - 1 - 2 - 2 - 1 - 2 - 2M",
+  "dia_semana": "miércoles",
+  "elige8": {
+    "activo": "1",
+    "gameid": "ELG8",
+    "relsorteoid_asociado": "1329013067"
+  },
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "14",
+      "premio": "3331,61",
+      "tipo": "Pleno al 15 "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "267",
+      "premio": "372,67",
+      "tipo": "1ª (14 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "4832",
+      "premio": "9,65",
+      "tipo": "2ª (13 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "30425",
+      "premio": "3,07",
+      "tipo": "3ª (12 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "90814",
+      "premio": "0",
+      "tipo": "4ª (11 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "155685",
+      "premio": "0",
+      "tipo": "5ª (10 Aciertos) "
+    }
+  ],
+  "escrutinioElige8": [
+    {
+      "categoria": 1,
+      "ganadores": "5390",
+      "premio": "2,85",
+      "tipo": "8 Acertados 8 "
+    }
+  ],
+  "fecha_sorteo": "2026-11-18 22:54:00",
+  "fondo_bote": "0",
+  "game_id": "LAQU",
+  "id_sorteo": "1329006067",
+  "jornada": "22",
+  "partidos": [
+    {
+      "local": "Bosnia Herzegovina (m)",
+      "marcador": "2 - 1",
+      "signo": "1 ",
+      "visitante": "Rumanía (m)"
+    },
+    {
+      "local": "Ucrania (m)",
+      "marcador": "1 - 0",
+      "signo": "1 ",
+      "visitante": "Georgia (m)"
+    },
+    {
+      "local": "Gales (m)",
+      "marcador": "2 - 3",
+      "signo": "2 ",
+      "visitante": "Portugal (m)"
+    },
+    {
+      "local": "Hungría (m)",
+      "marcador": "1 - 1",
+      "signo": "X ",
+      "visitante": "Irlanda Del Norte (m)"
+    },
+    {
+      "local": "Polonia (m)",
+      "marcador": "1 - 1",
+      "signo": "X ",
+      "visitante": "Suecia (m)"
+    },
+    {
+      "local": "República De Irlanda (m)",
+      "marcador": "3 - 0",
+      "signo": "1 ",
+      "visitante": "Kosovo (m)"
+    },
+    {
+      "local": "Real Madrid (f)",
+      "marcador": "3 - 1",
+      "signo": "1 ",
+      "visitante": "Inter De Milán (f)"
+    },
+    {
+      "local": "Hacken (f)",
+      "marcador": "0 - 2",
+      "signo": "2 ",
+      "visitante": "Manchester City (f)"
+    },
+    {
+      "local": "Chelsea (f)",
+      "marcador": "1 - 0",
+      "signo": "1 ",
+      "visitante": "Psg (f)"
+    },
+    {
+      "local": "Juventus (f)",
+      "marcador": "2 - 0",
+      "signo": "1 ",
+      "visitante": "Leuven (f)"
+    },
+    {
+      "local": "Austria De Viena (f)",
+      "marcador": "0 - 4",
+      "signo": "2 ",
+      "visitante": "Bayern De Múnich (f)"
+    },
+    {
+      "local": "Arsenal (f)",
+      "marcador": "0 - 2",
+      "signo": "2 ",
+      "visitante": "Ol Lyonnes (f)"
+    },
+    {
+      "local": "Barcelona (f)",
+      "marcador": "6 - 0",
+      "signo": "1 ",
+      "visitante": "Servette (f)"
+    },
+    {
+      "local": "Benfica (f)",
+      "marcador": "2 - 3",
+      "signo": "2 ",
+      "visitante": "Roma (f)"
+    },
+    {
+      "local": "Dinamarca (m)",
+      "marcador": "2 - 3",
+      "signo": "2-M",
+      "visitante": "Noruega (m)"
+    }
+  ],
+  "premio_bote": "0",
+  "premios": "342045",
+  "recaudacion": "621900",
+  "temporada": "2026-2027"
+}

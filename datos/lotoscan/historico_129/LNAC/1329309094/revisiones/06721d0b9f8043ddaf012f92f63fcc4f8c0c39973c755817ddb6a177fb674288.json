@@ -1,0 +1,163 @@
+{
+  "anyo": "2026",
+  "apertura": "2026-11-08 00:00:00",
+  "apuestas": "0",
+  "cdc": "13293",
+  "cierre": "2026-11-21 12:30:00",
+  "combinacion": {
+    "Segundo_premio": "26323",
+    "primer_premio": "23641"
+  },
+  "dia_semana": "sábado",
+  "escrutinio": [
+    {
+      "ganadores": 1,
+      "premio": "60000",
+      "tipo": "Primer Premio"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12000",
+      "tipo": "Segundo Premio"
+    },
+    {
+      "ganadores": 1,
+      "premio": "6",
+      "tipo": "Reintegro"
+    },
+    {
+      "ganadores": 1,
+      "premio": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "150",
+      "tipo": "Extracción de 4 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "30",
+      "tipo": "Extracción de 3 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    },
+    {
+      "ganadores": 1,
+      "premio": "12",
+      "tipo": "Extracción de 2 cifras"
+    }
+  ],
+  "estado": "cerrado",
+  "fecha_sorteo": "2026-11-21 13:00:00",
+  "fondo_bote": "0",
+  "fraccion": null,
+  "game_id": "LNAC",
+  "id_sorteo": "1329309094",
+  "lugar": "Madrid Sede Central",
+  "nombre": "SORTEO DE LOTERÍA NACIONAL",
+  "num_sorteo": "94",
+  "premio_bote": "0",
+  "premios": "0",
+  "recaudacion": "0",
+  "reintegros": [
+    "1",
+    "0",
+    "7"
+  ],
+  "serie": null,
+  "tenthPrice": 6.0
+}
