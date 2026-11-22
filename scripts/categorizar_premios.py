@@ -3,6 +3,7 @@
 import re
 from decimal import Decimal, InvalidOperation
 from comprobar_aciertos import compare
+from premios_joker_millon import joker, millon
 
 def money(value):
     if value is None or str(value).strip()=="": return None
@@ -51,22 +52,19 @@ def award(draw,ticket):
         if reinrow:
             supplements.append({"product":"REINTEGRO","amount_eur":reinrow["amount_eur"],
                                 "label":reinrow["category_label"]})
-    if game=="EMIL" and match.get("millon_code_matches") is True:
-        for r in draw["prizes"]:
-            if r["product"]=="EL_MILLON":
-                supplements.append({"product":"EL_MILLON","amount_eur":r["amount_eur"],
-                                    "label":r["category_label"]})
-    if game=="LAPR" and match.get("joker_full_match") is True:
-        for r in draw["prizes"]:
-            if r["product"]=="JOKER" and re.search(r"todas las cifras",r.get("category_label") or "",re.I):
-                supplements.append({"product":"JOKER","amount_eur":r["amount_eur"],
-                                    "label":r["category_label"]})
+    if game=="EMIL" and "millon_code" in ticket:
+        linked=millon(draw,ticket["millon_code"])
+        if linked.get("award"):
+            supplements.append(linked["award"])
+    if game=="LAPR" and "joker_code" in ticket:
+        linked=joker(draw,ticket["joker_code"])
+        supplements.extend(linked["awards"])
     issues=[]
     if cat is not None and primary is None:issues.append("missing_primary_category")
     if cat is not None and primary and money(primary["amount_eur"]) is None:
         issues.append("invalid_primary_amount")
     if game=="LAPR" and "joker_code" in ticket:
-        issues.append("joker_partial_categories_not_implemented")
+        issues.append("joker_cumulative_awards_pending_validation")
     if game=="LAPR" and match.get("number_hits")==6 and match.get("reintegro_hit") is True:
         issues.append("special_prize_and_reintegro_overlap_requires_rules_validation")
     return {**match,"category":cat,"primary_award":primary,"supplementary_awards":supplements,
