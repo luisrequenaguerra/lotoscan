@@ -45,7 +45,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add datos/lotoscan/loteria_nacional/historico_completo/ resultados/lnac/
+          git add datos/lotoscan/loteria_nacional/historico_resultados1/ resultados/lnac/
           if ! git diff --cached --quiet; then
             git commit -m 'LotoScan: LNAC resultados1 y manifest 0.70'
             git pull --rebase
