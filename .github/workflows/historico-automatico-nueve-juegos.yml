@@ -1,0 +1,59 @@
+name: LotoScan - Historico automatico nueve juegos
+on:
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: 'Dias que se revisan, 1-90'
+        type: number
+        default: 15
+      solo_lectura:
+        description: 'Diagnostico sin guardar'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '17 9,15,21 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-historico-oficial
+  cancel-in-progress: false
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Recuperar resultados oficiales de nueve juegos
+        env:
+          DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.dias || 15 }}
+          READ_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.solo_lectura || false }}
+        run: |
+          if [ "$READ_ONLY" = "true" ]; then
+            python scripts/actualizar_historico_nueve_juegos.py --dias "$DAYS" --solo-lectura
+          else
+            python scripts/actualizar_historico_nueve_juegos.py --dias "$DAYS"
+          fi
+      - name: Subir informe de ejecución
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-historico-nueve-juegos
+          path: salida_historico_9/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Guardar histórico incremental
+        if: ${{ success() && (github.event_name == 'schedule' || inputs.solo_lectura == false) }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add datos/lotoscan/historico_oficial/
+          if ! git diff --cached --quiet; then
+            git commit -m 'LotoScan: actualizar histórico de nueve juegos'
+            git pull --rebase
+            git push
+          fi
