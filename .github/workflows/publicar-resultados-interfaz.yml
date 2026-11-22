@@ -1,0 +1,41 @@
+name: LotoScan - Publicar resultados oficiales en interfaz
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/exportar_resultados_interfaz.py'
+      - 'scripts/normalizar_resultados_selae.py'
+      - 'datos/lotoscan/historico_oficial/**'
+      - '.github/workflows/publicar-resultados-interfaz.yml'
+permissions:
+  contents: write
+jobs:
+  exportar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generar contrato JSON de resultados SELAE
+        run: python scripts/exportar_resultados_interfaz.py
+      - name: Comprobar contrato
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('resultados/selae-interfaz.json')
+          data=json.loads(p.read_text())
+          assert data['provider']=='SELAE'
+          assert all(data['games'][k] for k in ('BONO','LAPR','EMIL'))
+          print({k:len(v) for k,v in data['games'].items()})
+          PY
+      - name: Guardar resultados publicados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resultados/selae-interfaz.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Actualizar resultados SELAE para interfaz"
+            git push
+          fi

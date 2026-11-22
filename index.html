@@ -567,7 +567,71 @@ function jokerResult081(ticketCode,draw){
  const amount=amounts[first]+amounts[last];
  return amount>0?{state:'won',amount,message:'Joker · '+(first?'primeras '+first+' cifras':'')+(first&&last?' y ':'')+(last?'últimas '+last+' cifras':'')}:{state:'lost',amount:0,message:'Joker sin coincidencias premiadas'};
 }
+// Datos oficiales SELAE normalizados por el motor Python; nunca certificar cobro.
+const OFFICIAL_DRAWS_UI={BONO:{},LAPR:{},EMIL:{}};
+let officialUiState='Resultados oficiales pendientes de sincronización';
+async function loadOfficialUi(){
+ try{
+  const response=await fetch('./resultados/selae-interfaz.json',{cache:'no-store'});
+  if(!response.ok)throw new Error('HTTP '+response.status);
+  const body=await response.json();
+  if(body?.schema_version!=='1'||body.provider!=='SELAE')throw new Error('Contrato oficial incompatible');
+  for(const game of ['BONO','LAPR','EMIL'])OFFICIAL_DRAWS_UI[game]=body.games?.[game]||{};
+  officialUiState='Resultados oficiales SELAE cargados';
+ }catch(error){officialUiState='Resultados oficiales no disponibles: '+error.message}
+ renderTickets();renderOfficialResults();
+}
+function officialUiCheck(t){
+ const game={bonoloto:'BONO',primitiva:'LAPR',euromillones:'EMIL'}[t.game];
+ if(!game)return null;
+ if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};
+ const draw=OFFICIAL_DRAWS_UI[game]?.[t.date];
+ if(!draw)return {state:'pending',message:'No hay escrutinio oficial normalizado disponible para esta fecha. No se atribuye premio ni ausencia de premio.'};
+ const entries=ticketEntries(t),count=game==='EMIL'?5:6,max=game==='EMIL'?50:49;
+ const winning=draw.result?.numbers;
+ if(!Array.isArray(winning)||winning.length!==count||!Array.isArray(draw.prizes)||!draw.prizes.length)
+  return {state:'pending',message:'Resultado oficial incompleto. Falta combinación o escrutinio.'};
+ const components=[],issues=[];
+ const rows=draw.prizes.filter(r=>r.product===game);
+ const categoryFor=(hits,starHits,comp,rein)=>{
+  if(game==='BONO')return hits===6?1:hits===5?(comp?2:3):hits===4?4:hits===3?5:null;
+  if(game==='LAPR')return hits===6?(rein?1:2):hits===5?(comp?3:4):hits===4?5:hits===3?6:null;
+  const cats={'5,2':1,'5,1':2,'5,0':3,'4,2':4,'4,1':5,'3,2':6,'4,0':7,'2,2':8,'3,1':9,'3,0':10,'1,2':11,'2,1':12,'2,0':13};
+  return cats[hits+','+starHits]??null;
+ };
+ for(let i=0;i<entries.length;i++){
+  const nums=reviewNumbers062(entries[i],count,max);
+  if(!nums){issues.push('Apuesta '+(i+1)+' incompleta');continue}
+  const hits=nums.filter(n=>winning.includes(n)).length;
+  let starHits=0;
+  if(game==='EMIL'){
+   const stars=reviewNumbers062(t.extra,2,12);
+   if(!stars||!Array.isArray(draw.result.stars)||draw.result.stars.length!==2){issues.push('Estrellas no verificadas');continue}
+   starHits=stars.filter(n=>draw.result.stars.includes(n)).length;
+  }
+  const refund=game!=='EMIL'&&/^(?:[0-9]|0[0-9])$/.test(String(t.extra??'').trim())&&Number(t.extra)===draw.result.reintegro;
+  const cat=categoryFor(hits,starHits,hits===5&&nums.includes(draw.result.complementary),refund);
+  if(cat==null)continue;
+  const row=rows.find((r,idx)=>Number(r.category_code??(idx+1))===cat);
+  const amount=row?.amount_eur;
+  if(amount==null||!/^\\d+(?:\\.\\d+)?$/.test(String(amount))){issues.push('Escrutinio incompleto en apuesta '+(i+1));continue}
+  components.push({label:'Apuesta '+(i+1)+' · '+(row.category_label||'Categoría '+cat),amount:Number(amount)});
+ }
+ // No sumar complementarios sin la información de participación del resguardo.
+ if(game!=='EMIL'){
+  if(!/^(?:[0-9]|0[0-9])$/.test(String(t.extra??'').trim()))issues.push('Reintegro no indicado');
+  else if(Number(t.extra)===draw.result.reintegro)issues.push('Reintegro premiado: importe y multiplicidad del resguardo pendientes');
+ }
+ if(game==='LAPR'&&t.joker)issues.push('Joker: pendiente de integrar premio acumulado y vinculación al resguardo');
+ if(game==='EMIL')issues.push('El Millón: falta validación de vinculación del código al resguardo');
+ if(game==='LAPR'&&components.some(x=>x.label.includes('Especial')))issues.push('Categoría especial: acumulación pendiente');
+ const partial=components.reduce((n,x)=>n+x.amount,0);
+ if(issues.length)return {state:'pending',components,prize:undefined,message:'Coincidencias calculadas con SELAE, pero no se puede determinar el total: '+[...new Set(issues)].join('; ')+'. Importe no certificado.',source:'SELAE · histórico normalizado'};
+ return {state:partial>0?'won':'lost',prize:partial,category:partial>0?'Premio bruto orientativo':'Sin premio ordinario',components,message:'Cálculo ordinario sobre escrutinio oficial SELAE. No certifica validez, titularidad ni cobro.',source:'SELAE · histórico normalizado'};
+}
+loadOfficialUi();
 function checkTicket38(t){
+ const official=officialUiCheck(t);if(official)return official;
  if(t.game==='loteria_nacional'){if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};return (typeof LNAC_DRAWS_066!=='undefined'&&LNAC_DRAWS_066[t.date])?checkLNAC067(t):{state:'pending',message:'Aún no se han publicado datos completos y compatibles para este sorteo en LotoScan. No se puede confirmar ni premio ni ausencia de premio.'};}
  if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};
  const game=t.game==='gordo'?'gordo_primitiva':t.game;
