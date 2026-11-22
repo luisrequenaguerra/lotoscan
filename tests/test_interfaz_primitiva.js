@@ -12,7 +12,7 @@ assert.equal(result.state,'candidate');
 assert(result.components.some(x=>x.amount===1434.22),'5-hit prize must be visible');
 assert(result.components.some(x=>x.amount===1000000),'matching Joker candidate must be visible');
 assert(result.components.some(x=>x.label.startsWith('Reintegro')&&x.amount===1),'single-entry reintegro unit candidate');
-const partial=sandbox.officialUiCheck({game:'primitiva',date:'2026-11-21',entries:['07 12 13 22 29 37'],extra:'2',joker:'0031439'});
+const partial=sandbox.officialUiCheck({game:'primitiva',date:'2026-11-21',entries:['07 12 13 22 29 37'],extra:'2',joker:'0031499'});
 assert(partial.components.some(x=>x.label.startsWith('Joker')&&x.amount===1000),'5 first Joker digits should yield 1000');
 assert(!partial.components.some(x=>x.label.startsWith('Joker')&&x.amount===1000000),'partial Joker is not jackpot');
 assert.equal(result.prize,undefined,'uncertified gross total must remain blocked');
