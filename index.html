@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ed">
-<title>LotoScan 0.65 — Comprobación prudente</title>
+<title>LotoScan 0.68 — Integración progresiva SELAE</title>
 <style>
 :root{--bg:#f6f4ef;--paper:#fffefa;--ink:#2b2c2a;--muted:#777b70;--line:#e7e2d8;--olive:#7a846b;--olive2:#e8ece3;--gold:#b99a60;--radius:22px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -206,7 +206,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <p class="notice">Lectura QR para resguardos sencillos compatibles de Euromillones y lectura de la línea inferior de Lotería Nacional. Revisa los datos antes de guardar. Si la lectura falla, puedes introducirlos manualmente. Los resultados no oficiales solo permiten cotejos orientativos, nunca confirmar premios.</p>
 </section>
 
-<section id="tickets" class="screen"><section id="lnacIntegration066" class="panel" style="margin:18px auto;max-width:720px;padding:20px;border:1px solid #c8cebf;border-radius:20px"><h2 style="font-size:1.15rem;margin:0 0 8px">Lotería Nacional · motor integrado</h2><p style="font-size:.9rem;line-height:1.5">Comprobación de sorteos ordinarios del 14 y 19 de noviembre de 2026 con datos SELAE incorporados. También puedes cargar un JSON completo de otro sorteo ordinario. La comprobación es informativa; no incluye premios especiales.</p><label for="lnacImport066" style="font-weight:600;display:block;margin-bottom:8px">Incorporar JSON completo de SELAE</label><input type="file" id="lnacImport066" accept=".json,application/json" onchange="importLNAC066(event)" style="max-width:100%"><p id="lnacImportStatus066" role="status" style="font-size:.8rem;margin-top:8px">12 comprobaciones de referencia disponibles para esta integración.</p></section>
+<section id="tickets" class="screen"><section id="lnacIntegration066" class="panel" style="margin:18px auto;max-width:720px;padding:20px;border:1px solid #c8cebf;border-radius:20px"><h2 style="font-size:1.15rem;margin:0 0 8px">Lotería Nacional · motor integrado</h2><p style="font-size:.9rem;line-height:1.5">Comprobación ordinaria con datos SELAE validados. La app busca automáticamente nuevos sorteos en el archivo publicado de LotoScan. Si todavía no hay datos completos, mostrará Pendiente. No incluye premios especiales.</p><button type="button" onclick="refreshLNAC068(true)" style="margin:8px 0 12px;padding:11px 16px;border-radius:12px;border:1px solid #87917d;background:#e8ece2;color:#354531;font-weight:700">Actualizar sorteos LNAC</button><p id="lnacAutoStatus068" role="status" style="font-size:.82rem;line-height:1.4">Datos integrados: 14 y 19 de noviembre. Buscando actualizaciones…</p><label for="lnacImport066" style="font-weight:600;display:block;margin-bottom:8px">Incorporar JSON completo de SELAE</label><input type="file" id="lnacImport066" accept=".json,application/json" onchange="importLNAC066(event)" style="max-width:100%"><p id="lnacImportStatus066" role="status" style="font-size:.8rem;margin-top:8px">12 comprobaciones de referencia disponibles para esta integración.</p></section>
 <button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">TU COLECCIÓN</div><div class="tickets-heading"><h1>Mis boletos.</h1><button type="button" class="add-top" onclick="go('gameForms')" aria-label="Añadir boleto">＋ Añadir</button></div><p class="lead">Todos tus números, organizados y listos para comprobar.</p>
 <div class="row" style="margin:18px 0 4px"><span class="eyebrow">TODOS TUS SORTEOS</span><span class="pill" id="ticketCount">4 boletos</span></div>
 <select id="gameFilter" class="game-filter" onchange="renderTickets()"><option value="all">Todos los juegos</option><option value="loteria_nacional">Lotería Nacional</option><option value="euromillones">Euromillones</option><option value="primitiva">La Primitiva</option><option value="bonoloto">Bonoloto</option><option value="gordo">El Gordo de la Primitiva</option><option value="quiniela">Quiniela</option><option value="quinigol">Quinigol</option><option value="lototurf">Lototurf</option><option value="quintuple_plus">Quíntuple Plus</option><option value="eurodreams">EuroDreams</option></select>
@@ -567,7 +567,7 @@ function jokerResult081(ticketCode,draw){
  return amount>0?{state:'won',amount,message:'Joker · '+(first?'primeras '+first+' cifras':'')+(first&&last?' y ':'')+(last?'últimas '+last+' cifras':'')}:{state:'lost',amount:0,message:'Joker sin coincidencias premiadas'};
 }
 function checkTicket38(t){
- if(t.game==='loteria_nacional' && t.date && typeof LNAC_DRAWS_066!=='undefined' && LNAC_DRAWS_066[t.date])return checkLNAC067(t);
+ if(t.game==='loteria_nacional'){if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};return (typeof LNAC_DRAWS_066!=='undefined'&&LNAC_DRAWS_066[t.date])?checkLNAC067(t):{state:'pending',message:'Aún no se han publicado datos completos y compatibles para este sorteo en LotoScan. No se puede confirmar ni premio ni ausencia de premio.'};}
  if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};
  const game=t.game==='gordo'?'gordo_primitiva':t.game;
  const draw=REVIEW_DRAWS_062[game+'|'+t.date];
@@ -1439,17 +1439,55 @@ for(const [date,tests] of Object.entries(LNAC_TESTS_066))for(const [num,expected
  lnacTestCount066++;
 }
 
+// 0.68: actualización desde un manifiesto JSON publicado junto al index.
+// No accede a PDF ni a resultados2. La generación del manifiesto corresponde
+// al pipeline oficial resultados1; los ficheros se validan antes de usarse.
+const LNAC_MANIFEST_068='./resultados/lnac/manifest.json';
+let lnacRefresh068=false;
+async function refreshLNAC068(manual=false){
+ if(lnacRefresh068)return;
+ lnacRefresh068=true;
+ const status=document.getElementById('lnacAutoStatus068');
+ if(status)status.textContent='Consultando sorteos publicados…';
+ let accepted=0, rejected=0;
+ try{
+  const res=await fetch(LNAC_MANIFEST_068+'?t='+Date.now(),{cache:'no-store'});
+  if(!res.ok)throw Error('Manifiesto no disponible (HTTP '+res.status+')');
+  const manifest=await res.json();
+  if(!manifest||manifest.version!==1||!Array.isArray(manifest.draws))throw Error('Formato de manifiesto no compatible');
+  for(const item of manifest.draws){
+   try{
+    if(!item||!/^\d{4}-\d{2}-\d{2}$/.test(item.date)||typeof item.file!=='string'||!/^\.\/resultados\/lnac\/[a-zA-Z0-9_./-]+\.json$/.test(item.file)||item.file.includes('..'))throw Error('Ruta no válida');
+    const r=await fetch(item.file+'?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw Error('HTTP '+r.status);
+    const data=await r.json();
+    if(String(data.fechaSorteo||'').slice(0,10)!==item.date)throw Error('Fecha incoherente');
+    registerLNAC066(data);accepted++;
+   }catch(e){rejected++;console.warn('LNAC 0.68: sorteo descartado',item?.date,e.message)}
+  }
+  if(status)status.textContent=accepted+' sorteos oficiales adicionales cargados'+(rejected?' · '+rejected+' descartados por validación':'')+'.';
+ }catch(e){
+  if(status)status.textContent='Sin archivo de actualización publicado. Se mantienen los sorteos integrados (14 y 19/11/2026).';
+  if(manual)console.info('LotoScan 0.68: '+e.message);
+ }finally{
+  lnacRefresh068=false;
+  renderTickets();renderOfficialResults();
+  if(currentTicketId&&tickets.some(t=>t.id===currentTicketId))openTicket(currentTicketId);
+ }
+}
+
 renderGameChooser();
 renderHomeGames();
 renderOfficialResults();
 loadDraws41();
 loadReview062();
+refreshLNAC068();
 // 0.68: consultar históricos de nuevo sin cerrar Safari.
 let lastRefresh068=Date.now(), refreshing068=false;
 async function refreshResults068(force=false){
  if(refreshing068||(!force&&Date.now()-lastRefresh068<120000))return;
  refreshing068=true;lastRefresh068=Date.now();
- try{await loadReview062()}finally{refreshing068=false}
+ try{await Promise.all([loadReview062(),refreshLNAC068()])}finally{refreshing068=false}
 }
 setInterval(()=>refreshResults068(),5*60*1000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshResults068()});
