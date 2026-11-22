@@ -1,0 +1,21 @@
+name: LotoScan - Loteria Nacional y Quintuple Plus 1.35
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verificar reglas especiales con historico oficial
+        run: python scripts/comprobar_especiales_135.py --informe salida_135
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-135
+          path: salida_135/
+          if-no-files-found: warn
