@@ -1,0 +1,24 @@
+name: LotoScan - Auditar integridad historico
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '40 7 * * *'
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validar historico almacenado
+        run: python scripts/auditar_integridad_historico.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-integridad-historico
+          path: salida_auditoria_historico/
+          if-no-files-found: warn
+          retention-days: 30
