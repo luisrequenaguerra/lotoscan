@@ -1,0 +1,32 @@
+name: LotoScan - Validacion premios LNAC 1.45
+on:
+  workflow_dispatch:
+    inputs:
+      numero:
+        description: 'Numero de decimo (opcional, cinco cifras)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Contrastar premios JSON con oraculos oficiales
+        env:
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          if [ -n "$NUMERO" ]; then
+            python scripts/comprobar_premios_lnac_145.py --numero "$NUMERO" --informe salida_145
+          else
+            python scripts/comprobar_premios_lnac_145.py --informe salida_145
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-145
+          path: salida_145/
