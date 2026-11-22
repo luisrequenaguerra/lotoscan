@@ -33,6 +33,7 @@ jobs:
           DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.dias || 15 }}
           READ_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.solo_lectura || false }}
         run: |
+          DAYS="${DAYS%%.*}"
           if [ "$READ_ONLY" = "true" ]; then
             python scripts/actualizar_historico_nueve_juegos.py --dias "$DAYS" --solo-lectura
           else
