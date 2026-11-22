@@ -36,18 +36,21 @@
       "visitante": "Celta (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 14:00:00",
       "local": "Barcelona (m)",
+      "marcador": "3 - 2",
+      "signo": "1",
       "visitante": "Villarreal (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 16:15:00",
       "local": "Racing Santander (m)",
+      "marcador": "3 - 2",
+      "signo": "1",
       "visitante": "Real Sociedad (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 18:30:00",
       "local": "Osasuna (m)",
+      "marcador": "1 - 0",
+      "signo": "1",
       "visitante": "Málaga (m)"
     },
     {
@@ -62,13 +65,15 @@
       "visitante": "Mallorca (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 16:15:00",
       "local": "Sporting (m)",
+      "marcador": "0 - 2",
+      "signo": "2",
       "visitante": "Las Palmas (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 18:30:00",
       "local": "Girona (m)",
+      "marcador": "2 - 1",
+      "signo": "1",
       "visitante": "Eibar (m)"
     },
     {
@@ -90,8 +95,9 @@
       "visitante": "Sevilla (f)"
     },
     {
-      "fecha": "2026\\/11\\/22 17:00:00",
       "local": "Tenerife (f)",
+      "marcador": "0 - 3",
+      "signo": "2",
       "visitante": "Madrid Cff (f)"
     },
     {

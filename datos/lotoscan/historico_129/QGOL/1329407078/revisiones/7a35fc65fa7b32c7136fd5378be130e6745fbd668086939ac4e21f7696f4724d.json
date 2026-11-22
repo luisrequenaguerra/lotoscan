@@ -1,0 +1,54 @@
+{
+  "anyo": "2026",
+  "apuestas": "0",
+  "cdc": "13294",
+  "combinacion": null,
+  "dia_semana": "domingo",
+  "escrutinio": [],
+  "fecha_sorteo": "2026-11-22 00:00:00",
+  "fondo_bote": "267481",
+  "game_id": "QGOL",
+  "id_sorteo": "1329407078",
+  "jornada": "25",
+  "partidos": [
+    {
+      "local": "Alavés",
+      "marcador": "3 - 1",
+      "signo": "M-1",
+      "visitante": "Deportivo"
+    },
+    {
+      "local": "Real Madrid",
+      "marcador": "2 - 1",
+      "signo": "2-1",
+      "visitante": "Celta"
+    },
+    {
+      "local": "Barcelona",
+      "marcador": "3 - 2",
+      "signo": "M-2",
+      "visitante": "Villarreal"
+    },
+    {
+      "local": "Racing Santander",
+      "marcador": "3 - 2",
+      "signo": "M-2",
+      "visitante": "Real Sociedad"
+    },
+    {
+      "fecha": "2026\\/11\\/22 21:00:00",
+      "local": "Getafe",
+      "visitante": "At. Madrid"
+    },
+    {
+      "local": "Sevilla",
+      "marcador": "1 - 1",
+      "signo": "1-1",
+      "visitante": "Betis"
+    }
+  ],
+  "premio_bote": "275000",
+  "premios": "0",
+  "recaudacion": null,
+  "temporada": "2026-2027"
+}
