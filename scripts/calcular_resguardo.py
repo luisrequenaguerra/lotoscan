@@ -53,13 +53,31 @@ def calculate_receipt(draw,receipt):
             elif primary.get("winners") is not None and str(primary["winners"]).strip()=="0" and amount>0:
                 issues.append("positive_award_without_winners_"+str(idx))
             else:parts.append({"product":game,"entry":idx,"amount_eur":str(amount)})
-    # Reintegro is per receipt, not per line; stake rules for multi-line
-    # tickets are not established here, so block rather than double count.
-    if game in ("BONO","LAPR") and "reintegro" in receipt:
-        official=draw["result"].get("reintegro")
-        if official is None:issues.append("pending_reintegro_result")
-        elif receipt["reintegro"]==official:
-            issues.append("reintegro_receipt_stake_requires_validation")
+    # Reintegro: official scrutiny provides the amount per simple wager.
+    # Only a single simple bet with an explicit unit stake is supported.
+    if game in ("BONO","LAPR"):
+        if "reintegro" not in receipt:
+            issues.append("missing_receipt_reintegro")
+        else:
+            rein=receipt["reintegro"]
+            if type(rein)!=int or not 0<=rein<=9:raise ValueError("invalid receipt reintegro")
+            official=draw["result"].get("reintegro")
+            if official is None:issues.append("pending_reintegro_result")
+            elif rein==official:
+                rows=[r for r in draw["prizes"] if r["product"]==game
+                      and "reintegro" in (r.get("category_label") or "").lower()]
+                if len(entries)!=1 or receipt.get("simple_unit_stake") is not True:
+                    issues.append("reintegro_multiple_bets_or_stake_unverified")
+                elif game=="LAPR" and any(p["product"]==game and p["entry"]==0
+                         and result_category==1 for result_category in
+                         [award(draw,{**entries[0],"game_id":game,
+                          "id_sorteo":draw["draw"]["id_sorteo"],"reintegro":rein}).get("category")]):
+                    issues.append("primitiva_special_reintegro_overlap_unverified")
+                elif len(rows)!=1 or _euros(rows[0].get("amount_eur")) is None:
+                    issues.append("reintegro_scrutiny_missing")
+                else:
+                    parts.append({"product":"REINTEGRO","entry":None,
+                                  "amount_eur":str(_euros(rows[0]["amount_eur"]))})
     if game=="LAPR":
         if receipt.get("joker_selected") is True:
             result=joker(draw,receipt.get("joker_code"))
