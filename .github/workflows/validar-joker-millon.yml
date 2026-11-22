@@ -1,0 +1,21 @@
+name: LotoScan - Joker y El Millon
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/premios_joker_millon.py'
+      - 'scripts/categorizar_premios.py'
+      - 'tests/test_premios_joker_millon.py'
+      - '.github/workflows/validar-joker-millon.yml'
+permissions:
+  contents: read
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validar premios asociados y regresiones
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
