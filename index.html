@@ -621,28 +621,63 @@ function officialUiCheck(t){
  // No sumar complementarios sin la información de participación del resguardo.
  if(game!=='EMIL'){
   if(!/^(?:[0-9]|0[0-9])$/.test(String(t.extra??'').trim()))issues.push('Reintegro no indicado');
-  else if(Number(t.extra)===draw.result.reintegro)issues.push('Reintegro premiado: importe y multiplicidad del resguardo pendientes');
- }
- if(game==='LAPR'&&t.joker){
-  const code=String(t.joker).trim(),winner=String(draw.result?.joker?.combinacion??'').padStart(7,'0');
-  if(!/^[0-9]{7}$/.test(code)||!/^[0-9]{7}$/.test(winner))issues.push('Joker: código o resultado incompleto');
-  else{
-   const jokerRows=draw.prizes.filter(r=>r.product==='JOKER');
-   let prefix=0,suffix=0;
-   while(prefix<7&&code[prefix]===winner[prefix])prefix++;
-   while(suffix<7&&code[6-suffix]===winner[6-suffix])suffix++;
-   // La coincidencia completa es un único premio; no acumular prefijos y sufijos.
-   const lengths=prefix===7?[7]:[prefix,suffix].filter(n=>n>0);
-   for(const length of lengths){
-    const row=jokerRows.find(r=>Number(r.category_code)===8-length);
-    const amount=Number(row?.amount_eur);
-    if(!row||!Number.isFinite(amount)||amount<0)issues.push('Escrutinio Joker incompleto');
-    else components.push({label:'Joker · '+length+' cifras coincidentes (premio candidato)',amount});
+  else if(draw.result.reintegro==null)issues.push('Resultado oficial del reintegro no disponible');
+  else if(Number(t.extra)===draw.result.reintegro){
+   const refundRows=rows.filter(r=>/reintegro/i.test(String(r.category_label||'')));
+   const amount=Number(refundRows[0]?.amount_eur);
+   if(refundRows.length!==1||!Number.isFinite(amount)||amount<0)issues.push('Reintegro: escrutinio incompleto');
+   else if(entries.length!==1)issues.push('Reintegro: varias apuestas; multiplicidad pendiente');
+   else if(game==='LAPR'&&components.some(x=>/^Apuesta 1 · Especial/i.test(x.label)))issues.push('Reintegro: solapamiento con categoría especial pendiente');
+   else {
+    components.push({label:'Reintegro · apuesta simple (importe unitario)',amount});
+    issues.push('Reintegro: participación simple e importe apostado sin verificar');
    }
-   issues.push('Joker: participación y vinculación al resguardo sin autenticar');
   }
  }
- if(game==='EMIL')issues.push('El Millón: falta validación de vinculación del código al resguardo');
+ if(game==='LAPR'&&t.joker){
+  const code=String(t.joker).trim(),rawWinner=draw.result?.joker?.combinacion;
+  const winner=rawWinner==null?'':String(rawWinner).padStart(7,'0');
+  if(!/^[0-9]{7}$/.test(code)||!/^[0-9]{7}$/.test(winner))issues.push('Joker: código o resultado incompleto');
+  else{
+   let prefix=0,suffix=0;
+   if(code===winner)prefix=7;
+   else{
+    while(prefix<7&&code[prefix]===winner[prefix])prefix++;
+    while(suffix<7&&code[6-suffix]===winner[6-suffix])suffix++;
+   }
+   // Anexo II Joker: importes acumulados, NO sumar dos categorías.
+   const cumulative={'7,0':1000000,'6,0':10000,'0,6':10000,
+    '5,1':1001,'5,0':1000,'1,5':1001,'0,5':1000,
+    '4,2':305,'4,1':301,'4,0':300,'2,4':305,'1,4':301,'0,4':300,
+    '3,3':100,'3,2':55,'3,1':51,'3,0':50,'2,3':55,'1,3':51,'0,3':50,
+    '2,2':10,'2,1':6,'2,0':5,'1,2':6,'0,2':5,
+    '1,1':2,'1,0':1,'0,1':1};
+   const amount=cumulative[prefix+','+suffix];
+   if(amount===undefined){
+    if(prefix!==0||suffix!==0)issues.push('Joker: patrón no reconocido');
+   }else{
+    const category=prefix===7?1:8-Math.max(prefix,suffix);
+    const row=draw.prizes.find(r=>r.product==='JOKER'&&Number(r.category_code)===category);
+    if(!row||!Number.isFinite(Number(row.amount_eur))||Number(row.amount_eur)<=0)
+     issues.push('Escrutinio Joker incompleto');
+    else components.push({label:'Joker · '+prefix+' primeras / '+suffix+' últimas · acumulado',amount});
+   }
+   issues.push('Joker: participación del resguardo sin autenticar');
+  }
+ }
+ if(game==='EMIL'){
+  const code=String(t.elMillon??'').trim().toUpperCase();
+  const winning=String(draw.result?.millon?.combinacion??'').trim().toUpperCase();
+  if(!/^[A-Z]{3}[0-9]{5}$/.test(code))issues.push('El Millón: código del resguardo ausente o inválido');
+  else if(!/^[A-Z]{3}[0-9]{5}$/.test(winning))issues.push('El Millón: resultado oficial no disponible');
+  else if(code===winning){
+   const row=draw.prizes.find(r=>r.product==='EL_MILLON'&&Number(r.category_code)===1);
+   const amount=Number(row?.amount_eur);
+   if(!row||!Number.isFinite(amount)||amount<=0)issues.push('El Millón: escrutinio incompleto');
+   else components.push({label:'El Millón · código coincidente',amount});
+  }
+  issues.push('El Millón: participación del resguardo sin autenticar');
+ }
  if(game==='LAPR'&&components.some(x=>x.label.includes('Especial')))issues.push('Categoría especial: acumulación pendiente');
  const partial=components.reduce((n,x)=>n+x.amount,0);
  if(issues.length)return {state:components.some(x=>Number(x.amount)>0)?'candidate':'pending',components,prize:undefined,message:'Coincidencias calculadas con SELAE, pero no se puede determinar el total: '+[...new Set(issues)].join('; ')+'. Importe no certificado.',source:'SELAE · histórico normalizado'};
