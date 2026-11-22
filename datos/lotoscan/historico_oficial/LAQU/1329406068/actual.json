@@ -4,7 +4,13 @@
   "cdc": "13294",
   "combinacion": null,
   "dia_semana": "domingo",
+  "elige8": {
+    "activo": "1",
+    "gameid": "ELG8",
+    "relsorteoid_asociado": "1329413068"
+  },
   "escrutinio": [],
+  "escrutinioElige8": [],
   "fecha_sorteo": "2026-11-22 00:00:00",
   "fondo_bote": "220379",
   "game_id": "LAQU",
@@ -12,18 +18,21 @@
   "jornada": "23",
   "partidos": [
     {
-      "fecha": "2026\\/11\\/21 14:00:00",
       "local": "Alavés (m)",
+      "marcador": "3 - 1",
+      "signo": "1",
       "visitante": "Deportivo (m)"
     },
     {
-      "fecha": "2026\\/11\\/21 16:15:00",
       "local": "Rayo Vallecano (m)",
+      "marcador": "0 - 1",
+      "signo": "2",
       "visitante": "Valencia (m)"
     },
     {
-      "fecha": "2026\\/11\\/21 21:00:00",
       "local": "Real Madrid (m)",
+      "marcador": "2 - 1",
+      "signo": "1",
       "visitante": "Celta (m)"
     },
     {
@@ -47,8 +56,9 @@
       "visitante": "At. Madrid (m)"
     },
     {
-      "fecha": "2026\\/11\\/21 21:00:00",
       "local": "Tenerife (m)",
+      "marcador": "0 - 0",
+      "signo": "X",
       "visitante": "Mallorca (m)"
     },
     {
@@ -62,8 +72,9 @@
       "visitante": "Eibar (m)"
     },
     {
-      "fecha": "2026\\/11\\/21 17:00:00",
       "local": "Eibar (f)",
+      "marcador": "1 - 3",
+      "signo": "2",
       "visitante": "At. Madrid (f)"
     },
     {
@@ -82,8 +93,9 @@
       "visitante": "Madrid Cff (f)"
     },
     {
-      "fecha": "2026\\/11\\/21 18:30:00",
       "local": "Sevilla (m)",
+      "marcador": "1 - 1",
+      "signo": "1-1",
       "visitante": "Betis (m)"
     }
   ],

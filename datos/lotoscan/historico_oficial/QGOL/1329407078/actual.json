@@ -12,13 +12,15 @@
   "jornada": "25",
   "partidos": [
     {
-      "fecha": "2026\\/11\\/21 14:00:00",
       "local": "Alavés",
+      "marcador": "3 - 1",
+      "signo": "M-1",
       "visitante": "Deportivo"
     },
     {
-      "fecha": "2026\\/11\\/21 21:00:00",
       "local": "Real Madrid",
+      "marcador": "2 - 1",
+      "signo": "2-1",
       "visitante": "Celta"
     },
     {
@@ -37,8 +39,9 @@
       "visitante": "At. Madrid"
     },
     {
-      "fecha": "2026\\/11\\/21 18:30:00",
       "local": "Sevilla",
+      "marcador": "1 - 1",
+      "signo": "1-1",
       "visitante": "Betis"
     }
   ],
