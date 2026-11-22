@@ -1,0 +1,26 @@
+name: LotoScan - Auditoria acumulacion LNAC 1.41
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/auditar_acumulacion_lnac_141.py'
+      - '.github/workflows/auditar-acumulacion-lnac-141.yml'
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Auditar histórico completo LNAC
+        run: python scripts/auditar_acumulacion_lnac_141.py --informe salida_141
+      - name: Publicar informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-141
+          path: salida_141/
+          if-no-files-found: warn
