@@ -1,7 +1,11 @@
 {
   "combinacion": null,
   "complementos": {
-    "elige8": null,
+    "elige8": {
+      "activo": "1",
+      "gameid": "ELG8",
+      "relsorteoid_asociado": "1329413068"
+    },
     "escrutinio_elige8": [],
     "jornada": "23",
     "temporada": "2026-2027"
