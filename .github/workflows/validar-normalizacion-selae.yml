@@ -1,0 +1,26 @@
+name: LotoScan - Validar normalizacion SELAE
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/normalizar_resultados_selae.py'
+      - '.github/workflows/validar-normalizacion-selae.yml'
+permissions:
+  contents: read
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Normalizar histórico sin modificar fuentes
+        run: python scripts/normalizar_resultados_selae.py
+      - name: Guardar diagnóstico y resultados normalizados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-normalizacion-selae
+          path: salida_normalizacion_selae/
+          retention-days: 14
