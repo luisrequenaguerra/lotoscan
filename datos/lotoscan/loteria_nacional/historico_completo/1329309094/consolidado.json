@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1329309094",
+  "fecha_sorteo": "2026-11-21T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "23641",
+  "segundo_premio": "26323",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "3410",
+      "6111",
+      "8460",
+      "9411"
+    ],
+    "extraccionesDeTresCifras": [
+      "185",
+      "346",
+      "431",
+      "483",
+      "509",
+      "540",
+      "673",
+      "758",
+      "957",
+      "997"
+    ],
+    "extraccionesDeDosCifras": [
+      "07",
+      "09",
+      "16",
+      "20",
+      "25",
+      "31",
+      "57",
+      "60",
+      "88"
+    ],
+    "reintegros": [
+      "0",
+      "1",
+      "7"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "SELAE resultados1/resultados2; valores prize originales sin conversión"
+}
