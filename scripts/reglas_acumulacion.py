@@ -27,10 +27,10 @@ def assess(draw,ticket):
     # combinations and receipt grouping, it cannot safely be multiplied.
     if game in ("BONO","LAPR") and a.get("reintegro_hit") is True:
         issues.append("reintegro_receipt_stake_multiplicity_unverified")
-    # Joker can accumulate multiple first/last matching awards per SELAE.
-    # Detailed cumulative award-table verification remains mandatory.
+    # Joker cumulative gross amount is available from official Annex II,
+    # but receipt authentication and cross-game totals remain unverified.
     if game=="LAPR" and "joker_code" in ticket:
-        issues.append("joker_cumulative_awards_table_pending_validation")
+        issues.append("joker_receipt_authentication_and_cross_game_total_pending")
     if game=="EMIL" and "millon_code" in ticket:
         issues.append("millon_ticket_code_ownership_unverified")
     if game=="EMIL" and draw["result"].get("lluvia"):

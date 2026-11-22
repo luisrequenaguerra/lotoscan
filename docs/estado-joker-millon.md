@@ -4,7 +4,7 @@ Fuentes oficiales consultadas:
 - Joker: https://www.loteriasyapuestas.es/es/centro-de-ayuda/como-se-juega/como-jugar-a-el-joker
 - Euromillones y El Millón: https://www.loteriasyapuestas.es/es/centro-de-ayuda/como-se-juega/jugar-a-euromillones
 
-**Importante:** Joker **sí permite premios acumulados**, según SELAE. Por tanto, NO se debe escoger solo la categoría más alta. La implementación devuelve cada coincidencia por primeras/últimas cifras, su categoría y su importe de escrutinio. El total sigue bloqueado hasta contrastar exhaustivamente la tabla oficial de premios acumulados, especialmente cuando coinciden ambos extremos y todas las cifras.
+**Importante:** Joker **sí permite premios acumulados**, según SELAE. Por tanto, NO se debe escoger solo la categoría más alta. La implementación devuelve cada coincidencia por primeras/últimas cifras, su categoría y su importe de escrutinio. La tabla oficial de premios acumulados del Anexo II se ha incorporado en scripts/premios_joker_millon.py. Se calculan importes brutos candidatos; los totales de resguardo y la autenticidad siguen sin certificarse.
 
 El Millón: código de tres letras y cinco dígitos asociado a una participación en Euromillones. Se identifica coincidencia exacta y se extrae el premio del escrutinio; **no** se certifica titularidad del resguardo ni pago.
 

@@ -16,25 +16,24 @@ class LinkedGameTests(unittest.TestCase):
             d=parse(json.loads(p.read_text(encoding="utf-8")))
             if d["result"].get("joker" if game=="LAPR" else "millon") and d["prizes"]:
                 yield d
-    def test_joker_all_seven_categories_and_both_directions(self):
+    def test_joker_annex_ii_cumulative_awards(self):
+        from premios_joker_millon import JOKER_TABLE
         checked=0
+        self.assertEqual(len(JOKER_TABLE),28)
         for d in self._draws("LAPR"):
             code=str(d["result"]["joker"]["combinacion"]).zfill(7)
-            self.assertEqual(len(code),7)
-            full=joker(d,code)
-            self.assertEqual(full["matched_categories"],list(range(1,8)))
-            self.assertIsNone(full["total_eur"])
-            for digits in range(1,7):
-                for direction in ("first","last"):
-                    chars=list(code)
-                    pos=digits if direction=="first" else 6-digits
-                    chars[pos]=str((int(chars[pos])+1)%10)
-                    candidate="".join(chars)
-                    result=joker(d,candidate)
-                    self.assertIn(8-digits,result["matched_categories"])
-                    self.assertNotIn(1,result["matched_categories"])
-                    self.assertTrue(any(x["direction"]==direction and x["category"]==8-digits
-                                        for x in result["awards"]))
+            self.assertEqual(joker(d,code)["joker_gross_eur"],"1000000")
+            for (first,last),(cat,amount) in JOKER_TABLE.items():
+                if first==7:continue
+                chars=list(code)
+                for i in range(first,7-last):
+                    chars[i]=str((int(chars[i])+1)%10)
+                candidate="".join(chars)
+                result=joker(d,candidate)
+                self.assertEqual(result["matched_categories"],[cat])
+                self.assertEqual(result["joker_gross_eur"],str(amount))
+                self.assertEqual(len(result["awards"]),1)
+                self.assertIsNone(result["total_eur"])
             checked+=1
         self.assertGreater(checked,0)
         print("JOKER_DRAWS",checked)
