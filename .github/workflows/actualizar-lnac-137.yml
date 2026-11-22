@@ -1,4 +1,4 @@
-name: LotoScan - Historico completo Loteria Nacional 1.37
+name: LotoScan - LNAC resultados1 y publicacion 0.70
 on:
   workflow_dispatch:
   schedule:
@@ -13,25 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Recuperar ultimos sorteos y guardar extracciones
-        run: python scripts/actualizar_lnac_137.py --informe salida_137
-      - name: Guardar historico en repositorio
-        if: success()
+      - name: Obtener ultimo sorteo ordinario desde resultados1
+        run: python scripts/actualizar_lnac_resultados1_070.py
+      - name: Publicar manifest y sorteos existentes
+        run: python scripts/publicar_lnac_070.py
+      - name: Guardar archivos
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add datos/lotoscan/loteria_nacional/historico_completo/
+          git add datos/lotoscan/loteria_nacional/historico_completo/ resultados/lnac/
           if ! git diff --cached --quiet; then
-            git commit -m 'LotoScan: actualizar extracciones LNAC 1.37'
+            git commit -m 'LotoScan: LNAC resultados1 y manifest 0.70'
+            git pull --rebase
             git push
           fi
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: lotoscan-selae-137
-          path: salida_137/
