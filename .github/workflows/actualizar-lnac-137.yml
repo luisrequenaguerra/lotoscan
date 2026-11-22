@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Probar publicacion con historicos archivados
+        run: python tests/test_publicacion_lnac_070.py
       - name: Obtener ultimo sorteo ordinario desde resultados1
         run: python scripts/actualizar_lnac_resultados1_070.py
       - name: Publicar manifest y sorteos existentes
