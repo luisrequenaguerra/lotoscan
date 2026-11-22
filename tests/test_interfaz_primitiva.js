@@ -1,0 +1,15 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const html=fs.readFileSync('index.html','utf8');
+const start=html.indexOf('function officialUiCheck(t)'),end=html.indexOf('loadOfficialUi();',start);
+assert(start>0&&end>start);
+const source=html.slice(start,end);
+const draw=JSON.parse(fs.readFileSync('resultados/selae-interfaz.json','utf8')).games.LAPR['2026-11-21'];
+assert(draw,'Sorteo oficial 21-11-2026 missing');
+const sandbox={OFFICIAL_DRAWS_UI:{LAPR:{'2026-11-21':draw}},ticketEntries:t=>t.entries,reviewNumbers062:(v,n,max)=>{const a=String(v).match(/\d+/g)?.map(Number)||[];return a.length===n&&new Set(a).size===n&&a.every(x=>x>=1&&x<=max)?a:null}};
+vm.createContext(sandbox);vm.runInContext(source,sandbox);
+const result=sandbox.officialUiCheck({game:'primitiva',date:'2026-11-21',entries:['07 12 13 22 29 37'],extra:'2',joker:'0031430'});
+assert.equal(result.state,'pending');
+assert(result.components.some(x=>x.amount===1434.22),'5-hit prize must be visible');
+assert(result.components.some(x=>x.amount===1000000),'matching Joker candidate must be visible');
+assert.equal(result.prize,undefined,'uncertified gross total must remain blocked');
+console.log('OK: primary award and Joker candidate visible; uncertified total blocked');
