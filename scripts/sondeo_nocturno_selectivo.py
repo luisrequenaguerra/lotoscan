@@ -39,7 +39,7 @@ def main():
     report={"fecha_local":now.isoformat(),"consultas":[],"sorteos":[],
             "modo":"sondeo_selectivo","premios_validados":False}
     out=Path(args.salida)
-    if not args.forzar and not (20<=now.hour<23 or (now.hour==23 and now.minute==0)):
+    if not args.forzar and not (20<=now.hour<23 or (now.hour==23 and now.minute<=15)):
         report["estado"]="fuera_de_franja"
         write_json(out/"informe.json",report)
         print("Fuera de la franja 20:00-23:00 Europe/Madrid")
