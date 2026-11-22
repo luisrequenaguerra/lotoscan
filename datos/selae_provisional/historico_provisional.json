@@ -1843,6 +1843,67 @@
           "publicable": false
         }
       ]
+    },
+    {
+      "juego": "QUPL",
+      "id_sorteo": "1329408073",
+      "fecha": "2026-11-22",
+      "revisiones": [
+        {
+          "sha256": "00e78ec4c19b5b8783d2d7cf9084d7365fc4932a801acf2bfecad9ea0f61a306",
+          "detectado_utc": "2026-11-22T19:07:10.504168+00:00",
+          "datos_oficiales": {
+            "fecha_sorteo": "2026-11-22 14:20:00",
+            "dia_semana": "domingo",
+            "id_sorteo": "1329408073",
+            "game_id": "QUPL",
+            "anyo": "2026",
+            "premio_bote": "9000",
+            "cdc": "13294",
+            "apuestas": "11171",
+            "recaudacion": "11171",
+            "combinacion": "4 - 2 - 10 - 2 - 11 C(7)",
+            "premios": "6144",
+            "fondo_bote": "3289",
+            "escrutinio": [
+              {
+                "tipo": "Especial (1 solo resguardo de 1ª Cat) ",
+                "categoria": 1,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "1ª (5 Caballos Gan+2º de 5ªCarrera) ",
+                "categoria": 2,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "2ª (5 Caballos Ganadores) ",
+                "categoria": 3,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "3ª (4 Caballos Gan+2º de 5ªCarrera) ",
+                "categoria": 4,
+                "premio": "0",
+                "ganadores": "0"
+              },
+              {
+                "tipo": "4ª (4 Caballos Ganadores) ",
+                "categoria": 5,
+                "premio": "781,97",
+                "ganadores": "2"
+              }
+            ]
+          },
+          "advertencias": [
+            "premios_no_contrastados_individualmente_con_pdf"
+          ],
+          "publicable": false
+        }
+      ]
     }
   ]
 }
