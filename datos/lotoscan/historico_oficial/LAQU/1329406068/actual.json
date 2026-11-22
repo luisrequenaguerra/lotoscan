@@ -48,8 +48,9 @@
       "visitante": "Real Sociedad (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 18:30:00",
       "local": "Osasuna (m)",
+      "marcador": "1 - 0",
+      "signo": "1",
       "visitante": "Málaga (m)"
     },
     {
@@ -70,8 +71,9 @@
       "visitante": "Las Palmas (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 18:30:00",
       "local": "Girona (m)",
+      "marcador": "2 - 1",
+      "signo": "1",
       "visitante": "Eibar (m)"
     },
     {
@@ -93,8 +95,9 @@
       "visitante": "Sevilla (f)"
     },
     {
-      "fecha": "2026\\/11\\/22 17:00:00",
       "local": "Tenerife (f)",
+      "marcador": "0 - 3",
+      "signo": "2",
       "visitante": "Madrid Cff (f)"
     },
     {
