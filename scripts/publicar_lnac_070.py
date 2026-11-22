@@ -4,7 +4,7 @@ import json
 import pathlib
 import re
 
-ROOT = pathlib.Path("datos/lotoscan/loteria_nacional/historico_completo")
+ROOT = pathlib.Path("datos/lotoscan/loteria_nacional/historico_resultados1")
 OUT = pathlib.Path("resultados/lnac")
 WIDTHS = {"extraccionesDeCuatroCifras":4, "extraccionesDeTresCifras":3,
           "extraccionesDeDosCifras":2, "reintegros":1}
@@ -48,7 +48,7 @@ def main():
     if not draws:
         raise RuntimeError("No hay sorteos ordinarios validos; no publicar manifest vacio")
     draws.sort(key=lambda x:(x["date"],x["id"]),reverse=True)
-    manifest={"version":1,"draws":draws,"notice":"Sorteos ordinarios. No incluye premios especiales. Los archivos legados requieren auditoria de procedencia."}
+    manifest={"version":1,"draws":draws,"notice":"Sorteos ordinarios. No incluye premios especiales. Solo registros archivados por el flujo resultados1 de LotoScan 0.70."}
     (OUT/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print("Publicados",len(draws),"sorteos")
 
