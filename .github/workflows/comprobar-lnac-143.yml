@@ -1,0 +1,32 @@
+name: LotoScan - Premios derivados LNAC JSON 1.43
+on:
+  workflow_dispatch:
+    inputs:
+      numero:
+        description: 'Numero de decimo de cinco cifras (opcional)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Ejecutar auditoria JSON
+        env:
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          if [ -n "$NUMERO" ]; then
+            python scripts/comprobar_lnac_143.py --numero "$NUMERO" --informe salida_143
+          else
+            python scripts/comprobar_lnac_143.py --informe salida_143
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-143
+          path: salida_143/
