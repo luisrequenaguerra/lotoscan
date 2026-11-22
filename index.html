@@ -614,7 +614,7 @@ function officialUiCheck(t){
   if(cat==null)continue;
   const row=rows.find((r,idx)=>Number(r.category_code??(idx+1))===cat);
   const amount=row?.amount_eur;
-  if(amount==null||!/^\\d+(?:\\.\\d+)?$/.test(String(amount))){issues.push('Escrutinio incompleto en apuesta '+(i+1));continue}
+  if(amount==null||!/^[0-9]+(?:\.[0-9]+)?$/.test(String(amount))){issues.push('Escrutinio incompleto en apuesta '+(i+1));continue}
   components.push({label:'Apuesta '+(i+1)+' · '+(row.category_label||'Categoría '+cat),amount:Number(amount)});
  }
  // No sumar complementarios sin la información de participación del resguardo.
@@ -622,7 +622,25 @@ function officialUiCheck(t){
   if(!/^(?:[0-9]|0[0-9])$/.test(String(t.extra??'').trim()))issues.push('Reintegro no indicado');
   else if(Number(t.extra)===draw.result.reintegro)issues.push('Reintegro premiado: importe y multiplicidad del resguardo pendientes');
  }
- if(game==='LAPR'&&t.joker)issues.push('Joker: pendiente de integrar premio acumulado y vinculación al resguardo');
+ if(game==='LAPR'&&t.joker){
+  const code=String(t.joker).trim(),winner=String(draw.result?.joker?.combinacion??'').padStart(7,'0');
+  if(!/^[0-9]{7}$/.test(code)||!/^[0-9]{7}$/.test(winner))issues.push('Joker: código o resultado incompleto');
+  else{
+   const jokerRows=draw.prizes.filter(r=>r.product==='JOKER');
+   let prefix=0,suffix=0;
+   while(prefix<7&&code[prefix]===winner[prefix])prefix++;
+   while(suffix<7&&code[6-suffix]===winner[6-suffix])suffix++;
+   // La coincidencia completa es un único premio; no acumular prefijos y sufijos.
+   const lengths=prefix===7?[7]:[prefix,suffix].filter(n=>n>0);
+   for(const length of lengths){
+    const row=jokerRows.find(r=>Number(r.category_code)===8-length);
+    const amount=Number(row?.amount_eur);
+    if(!row||!Number.isFinite(amount)||amount<0)issues.push('Escrutinio Joker incompleto');
+    else components.push({label:'Joker · '+length+' cifras coincidentes (premio candidato)',amount});
+   }
+   issues.push('Joker: participación y vinculación al resguardo sin autenticar');
+  }
+ }
  if(game==='EMIL')issues.push('El Millón: falta validación de vinculación del código al resguardo');
  if(game==='LAPR'&&components.some(x=>x.label.includes('Especial')))issues.push('Categoría especial: acumulación pendiente');
  const partial=components.reduce((n,x)=>n+x.amount,0);
