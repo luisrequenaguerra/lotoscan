@@ -30,7 +30,7 @@ class ReceiptGrossTests(unittest.TestCase):
             self.assertNotIn("missing_receipt_millon_code",result["issues"])
             invalid={**receipt,"entries":[{**receipt["entries"][0],"millon_code":code["combinacion"]}]}
             with self.assertRaises(ValueError):calculate_receipt(d,invalid)
-            missing=calculate_receipt(d,{**receipt,"millon_code":None}) if False else calculate_receipt(d,{k:v for k,v in receipt.items() if k!="millon_code"})
+            missing=calculate_receipt(d,{k:v for k,v in receipt.items() if k!="millon_code"})
             self.assertIsNone(missing["gross_eur"])
             checked+=1
         self.assertGreater(checked,0)
