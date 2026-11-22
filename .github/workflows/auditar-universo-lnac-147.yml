@@ -1,0 +1,23 @@
+name: LotoScan - Auditar 100000 numeros LNAC 1.47
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Enumerar 100000 numeros por sorteo ordinario compatible
+        run: python scripts/auditar_universo_lnac_147.py --informe salida_147
+      - name: Guardar informe aun si la auditoria falla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-selae-147
+          path: salida_147/
+          if-no-files-found: warn
