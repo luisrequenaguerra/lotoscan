@@ -6,6 +6,7 @@ on:
       - 'scripts/actualizar_lnac_resultados1_070.py'
       - 'scripts/publicar_lnac_070.py'
       - 'tests/test_publicacion_lnac_070.py'
+      - 'scripts/diagnosticar_fuentes_selae_071.py'
   workflow_dispatch:
   schedule:
     - cron: '25 8,14,22 * * *'
@@ -27,6 +28,8 @@ jobs:
           python-version: '3.11'
       - name: Regresion LNAC offline
         run: python tests/test_publicacion_lnac_070.py
+      - name: Diagnosticar nueve juegos y tres PDF oficiales (solo lectura)
+        run: python scripts/diagnosticar_fuentes_selae_071.py
       - name: Consulta real SELAE resultados1 (sin publicar)
         run: |
           python scripts/actualizar_lnac_resultados1_070.py
