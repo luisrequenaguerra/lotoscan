@@ -17,6 +17,8 @@ def audit(root):
     for code in sorted(CODES):
         folder=root/code
         entries=[]
+        completos=0
+        pendientes=0
         if folder.exists():
             for file in sorted(folder.glob("*/actual.json")):
                 draw_id=file.parent.name
@@ -27,9 +29,14 @@ def audit(root):
                     if item.get("game_id")!=code: raise ValueError("Juego no coincide")
                     date=str(item.get("fecha_sorteo") or "")[:10]
                     dt.date.fromisoformat(date)
-                    if not item.get("combinacion"): report["avisos"].append(f"{code}/{draw_id}: combinación vacía")
-                    if not isinstance(item.get("escrutinio"),list) or not item["escrutinio"]:
-                        report["avisos"].append(f"{code}/{draw_id}: escrutinio pendiente")
+                    has_combination=bool(item.get("combinacion"))
+                    has_scrutiny=isinstance(item.get("escrutinio"),list) and bool(item["escrutinio"])
+                    has_elige8=(code!="LAQU" or (isinstance(item.get("escrutinioElige8"),list) and bool(item["escrutinioElige8"])))
+                    if not has_combination: report["avisos"].append(f"{code}/{draw_id}: combinación vacía")
+                    if not has_scrutiny: report["avisos"].append(f"{code}/{draw_id}: escrutinio pendiente")
+                    if code=="LAQU" and not has_elige8: report["avisos"].append(f"{code}/{draw_id}: Elige8 pendiente o no identificado")
+                    if has_combination and has_scrutiny and has_elige8: completos+=1
+                    else: pendientes+=1
                     current_hash=digest(item)
                     revision=file.parent/"revisiones"/(current_hash+".json")
                     if not revision.exists():
@@ -38,12 +45,28 @@ def audit(root):
                         saved=json.loads(revision.read_text(encoding="utf-8"))
                         if digest(saved)!=current_hash:
                             report["errores"].append(f"{code}/{draw_id}: revisión actual corrupta")
+                    for old_revision in (file.parent/"revisiones").glob("*.json"):
+                        try:
+                            old=json.loads(old_revision.read_text(encoding="utf-8"))
+                            if digest(old)!=old_revision.stem:
+                                report["errores"].append(f"{code}/{draw_id}: revisión corrupta {old_revision.name}")
+                            if not isinstance(old,dict) or str(old.get("id_sorteo"))!=draw_id or old.get("game_id")!=code:
+                                report["errores"].append(f"{code}/{draw_id}: identidad incorrecta en {old_revision.name}")
+                        except (OSError,ValueError,TypeError) as exc:
+                            report["errores"].append(f"{code}/{draw_id}: revisión ilegible {old_revision.name}: {exc}")
                     entries.append({"id_sorteo":draw_id,"fecha":date,"sha256":current_hash,
                                     "revisiones":len(list((file.parent/"revisiones").glob("*.json")))})
                 except (OSError,ValueError,TypeError) as exc:
                     report["errores"].append(f"{code}/{draw_id}: {exc}")
-        report["juegos"][code]={"total":len(entries),"ultimo":max((x["fecha"] for x in entries),default=None)}
+        report["juegos"][code]={"total":len(entries),"ultimo":max((x["fecha"] for x in entries),default=None),
+                                "completos_estructurales":completos,"pendientes":pendientes}
+        if not entries: report["errores"].append(f"{code}: sin sorteos archivados")
         report["total_sorteos"]+=len(entries)
+    report["resumen"]={"juegos_con_historico":sum(bool(v["total"]) for v in report["juegos"].values()),
+                       "completos_estructurales":sum(v["completos_estructurales"] for v in report["juegos"].values()),
+                       "pendientes":sum(v["pendientes"] for v in report["juegos"].values()),
+                       "errores":len(report["errores"]),"avisos":len(report["avisos"])}
+    report["nota"]="Completo estructural NO implica premios certificados ni escrutinio definitivo"
     report["estado"]="error" if report["errores"] else ("advertencias" if report["avisos"] else "correcto")
     return report
 
