@@ -1,0 +1,22 @@
+name: LotoScan - Auditar resultados1 nueve juegos
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar SELAE resultados1 desde GitHub Actions
+        run: python scripts/auditar_resultados1_nueve_juegos.py
+      - name: Conservar respuestas y diagnostico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lotoscan-auditoria-resultados1
+          path: auditoria_resultados1/
+          if-no-files-found: warn
