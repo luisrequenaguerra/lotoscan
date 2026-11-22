@@ -1,0 +1,86 @@
+{
+  "anyo": "2026",
+  "apuestas": "188130",
+  "cdc": "13284",
+  "combinacion": " M1 - 02 - 21 - 00 - M0 - 1M",
+  "dia_semana": "jueves",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "2",
+      "premio": "8465,85",
+      "tipo": "2ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "218",
+      "premio": "69,04",
+      "tipo": "3ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "2949",
+      "premio": "5,1",
+      "tipo": "4ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "21879",
+      "premio": "1,72",
+      "tipo": "5ª  (2 Aciertos) "
+    }
+  ],
+  "fecha_sorteo": "2026-11-12 22:43:00",
+  "fondo_bote": "225910",
+  "game_id": "QGOL",
+  "id_sorteo": "1328407075",
+  "jornada": "22",
+  "partidos": [
+    {
+      "local": "Italia",
+      "marcador": "3 - 1",
+      "signo": "M-1",
+      "visitante": "Francia"
+    },
+    {
+      "local": "República Checa",
+      "marcador": "0 - 2",
+      "signo": "0-2",
+      "visitante": "España"
+    },
+    {
+      "local": "Inglaterra",
+      "marcador": "2 - 1",
+      "signo": "2-1",
+      "visitante": "Croacia"
+    },
+    {
+      "local": "Eslovenia",
+      "marcador": "0 - 0",
+      "signo": "0-0",
+      "visitante": "Suiza"
+    },
+    {
+      "local": "Países Bajos",
+      "marcador": "7 - 0",
+      "signo": "M-0",
+      "visitante": "Grecia"
+    },
+    {
+      "local": "Serbia",
+      "marcador": "1 - 3",
+      "signo": "1-M",
+      "visitante": "Alemania"
+    }
+  ],
+  "premio_bote": "235000",
+  "premios": "103471",
+  "recaudacion": "188130",
+  "temporada": "2026-2027"
+}

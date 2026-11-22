@@ -1,0 +1,143 @@
+{
+  "anyo": "2026",
+  "apuestas": "4956794",
+  "cdc": "13282",
+  "combinacion": " 15 - 18 - 31 - 37 - 41 - 01 - 05",
+  "dia_semana": "martes",
+  "escrutinio": [
+    {
+      "ganadores": "1",
+      "ganadores_eu": "1",
+      "multiplicador": null,
+      "premio": "141899445",
+      "tipo": "1ª       5      +      2"
+    },
+    {
+      "ganadores": "0",
+      "ganadores_eu": "2",
+      "multiplicador": null,
+      "premio": "369732,75",
+      "tipo": "2ª       5      +      1"
+    },
+    {
+      "ganadores": "0",
+      "ganadores_eu": "3",
+      "multiplicador": null,
+      "premio": "57608,42",
+      "tipo": "3ª       5      +      0"
+    },
+    {
+      "ganadores": "4",
+      "ganadores_eu": "32",
+      "multiplicador": null,
+      "premio": "1682,21",
+      "tipo": "4ª       4      +      2"
+    },
+    {
+      "ganadores": "145",
+      "ganadores_eu": "733",
+      "multiplicador": null,
+      "premio": "135,28",
+      "tipo": "5ª       4      +      1"
+    },
+    {
+      "ganadores": "305",
+      "ganadores_eu": "1479",
+      "multiplicador": null,
+      "premio": "70,88",
+      "tipo": "6ª       3      +      2"
+    },
+    {
+      "ganadores": "320",
+      "ganadores_eu": "1541",
+      "multiplicador": null,
+      "premio": "47,8",
+      "tipo": "7ª       4      +      0"
+    },
+    {
+      "ganadores": "4602",
+      "ganadores_eu": "23501",
+      "multiplicador": null,
+      "premio": "15,67",
+      "tipo": "8ª       2      +      2"
+    },
+    {
+      "ganadores": "6393",
+      "ganadores_eu": "32343",
+      "multiplicador": null,
+      "premio": "12,7",
+      "tipo": "9ª       3      +      1"
+    },
+    {
+      "ganadores": "14068",
+      "ganadores_eu": "72258",
+      "multiplicador": null,
+      "premio": "10,59",
+      "tipo": "10ª       3      +      0"
+    },
+    {
+      "ganadores": "26012",
+      "ganadores_eu": "130007",
+      "multiplicador": null,
+      "premio": "7,13",
+      "tipo": "11ª       1      +      2"
+    },
+    {
+      "ganadores": "95811",
+      "ganadores_eu": "488308",
+      "multiplicador": null,
+      "premio": "5,98",
+      "tipo": "12ª       2      +      1"
+    },
+    {
+      "ganadores": "210375",
+      "ganadores_eu": "1091588",
+      "multiplicador": null,
+      "premio": "4,31",
+      "tipo": "13ª       2      +      0"
+    }
+  ],
+  "escrutinio_lluvia": null,
+  "escrutinio_millon": [
+    {
+      "ganadores": 1,
+      "orden_escrutinio": "1",
+      "premio": "1000000",
+      "tipo": "El Millón"
+    }
+  ],
+  "fecha_sorteo": "2026-11-10 21:16:00",
+  "fondo_bote": "130000000",
+  "game_id": "EMIL",
+  "id_sorteo": "1328202090",
+  "lluvia": null,
+  "millon": {
+    "activo": "1",
+    "combinacion": "HJL03816",
+    "contenidosRelacionados": {
+      "documentos": [],
+      "enlaces": [],
+      "imagenes": [],
+      "noticias": [
+        {
+          "tituloContenido": "Premio El Millón de Euromillones del 10 de noviembre de 2026",
+          "tituloRelacion": "Premio Automatico",
+          "urlContenido": "/premios/premio-el-millon-de-euromillones-del-10-de-noviembre-de-2026"
+        }
+      ],
+      "paginasLibres": [],
+      "preguntasFrecuentes": [],
+      "puntosDeVenta": []
+    },
+    "gameid": "LAMI",
+    "importe": 1000000,
+    "relsorteoid_asociado": "1328211090"
+  },
+  "mw_categoria_final": null,
+  "mw_categoria_inicial": null,
+  "mw_multiplicador": null,
+  "premio_bote": "141000000",
+  "premios": "5452473",
+  "recaudacion": "10904946",
+  "recaudacion_europea": "56664022"
+}

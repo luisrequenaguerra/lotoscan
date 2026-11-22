@@ -1,0 +1,46 @@
+{
+  "anyo": "2026",
+  "apuestas": "10897",
+  "cdc": "13280",
+  "combinacion": "1 - 5 - 4 - 5 - 6 C(12)",
+  "dia_semana": "domingo",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "Especial (1 solo resguardo de 1ª Cat) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª (5 Caballos Gan+2º de 5ªCarrera) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "2ª (5 Caballos Ganadores) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "1",
+      "premio": "762,79",
+      "tipo": "3ª (4 Caballos Gan+2º de 5ªCarrera) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "6",
+      "premio": "127,13",
+      "tipo": "4ª (4 Caballos Ganadores) "
+    }
+  ],
+  "fecha_sorteo": "2026-11-08 14:13:00",
+  "fondo_bote": "0",
+  "game_id": "QUPL",
+  "id_sorteo": "1328008070",
+  "premio_bote": "5000",
+  "premios": "5993",
+  "recaudacion": "10897"
+}

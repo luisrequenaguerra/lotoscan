@@ -1,0 +1,159 @@
+{
+  "anyo": "2026",
+  "apuestas": "4504950",
+  "cdc": "13280",
+  "combinacion": "2 - X - 2 - 2 - 1 - X - 1 - 2 - 2 - 2 - X - X - 2 - 1 - 12",
+  "dia_semana": "domingo",
+  "elige8": {
+    "activo": "1",
+    "gameid": "ELG8",
+    "relsorteoid_asociado": "1328013065"
+  },
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "1",
+      "premio": "1647986,55",
+      "tipo": "Pleno al 15 "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "6",
+      "premio": "90099",
+      "tipo": "1ª (14 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "185",
+      "premio": "1369,75",
+      "tipo": "2ª (13 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "2301",
+      "premio": "110,13",
+      "tipo": "3ª (12 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "17496",
+      "premio": "14,48",
+      "tipo": "4ª (11 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "89116",
+      "premio": "3,41",
+      "tipo": "5ª (10 Aciertos) "
+    }
+  ],
+  "escrutinioElige8": [
+    {
+      "categoria": 1,
+      "ganadores": "258",
+      "premio": "214,66",
+      "tipo": "8 Acertados 8 "
+    }
+  ],
+  "fecha_sorteo": "2026-11-08 22:57:00",
+  "fondo_bote": "1394583",
+  "game_id": "LAQU",
+  "id_sorteo": "1328006065",
+  "jornada": "20",
+  "partidos": [
+    {
+      "local": "Málaga (m)",
+      "marcador": "1 - 2",
+      "signo": "2 ",
+      "visitante": "Racing De Santander (m)"
+    },
+    {
+      "local": "Osasuna (m)",
+      "marcador": "1 - 1",
+      "signo": "X ",
+      "visitante": "Athletic Club (m)"
+    },
+    {
+      "local": "Valencia (m)",
+      "marcador": "0 - 3",
+      "signo": "2 ",
+      "visitante": "Real Madrid (m)"
+    },
+    {
+      "local": "Elche (m)",
+      "marcador": "0 - 2",
+      "signo": "2 ",
+      "visitante": "Betis (m)"
+    },
+    {
+      "local": "Real Sociedad (m)",
+      "marcador": "1 - 0",
+      "signo": "1 ",
+      "visitante": "Rayo Vallecano (m)"
+    },
+    {
+      "local": "Celta (m)",
+      "marcador": "0 - 0",
+      "signo": "X ",
+      "visitante": "Levante (m)"
+    },
+    {
+      "local": "Villarreal (m)",
+      "marcador": "2 - 0",
+      "signo": "1 ",
+      "visitante": "Getafe (m)"
+    },
+    {
+      "local": "Cádiz (m)",
+      "marcador": "1 - 2",
+      "signo": "2 ",
+      "visitante": "R. Oviedo (m)"
+    },
+    {
+      "local": "Girona (m)",
+      "marcador": "0 - 1",
+      "signo": "2 ",
+      "visitante": "Almería (m)"
+    },
+    {
+      "local": "Sporting (m)",
+      "marcador": "1 - 2",
+      "signo": "2 ",
+      "visitante": "R. Valladolid (m)"
+    },
+    {
+      "local": "Athletic Club (f)",
+      "marcador": "1 - 1",
+      "signo": "X ",
+      "visitante": "Real Madrid (f)"
+    },
+    {
+      "local": "Logroño (f)",
+      "marcador": "2 - 2",
+      "signo": "X ",
+      "visitante": "Sevilla (f)"
+    },
+    {
+      "local": "Eibar (f)",
+      "marcador": "1 - 2",
+      "signo": "2 ",
+      "visitante": "Real Sociedad (f)"
+    },
+    {
+      "local": "Tenerife (f)",
+      "marcador": "1 - 0",
+      "signo": "1 ",
+      "visitante": "Alavés (f)"
+    },
+    {
+      "local": "At. Madrid (m)",
+      "marcador": "1 - 2",
+      "signo": "1-2",
+      "visitante": "Barcelona (m)"
+    }
+  ],
+  "premio_bote": "2200000",
+  "premios": "1858291",
+  "recaudacion": "3378712",
+  "temporada": "2026-2027"
+}

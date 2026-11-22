@@ -1,0 +1,86 @@
+{
+  "anyo": "2026",
+  "apuestas": "155003",
+  "cdc": "13280",
+  "combinacion": " 12 - 11 - 0M - 00 - 20 - 12",
+  "dia_semana": "domingo",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "60",
+      "premio": "232,5",
+      "tipo": "2ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "988",
+      "premio": "12,55",
+      "tipo": "3ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "7724",
+      "premio": "1,61",
+      "tipo": "4ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "29469",
+      "premio": "1,05",
+      "tipo": "5ª  (2 Aciertos) "
+    }
+  ],
+  "fecha_sorteo": "2026-11-08 22:57:00",
+  "fondo_bote": "210410",
+  "game_id": "QGOL",
+  "id_sorteo": "1328007074",
+  "jornada": "21",
+  "partidos": [
+    {
+      "local": "Málaga",
+      "marcador": "1 - 2",
+      "signo": "1-2",
+      "visitante": "Racing De Santander"
+    },
+    {
+      "local": "Osasuna",
+      "marcador": "1 - 1",
+      "signo": "1-1",
+      "visitante": "Athletic Club"
+    },
+    {
+      "local": "Valencia",
+      "marcador": "0 - 3",
+      "signo": "0-M",
+      "visitante": "Real Madrid"
+    },
+    {
+      "local": "Celta",
+      "marcador": "0 - 0",
+      "signo": "0-0",
+      "visitante": "Levante"
+    },
+    {
+      "local": "Villarreal",
+      "marcador": "2 - 0",
+      "signo": "2-0",
+      "visitante": "Getafe"
+    },
+    {
+      "local": "At. Madrid",
+      "marcador": "1 - 2",
+      "signo": "1-2",
+      "visitante": "Barcelona"
+    }
+  ],
+  "premio_bote": "220000",
+  "premios": "85251",
+  "recaudacion": "155003",
+  "temporada": "2026-2027"
+}

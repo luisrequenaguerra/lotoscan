@@ -36,13 +36,15 @@
       "visitante": "Celta (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 14:00:00",
       "local": "Barcelona (m)",
+      "marcador": "3 - 2",
+      "signo": "1",
       "visitante": "Villarreal (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 16:15:00",
       "local": "Racing Santander (m)",
+      "marcador": "3 - 2",
+      "signo": "1",
       "visitante": "Real Sociedad (m)"
     },
     {
@@ -62,8 +64,9 @@
       "visitante": "Mallorca (m)"
     },
     {
-      "fecha": "2026\\/11\\/22 16:15:00",
       "local": "Sporting (m)",
+      "marcador": "0 - 2",
+      "signo": "2",
       "visitante": "Las Palmas (m)"
     },
     {

@@ -1,0 +1,64 @@
+{
+  "anyo": "2026",
+  "apuestas": "82432",
+  "cdc": "13280",
+  "combinacion": "2 - 10 - 13 - 17 - 19 - 20 C(5) R(6)",
+  "dia_semana": "domingo",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª  (6 Números + Caballo Ganador) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "2ª  (6 Números) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "4",
+      "premio": "618,24",
+      "tipo": "3ª  (5 Números + Caballo Ganador) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "10",
+      "premio": "329,73",
+      "tipo": "4ª  (5 Números) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "147",
+      "premio": "11,22",
+      "tipo": "5ª  (4 Números + Caballo Ganador) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "440",
+      "premio": "7,49",
+      "tipo": "6ª  (4 Números) "
+    },
+    {
+      "categoria": 7,
+      "ganadores": "1024",
+      "premio": "3,22",
+      "tipo": "7ª  (3 Números + Caballo Ganador) "
+    },
+    {
+      "categoria": 8,
+      "ganadores": "7856",
+      "premio": "1",
+      "tipo": "Reintegro"
+    }
+  ],
+  "fecha_sorteo": "2026-11-08 21:21:00",
+  "fondo_bote": "1911867",
+  "game_id": "LOTU",
+  "id_sorteo": "1328003070",
+  "premio_bote": "1920000",
+  "premios": "45337",
+  "recaudacion": "82432"
+}
