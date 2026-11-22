@@ -47,12 +47,24 @@ jobs:
           path: salida_historico_9/
           if-no-files-found: warn
           retention-days: 30
+      - name: Actualizar resultados consumidos por LotoScan
+        if: ${{ success() && (github.event_name == 'schedule' || inputs.solo_lectura == false) }}
+        run: |
+          python scripts/exportar_resultados_interfaz.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('resultados/selae-interfaz.json').read_text(encoding='utf-8'))
+          assert data['provider']=='SELAE'
+          assert all(data['games'].get(game) for game in ('BONO','LAPR','EMIL'))
+          print('Resultados disponibles en interfaz:',{k:len(v) for k,v in data['games'].items()})
+          PY
       - name: Guardar histórico incremental
         if: ${{ success() && (github.event_name == 'schedule' || inputs.solo_lectura == false) }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add datos/lotoscan/historico_oficial/
+          git add datos/lotoscan/historico_oficial/ resultados/selae-interfaz.json
           if ! git diff --cached --quiet; then
             git commit -m 'LotoScan: actualizar histórico de nueve juegos'
             git pull --rebase
