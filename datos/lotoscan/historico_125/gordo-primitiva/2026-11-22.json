@@ -1,0 +1,21 @@
+{
+  "adicionales": {},
+  "combinacion": [
+    "09",
+    "13",
+    "16",
+    "19",
+    "45"
+  ],
+  "errores": [
+    "Clave de El Gordo pendiente de selector confirmado",
+    "Categorías: esperadas 9, recibidas 0"
+  ],
+  "fecha": "22/11/2026",
+  "fecha_original": "domingo - dom - 22/11/2026",
+  "fuente": "SELAE /es/resultados (extractor reutilizado 0.85W)",
+  "juego": "gordo-primitiva",
+  "premios": [],
+  "publicable": false,
+  "validado": false
+}

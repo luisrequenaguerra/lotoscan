@@ -1,0 +1,59 @@
+{
+  "adicionales": {
+    "complementario": "01",
+    "reintegro": "5"
+  },
+  "combinacion": [
+    "03",
+    "04",
+    "12",
+    "20",
+    "26",
+    "36"
+  ],
+  "errores": [],
+  "fecha": "22/11/2026",
+  "fecha_original": "domingo - dom - 22/11/2026",
+  "fuente": "SELAE /es/resultados (extractor reutilizado 0.85W)",
+  "juego": "bonoloto",
+  "premios": [
+    [
+      "1ª (6 Aciertos)",
+      "0",
+      "0,00 €",
+      ""
+    ],
+    [
+      "2ª (5 Aciertos + C)",
+      "1",
+      "116.699,24 €",
+      ""
+    ],
+    [
+      "3ª (5 Aciertos)",
+      "66",
+      "884,09 €",
+      ""
+    ],
+    [
+      "4ª (4 Aciertos)",
+      "3.718",
+      "23,54 €",
+      ""
+    ],
+    [
+      "5ª (3 Aciertos)",
+      "69.896",
+      "4,00 €",
+      ""
+    ],
+    [
+      "Reintegro",
+      "383.707",
+      "0,50 €",
+      ""
+    ]
+  ],
+  "publicable": false,
+  "validado": true
+}
