@@ -1,0 +1,24 @@
+name: Validar interfaz Primitiva
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'resultados/selae-interfaz.json'
+      - 'tests/test_interfaz_primitiva.js'
+      - '.github/workflows/validar-interfaz-primitiva.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'resultados/selae-interfaz.json'
+      - 'tests/test_interfaz_primitiva.js'
+permissions:
+  contents: read
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/test_interfaz_primitiva.js
