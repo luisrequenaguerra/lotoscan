@@ -1,0 +1,32 @@
+name: LotoScan - Calculo JSON LNAC 1.42
+on:
+  workflow_dispatch:
+    inputs:
+      numero:
+        description: 'Numero de decimo (5 cifras, opcional)'
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  calcular:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Calcular con JSON oficial archivado
+        env:
+          NUMERO: ${{ inputs.numero }}
+        run: |
+          if [ -n "$NUMERO" ]; then
+            python scripts/calcular_lnac_json_142.py --numero "$NUMERO" --informe salida_142_json
+          else
+            python scripts/calcular_lnac_json_142.py --informe salida_142_json
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-selae-142-json
+          path: salida_142_json/
