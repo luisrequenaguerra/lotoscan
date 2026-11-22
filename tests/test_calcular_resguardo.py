@@ -51,6 +51,28 @@ class ReceiptGrossTests(unittest.TestCase):
             self.assertIsNone(calculate_receipt(d,{**receipt,"validated":False})["gross_eur"])
             checked+=1
         self.assertGreater(checked,0)
+    def test_single_simple_bet_reintegro_from_scrutiny(self):
+        for game in ("BONO","LAPR"):
+            tested=0
+            for d in draws(game):
+                result=d["result"]
+                nums=result["numbers"]
+                # Three correct numbers: ordinary category plus reintegro.
+                others=[n for n in range(1,50) if n not in nums and n!=result["complementary"]]
+                entry={"numbers":nums[:3]+others[:3]}
+                receipt={"game_id":game,"id_sorteo":d["draw"]["id_sorteo"],
+                         "validated":True,"voided":False,"multiple_draws":False,
+                         "simple_unit_stake":True,"reintegro":result["reintegro"],
+                         "joker_selected":False,"entries":[entry]}
+                outcome=calculate_receipt(d,receipt)
+                rein=[p for p in outcome["components"] if p["product"]=="REINTEGRO"]
+                self.assertEqual(len(rein),1)
+                expected=next(r["amount_eur"] for r in d["prizes"]
+                              if r["product"]==game and "reintegro" in (r["category_label"] or "").lower())
+                self.assertEqual(float(rein[0]["amount_eur"]),float(expected))
+                self.assertFalse(outcome["prize_certified"])
+                tested+=1
+            self.assertGreater(tested,0)
     def test_reintegro_blocks_ambiguous_stake(self):
         d=next(draws("LAPR"))
         receipt={"game_id":"LAPR","id_sorteo":d["draw"]["id_sorteo"],
@@ -59,5 +81,5 @@ class ReceiptGrossTests(unittest.TestCase):
                  "entries":[{"numbers":d["result"]["numbers"]}]}
         result=calculate_receipt(d,receipt)
         self.assertIsNone(result["gross_eur"])
-        self.assertIn("reintegro_receipt_stake_requires_validation",result["issues"])
+        self.assertIn("reintegro_multiple_bets_or_stake_unverified",result["issues"])
 if __name__=="__main__":unittest.main()
