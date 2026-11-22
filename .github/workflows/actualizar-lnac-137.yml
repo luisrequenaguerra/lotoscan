@@ -1,5 +1,11 @@
 name: LotoScan - LNAC resultados1 y publicacion 0.70
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/actualizar-lnac-137.yml'
+      - 'scripts/actualizar_lnac_resultados1_070.py'
+      - 'scripts/publicar_lnac_070.py'
+      - 'tests/test_publicacion_lnac_070.py'
   workflow_dispatch:
   schedule:
     - cron: '25 8,14,22 * * *'
@@ -9,7 +15,20 @@ concurrency:
   group: lotoscan-lnac-historico
   cancel-in-progress: false
 jobs:
+  validar:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Regresion LNAC offline
+        run: python tests/test_publicacion_lnac_070.py
   actualizar:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
