@@ -1,0 +1,56 @@
+name: LotoScan - Sondeo nocturno selectivo
+on:
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: 'Permitir prueba fuera de 20-23 hora española'
+        type: boolean
+        default: false
+      solo_lectura:
+        description: 'No escribir resultados'
+        type: boolean
+        default: false
+  schedule:
+    # UTC amplio para cubrir horario de verano e invierno.
+    - cron: '0,30 18-22 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-historico-oficial
+  cancel-in-progress: false
+jobs:
+  sondeo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Consultar solo juegos previstos y pendientes
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.forzar || false }}
+          READ_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.solo_lectura || false }}
+        run: |
+          FLAGS=""
+          if [ "$FORCE" = "true" ]; then FLAGS="$FLAGS --forzar"; fi
+          if [ "$READ_ONLY" = "true" ]; then FLAGS="$FLAGS --solo-lectura"; fi
+          python scripts/sondeo_nocturno_selectivo.py $FLAGS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lotoscan-sondeo-nocturno
+          path: salida_sondeo_nocturno/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Guardar resultados nuevos o revisados
+        if: ${{ success() && (github.event_name == 'schedule' || inputs.solo_lectura == false) }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add datos/lotoscan/historico_oficial/
+          if ! git diff --cached --quiet; then
+            git commit -m 'LotoScan: resultados nocturnos selectivos'
+            git pull --rebase
+            git push
+          fi
