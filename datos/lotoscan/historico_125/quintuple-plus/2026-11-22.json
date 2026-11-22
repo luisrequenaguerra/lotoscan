@@ -1,0 +1,47 @@
+{
+  "adicionales": {},
+  "combinacion": [
+    "04",
+    "02",
+    "10",
+    "02",
+    "11",
+    "07"
+  ],
+  "errores": [
+    "Validación semántica de pronósticos pendiente"
+  ],
+  "fecha": "22/11/2026",
+  "fecha_original": "Jornada 73ª - domingo - dom - 22/11/2026",
+  "fuente": "SELAE /es/resultados (extractor reutilizado 0.85W)",
+  "juego": "quintuple-plus",
+  "premios": [
+    [
+      "Especial (1 solo resguardo de 1ª Cat)",
+      "0",
+      "0,00 €"
+    ],
+    [
+      "1ª (5 Caballos Gan+2º de 5ªCarrera)",
+      "0",
+      "0,00 €"
+    ],
+    [
+      "2ª (5 Caballos Ganadores)",
+      "0",
+      "0,00 €"
+    ],
+    [
+      "3ª (4 Caballos Gan+2º de 5ªCarrera)",
+      "0",
+      "0,00 €"
+    ],
+    [
+      "4ª (4 Caballos Ganadores)",
+      "2",
+      "781,97 €"
+    ]
+  ],
+  "publicable": false,
+  "validado": false
+}
