@@ -1,20 +1,64 @@
 {
-  "combinacion": null,
+  "combinacion": {
+    "complementario": 7,
+    "numeros": [
+      4,
+      2,
+      10,
+      2,
+      11
+    ],
+    "reintegro_o_clave": null,
+    "texto_original": "4 - 2 - 10 - 2 - 11 C(7)"
+  },
   "complementos": {
     "jornada": null,
     "temporada": null
   },
-  "escrutinio": [],
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "Especial (1 solo resguardo de 1ª Cat) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "1ª (5 Caballos Gan+2º de 5ªCarrera) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "2ª (5 Caballos Ganadores) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "0",
+      "ganadores_eu": null,
+      "premio_eur": "0",
+      "tipo": "3ª (4 Caballos Gan+2º de 5ªCarrera) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "2",
+      "ganadores_eu": null,
+      "premio_eur": "781.97",
+      "tipo": "4ª (4 Caballos Ganadores) "
+    }
+  ],
   "esquema": "lotoscan.resultado.normalizado.v1",
-  "estado_datos": "pendiente",
-  "fecha_sorteo": "2026-11-22 00:00:00",
+  "estado_datos": "estructura_disponible",
+  "fecha_sorteo": "2026-11-22 14:20:00",
   "fuente": "historico oficial SELAE fechav3/fecha2",
   "game_id": "QUPL",
   "id_sorteo": "1329408073",
-  "incidencias": [
-    "combinacion_ausente_o_no_interpretable",
-    "escrutinio_ausente"
-  ],
+  "incidencias": [],
   "origen": "actual.json",
   "premios_verificados": false,
   "publicable": false
