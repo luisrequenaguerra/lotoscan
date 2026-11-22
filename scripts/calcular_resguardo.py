@@ -68,10 +68,8 @@ def calculate_receipt(draw,receipt):
                       and "reintegro" in (r.get("category_label") or "").lower()]
                 if len(entries)!=1 or receipt.get("simple_unit_stake") is not True:
                     issues.append("reintegro_multiple_bets_or_stake_unverified")
-                elif game=="LAPR" and any(p["product"]==game and p["entry"]==0
-                         and result_category==1 for result_category in
-                         [award(draw,{**entries[0],"game_id":game,
-                          "id_sorteo":draw["draw"]["id_sorteo"],"reintegro":rein}).get("category")]):
+                elif game=="LAPR" and award(draw,{**entries[0],"game_id":game,
+                         "id_sorteo":draw["draw"]["id_sorteo"],"reintegro":rein}).get("category")==1:
                     issues.append("primitiva_special_reintegro_overlap_unverified")
                 elif len(rows)!=1 or _euros(rows[0].get("amount_eur")) is None:
                     issues.append("reintegro_scrutiny_missing")
