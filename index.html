@@ -94,6 +94,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 
 /* 0.40 · Calendario táctil de sorteos */
 .lotocal{width:100%;box-sizing:border-box;border:1px solid #e1dfd5;border-radius:18px;background:#fffefa;padding:12px;margin:8px 0 5px}.lotocal-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;text-transform:capitalize;color:#30312e}.lotocal-nav button{border:1px solid #e1dfd5;background:#f5f3ed;border-radius:11px;width:42px;height:40px;font-size:26px;color:#68755f}.lotocal-nav button:disabled{opacity:.22}.lotocal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}.lotocal-week{font-size:12px;color:#7d8174;padding:8px 0}.lotocal-day{appearance:none;border:0;background:#eef0e9;color:#344032;min-width:0;width:100%;aspect-ratio:1;border-radius:10px;font-size:15px;font-weight:600;padding:0;touch-action:manipulation}.lotocal-day.lotocal-muted{background:transparent;color:#c4c5be;opacity:.55;font-weight:400}.lotocal-day.lotocal-selected{background:#68755f;color:white;box-shadow:inset 0 0 0 2px #68755f}.lotocal-day:focus-visible{outline:2px solid #344032;outline-offset:2px}.lotocal-choice{font-size:12px;color:#68755f;padding:12px 3px 2px;min-height:18px}@media(max-width:370px){.lotocal{padding:8px}.lotocal-day{font-size:13px}}
+.chooser-group{margin:22px 0 28px}.chooser-heading{margin-bottom:12px}.chooser-heading h2{font-family:Georgia,serif;font-size:21px;font-weight:400;margin:0 0 5px}.chooser-heading p{font-size:12px;color:var(--muted);margin:0}.chooser-group .game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.chooser-group .game-tile{min-width:0;min-height:125px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:12px 8px}.chooser-group .game-tile-icon{display:flex;align-items:center;justify-content:center;height:44px}
 </style>
 <style>
 .detail-bubbles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.detail-bubble{display:flex;align-items:center;justify-content:center;min-width:43px;height:43px;padding:0 7px;border-radius:50%;background:#65715c;color:white;font-size:16px;font-weight:600}.detail-bubble-extra{background:transparent;border:1.5px solid #65715c;color:#65715c}.detail-subtitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#737b69;font-weight:700;margin:16px 0 8px}.detail-line{display:flex;justify-content:space-between;gap:14px;align-items:baseline;border-top:1px solid #e5e1d7;padding:12px 0;font-size:13px}.detail-line span{color:#777c70}.detail-line strong{text-align:right;overflow-wrap:anywhere}.sports-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 20px}.sports-detail>div{display:flex;justify-content:space-between;gap:6px;background:#f2f0e9;border-radius:12px;padding:12px;align-items:center}.sports-detail small{font-size:11px;color:#737b69}.sports-detail strong{font-size:19px}.review-grid>div{min-width:0}.review-grid input{width:100%;min-width:0;box-sizing:border-box}
@@ -262,7 +263,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <section id="gameForms" class="screen">
 <button class="back" onclick="go('tickets')">← Volver a mis boletos</button><div class="eyebrow">TODOS LOS JUEGOS</div><h1>Selecciona tu juego.</h1>
 <p class="lead">Elige el sorteo que quieres añadir.</p>
-<div id="gameChooser" class="game-grid" style="margin-top:16px"></div>
+<div id="gameChooser" style="margin-top:16px"></div>
 <p class="notice">Los formularios guardan las apuestas que introduces, pero no validan la existencia del resguardo ni comprueban premios.</p>
 </section>
 <section id="gameEntry" class="screen">
@@ -1348,7 +1349,14 @@ function renderHomeGames(){const el=document.getElementById('homeGameGrid');if(!
 
 function renderGameChooser(){
  const el=document.getElementById('gameChooser');if(!el)return;
- el.innerHTML=Object.entries(GAME_DEFS).map(([k,v])=>`<button type="button" class="game game-tile" onclick="openGameForm('${k}')" aria-label="Añadir boleto de ${v.label}"><span class="game-tile-icon" aria-hidden="true">${gameIcon(k)}</span><strong>${v.label}</strong></button>`).join('');
+ const groups=[
+  {title:'Loterías de números',description:'Selecciona los números de tu apuesta.',keys:['bonoloto','primitiva','euromillones','gordo','eurodreams']},
+  {title:'Lotería Nacional',description:'Décimos y sorteos especiales.',keys:['loteria_nacional']},
+  {title:'Pronósticos deportivos',description:'Resultados de fútbol.',keys:['quiniela','quinigol']},
+  {title:'Apuestas hípicas',description:'Carreras de caballos.',keys:['lototurf','quintuple_plus']}
+ ];
+ el.classList.remove('game-grid');
+ el.innerHTML=groups.map(group=>`<section class="chooser-group" aria-label="${group.title}"><div class="chooser-heading"><h2>${group.title}</h2><p>${group.description}</p></div><div class="game-grid">${group.keys.map(k=>{const v=GAME_DEFS[k];return `<button type="button" class="game game-tile" onclick="openGameForm('${k}')" aria-label="Añadir boleto de ${v.label}"><span class="game-tile-icon" aria-hidden="true">${gameIcon(k)}</span><strong>${v.label}</strong></button>`}).join('')}</div></section>`).join('');
 }
 window.addEventListener('error',event=>{console.error('LotoScan error:',event.error||event.message);});
 // Catch failures in form submissions, so Safari never appears to ignore the Save button.
