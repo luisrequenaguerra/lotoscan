@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Auditoría NO destructiva de resultados1 para nueve juegos SELAE."""
+"""Auditoría NO destructiva de resultados1, fechav3 y fecha2 para nueve juegos SELAE."""
 import datetime as dt
 import hashlib
 import json
@@ -10,16 +10,18 @@ import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
 
-BASE = "https://www.loteriasyapuestas.es/servicios/resultados1"
+BASE = "https://www.loteriasyapuestas.es/servicios/"
 GAMES = {"euromillones":"EMIL","primitiva":"LAPR","bonoloto":"BONO",
          "gordo-primitiva":"ELGR","eurodreams":"EDMS","quiniela":"LAQU",
          "quinigol":"QGOL","lototurf":"LOTU","quintuple-plus":"QUPL"}
 OUT = pathlib.Path("auditoria_resultados1")
 MAX_BYTES = 2_000_000
 
-def inspect(game, code):
-    url = BASE + "?" + urllib.parse.urlencode({"game_id":code})
-    row = {"juego":game,"game_id":code,"endpoint":"resultados1",
+def inspect(game, code, endpoint, day=None):
+    params={"game_id":code}
+    if day is not None: params["fecha_sorteo"]=day.strftime("%Y%m%d")
+    url = BASE + endpoint + "?" + urllib.parse.urlencode(params)
+    row = {"juego":game,"game_id":code,"endpoint":endpoint,"fecha_consultada":day.isoformat() if day else None,
            "url":url,"campos":{},"muestras":[],"premios_validados":False}
     try:
         req = urllib.request.Request(url,headers={"User-Agent":"LotoScan/1.31 source-audit",
@@ -47,7 +49,7 @@ def inspect(game, code):
                 "no_vacio":any(bool(x.get(field)) for x in matching)}
         row["estado"]="json_con_juego" if matching else "json_sin_identidad_confirmada"
         # Conservar respuesta íntegra como artefacto de auditoría, nunca en histórico.
-        (OUT/(code+".json")).write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
+        (OUT/(code+"_"+endpoint+"_"+(day.strftime("%Y%m%d") if day else "latest")+".json")).write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
     except Exception as exc:
         row["estado"]="error"
         row["error"]=type(exc).__name__+": "+str(exc)[:220]
@@ -58,12 +60,15 @@ def main():
     OUT.mkdir(parents=True,exist_ok=True)
     rows=[]
     for name,code in GAMES.items():
-        row=inspect(name,code)
-        rows.append(row)
-        print(name,row["estado"],row.get("http"),row.get("coincidencias_game_id"),flush=True)
-        time.sleep(.4)
+        for endpoint in ("resultados1","fechav3","fecha2"):
+            days=[None] if endpoint=="resultados1" else [dt.datetime.now(ZoneInfo("Europe/Madrid")).date()-dt.timedelta(days=n) for n in range(8)]
+            for day in days:
+                row=inspect(name,code,endpoint,day)
+                rows.append(row)
+                print(name,endpoint,str(day),row["estado"],row.get("http"),row.get("coincidencias_game_id"),flush=True)
+                time.sleep(.25)
     report={"fecha_utc":dt.datetime.now(dt.timezone.utc).isoformat(),
-      "fuente":"SELAE resultados1","solo_lectura":True,"publicable":False,
+      "fuentes":["SELAE resultados1","SELAE fechav3","SELAE fecha2"],"solo_lectura":True,"publicable":False,
       "nota":"La presencia de campos no certifica categorías, premios ni cobertura histórica.",
       "juegos":rows}
     (OUT/"informe.json").write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
