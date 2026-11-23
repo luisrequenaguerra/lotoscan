@@ -190,7 +190,8 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
   <button class="primary" type="button" style="width:100%;background:#65715c;color:white;margin-top:10px" onclick="saveQRReview()">Confirmar y guardar en Mis boletos</button>
   <button class="secondary" type="button" style="margin-top:8px" onclick="resetScanner()">Volver a escanear</button>
 </div>
-<button id="scanManualButton" class="secondary" type="button" style="width:100%;margin-top:10px" onclick="openManualReview()">✎ Introducir datos manualmente</button>
+<button id="scanManualButton" class="secondary" type="button" style="width:100%;margin-top:10px" aria-expanded="false" aria-controls="scanManualChooser" onclick="toggleScanManualChooser()">✎ Introducir datos manualmente</button>
+<div id="scanManualChooser" class="panel" style="display:none;margin-top:12px" aria-label="Seleccionar sorteo para entrada manual"><div class="eyebrow">ENTRADA MANUAL</div><h2 style="font:400 23px Georgia,serif;margin:8px 0">¿Qué sorteo quieres introducir?</h2><p class="ticketmeta">Selecciona el juego de tu resguardo para mostrar los campos adecuados.</p><div id="scanManualGames" class="game-grid"></div></div>
 <div id="reviewPanel" class="panel review-panel">
   <div class="eyebrow">DATOS DEL DÉCIMO</div><h2 style="font:400 23px Georgia,serif;margin:8px 0">Comprueba los datos.</h2>
   <p class="ticketmeta">Revisa o introduce los datos del décimo antes de guardarlo.</p>
@@ -1499,6 +1500,20 @@ async function recognizeTicket(){
   scanMessage('Datos reconocidos. Compruébalos antes de guardar.');
  }catch(e){scanMessage('No se ha podido completar la lectura. Introduce los datos manualmente o vuelve a intentarlo.');openManualReview(false)}
  finally{button.disabled=false;if(worker){try{await worker.terminate()}catch(e){}}}
+}
+function toggleScanManualChooser(){
+ const panel=document.getElementById('scanManualChooser'),button=document.getElementById('scanManualButton');
+ const open=panel.style.display==='none';panel.style.display=open?'block':'none';button.setAttribute('aria-expanded',String(open));
+ if(open){const games=['loteria_nacional','bonoloto','primitiva','euromillones','gordo','eurodreams','quiniela','quinigol','lototurf','quintuple_plus'];
+  document.getElementById('scanManualGames').innerHTML=games.map(game=>'<button class="game game-tile" type="button" onclick="selectScanManualGame(&quot;'+game+'&quot;)"><strong>'+GAME_DEFS[game].label+'</strong></button>').join('');
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+ }
+}
+function selectScanManualGame(game){
+ if(!GAME_DEFS[game])return;
+ document.getElementById('scanManualChooser').style.display='none';document.getElementById('scanManualButton').setAttribute('aria-expanded','false');
+ if(game==='loteria_nacional'){openManualReview();return}
+ openGameForm(game);
 }
 function openManualReview(clear=true){
  if(clear){for(const id of ['ocrNumber','ocrSeries','ocrFraction','ocrDate','ocrCode'])document.getElementById(id).value='';document.getElementById('ocrPrice').value='20';}
