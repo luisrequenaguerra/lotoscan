@@ -806,7 +806,7 @@ function officialUiCheck(t){
    const amount=Number(refundRows[0]?.amount_eur);
    if(refundRows.length!==1||!Number.isFinite(amount)||amount<0)issues.push('Reintegro: escrutinio incompleto');
    else if(entries.length!==1)issues.push('Reintegro: varias apuestas; multiplicidad pendiente');
-   else if(game==='LAPR'&&components.some(x=>/^Apuesta 1 · Especial/i.test(x.label)))issues.push('Reintegro: solapamiento con categoría especial pendiente');
+   else if(game==='LAPR'&&components.some(x=>/^Apuesta 1 · Especial/i.test(x.label)))issues.push('Categoría especial: reintegro ya incluido; no se suma dos veces');
    else {
     components.push({label:'Reintegro · apuesta simple (importe unitario)',amount});
     issues.push('Reintegro: participación simple e importe apostado sin verificar');
@@ -857,7 +857,7 @@ function officialUiCheck(t){
   }
   issues.push('El Millón: participación del resguardo sin autenticar');
  }
- if(game==='LAPR'&&components.some(x=>x.label.includes('Especial')))issues.push('Categoría especial: acumulación pendiente');
+ // La categoría Especial de Primitiva incluye el reintegro: evitar cualquier acumulación adicional.
  const partial=components.reduce((n,x)=>n+x.amount,0);
  if(issues.length){
   const winning=components.some(x=>Number(x.amount)>0);
