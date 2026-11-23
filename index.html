@@ -588,6 +588,48 @@ function officialUiCheck(t){
  if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};
  const draw=OFFICIAL_DRAWS_UI[game]?.[t.date];
  if(!draw)return {state:'pending',message:'No hay escrutinio oficial normalizado disponible para esta fecha. No se atribuye premio ni ausencia de premio.'};
+ if(game==='ELGR'||game==='EDMS'){
+  const count=game==='ELGR'?5:6,max=game==='ELGR'?54:40,extraMax=game==='ELGR'?9:5;
+  const winning=draw.result?.numbers,extraWinner=game==='ELGR'?draw.result?.key_number:draw.result?.dream;
+  const pending=message=>({state:'pending',message,source:'SELAE · histórico normalizado'});
+  if(!Array.isArray(winning)||winning.length!==count||new Set(winning).size!==count||
+    winning.some(n=>!Number.isInteger(n)||n<1||n>max)||
+    !Number.isInteger(extraWinner)||extraWinner<1||extraWinner>extraMax||
+    !Array.isArray(draw.prizes)||draw.prizes.length<(game==='ELGR'?9:6))
+    return pending('Resultado oficial incompleto: combinación, número especial o escrutinio pendiente.');
+  const extra=reviewNumbers062(t.extra,1,extraMax);
+  if(!extra)return pending('Indica el '+(game==='ELGR'?'número clave':'número sueño')+' del resguardo.');
+  const entries=ticketEntries(t);
+  if(!entries.length)return pending('No hay apuestas válidas para comprobar.');
+  const rows=draw.prizes.filter(r=>r.product===game);
+  if(rows.length<(game==='ELGR'?9:6))return pending('Escrutinio oficial incompleto.');
+  const components=[];
+  for(let i=0;i<entries.length;i++){
+    const nums=reviewNumbers062(entries[i],count,max);
+    if(!nums)return pending('Apuesta '+(i+1)+' incompleta o con números no válidos.');
+    const hits=nums.filter(n=>winning.includes(n)).length;
+    const special=extra[0]===extraWinner;
+    let category=null;
+    if(game==='ELGR'){
+      category=hits===5?(special?1:2):hits===4?(special?3:4):
+        hits===3?(special?5:6):hits===2?(special?7:8):special?9:null;
+    }else{
+      category=hits===6?(special?1:2):hits===5?3:hits===4?4:hits===3?5:hits===2?6:null;
+    }
+    if(category===null)continue;
+    const row=rows.find((r,j)=>Number(r.category_code??(j+1))===category);
+    const amount=row?.amount_eur;
+    if(!row||amount===null||amount===undefined||!/^[0-9]+(?:\.[0-9]+)?$/.test(String(amount)))
+      return pending('Importe oficial incompleto para la categoría '+category+'.');
+    if(Number(amount)===0)return pending('La categoría '+category+' figura sin premio abonable en el escrutinio; se requiere validación adicional.');
+    components.push({label:'Apuesta '+(i+1)+' · '+(row.category_label||'Categoría '+category),amount:Number(amount)});
+  }
+  const prize=components.reduce((sum,x)=>sum+x.amount,0);
+  return {state:prize>0?'won':'lost',prize,components,receiptVerified:false,grossEstimate:prize>0,
+    category:prize>0?'Premio bruto orientativo':'Sin premio en categorías ordinarias',
+    message:'Comprobación orientativa con escrutinio oficial SELAE. Resguardo y participación no verificados.',
+    source:'SELAE · histórico normalizado'};
+ }
  if(!['BONO','LAPR','EMIL'].includes(game))return {state:'pending',message:'Resultado oficial SELAE disponible para esta fecha. El cálculo de premios de este juego está en integración; no se atribuye premio ni ausencia de premio.',source:'SELAE · histórico normalizado'};
  const entries=ticketEntries(t),count=game==='EMIL'?5:6,max=game==='EMIL'?50:49;
  const winning=draw.result?.numbers;
