@@ -694,6 +694,60 @@ function officialUiCheck(t){
    message:'Importe unitario orientativo; condiciones y resguardo no verificados.',
    source:'SELAE · histórico normalizado'};
  }
+ if(game==='LAQU'||game==='QGOL'){
+  const pending=message=>({state:'pending',message,source:'SELAE · histórico normalizado'});
+  const rows=(draw.prizes||[]).filter(r=>r.product===game);
+  const result=draw.result||{};
+  const expected=game==='LAQU'?6:5;
+  if(rows.length!==expected)return pending('Escrutinio oficial incompleto.');
+  const entries=ticketEntries(t);
+  if(!entries.length||t.modality&&t.modality!=='simple')
+   return pending('Solo se comprueban columnas sencillas completas.');
+  const components=[];
+  const amountFor=cat=>{
+   const row=rows.find((r,i)=>Number(r.category_code??(i+1))===cat);
+   return row&&/^[0-9]+(?:\.[0-9]+)?$/.test(String(row.amount_eur))?{row,amount:Number(row.amount_eur)}:null;
+  };
+  if(game==='LAQU'){
+   const signs=result.quiniela_signs,pleno=String(result.pleno_15??'').trim().toUpperCase().replace(/-/g,'');
+   if(!Array.isArray(signs)||signs.length!==14||signs.some(x=>!['1','X','2'].includes(String(x).trim().toUpperCase()))||
+      !/^[012M]{2}$/.test(pleno))return pending('Signos oficiales o Pleno al 15 incompletos.');
+   const minePleno=String(t.extra??'').trim().toUpperCase().replace(/\s|-/g,'');
+   if(!/^[012M]{2}$/.test(minePleno))return pending('Pleno al 15 del resguardo no indicado.');
+   for(let i=0;i<entries.length;i++){
+    const mine=String(entries[i]).trim().toUpperCase().replace(/\s/g,'');
+    if(!/^[1X2]{14}$/.test(mine))return pending('Columna '+(i+1)+' incompleta.');
+    const hits=[...mine].filter((x,j)=>x===String(signs[j]).trim().toUpperCase()).length;
+    const cat=hits===14?(minePleno===pleno?1:2):hits>=10?16-hits:null;
+    if(cat===null)continue;
+    const item=amountFor(cat);
+    if(!item)return pending('Importe de categoría '+cat+' no publicado.');
+    if(item.amount===0)continue;
+    components.push({label:'Columna '+(i+1)+' · '+item.row.category_label,amount:item.amount});
+   }
+   // Elige8 requiere la selección de ocho partidos del resguardo, distinta de la columna ordinaria.
+   if(t.elige8)return pending('Elige8: falta comprobar los ocho partidos seleccionados y su escrutinio específico.');
+  }else{
+   const scores=result.quinigol_scores;
+   if(!Array.isArray(scores)||scores.length!==6||scores.some(x=>!/^[012M]{2}$/.test(String(x).trim().toUpperCase().replace(/-/g,''))))
+    return pending('Marcadores oficiales de Quinigol incompletos.');
+   for(let i=0;i<entries.length;i++){
+    const mine=String(entries[i]).trim().toUpperCase().split(/\s*,\s*/);
+    if(mine.length!==6||mine.some(x=>!/^[012M]-[012M]$/.test(x)))return pending('Columna '+(i+1)+' incompleta.');
+    const hits=mine.filter((x,j)=>x.replace('-','')===String(scores[j]).trim().toUpperCase().replace('-','')).length;
+    if(hits<2)continue;
+    const cat=7-hits,item=amountFor(cat);
+    if(!item)return pending('Importe de categoría '+cat+' no publicado.');
+    if(item.amount===0)continue;
+    components.push({label:'Columna '+(i+1)+' · '+item.row.category_label,amount:item.amount});
+   }
+  }
+  const prize=components.reduce((n,c)=>n+c.amount,0);
+  return {state:prize>0?'won':'lost',prize,components,grossEstimate:prize>0,receiptVerified:false,
+   category:prize>0?'Premio bruto orientativo':'Sin premio en categorías abonables',
+   message:'Importe orientativo de columnas sencillas. Modalidades especiales, participación y validez del resguardo no verificadas.',
+   source:'SELAE · histórico normalizado'};
+ }
  if(!['BONO','LAPR','EMIL'].includes(game))return {state:'pending',message:'Resultado oficial SELAE disponible para esta fecha. El cálculo de premios de este juego está en integración; no se atribuye premio ni ausencia de premio.',source:'SELAE · histórico normalizado'};
  const entries=ticketEntries(t),count=game==='EMIL'?5:6,max=game==='EMIL'?50:49;
  const winning=draw.result?.numbers;

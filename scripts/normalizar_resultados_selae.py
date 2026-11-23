@@ -65,7 +65,7 @@ def parse(item):
             else: issues.append("quiniela_expected_15_signs")
         elif game=="QGOL":
             scores=[x.strip() for x in raw.split("-")]
-            if len(scores)==6: result["quinigol_scores"]=scores
+            if len(scores)==6: result["quinigol_scores"]=[x.replace(" ","").upper() for x in scores]
             else: issues.append("quinigol_expected_6_scores")
         elif game=="QUPL":
             result["races"]=integers(raw)
