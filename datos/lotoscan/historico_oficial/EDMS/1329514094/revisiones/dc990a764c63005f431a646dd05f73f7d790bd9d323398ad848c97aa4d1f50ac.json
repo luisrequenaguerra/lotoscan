@@ -1,0 +1,52 @@
+{
+  "anyo": "2026",
+  "apuestas": null,
+  "cdc": "13295",
+  "combinacion": "02 - 07 - 08 - 09 - 16 - 24 C(1)",
+  "dia_semana": "lunes",
+  "escrutinio": [
+    {
+      "ganadores": "0",
+      "ganadores_eu": "0",
+      "premio": "0",
+      "tipo": "1ª       6      +      1"
+    },
+    {
+      "ganadores": "0",
+      "ganadores_eu": "1",
+      "premio": "120000",
+      "tipo": "2ª       6      +      0"
+    },
+    {
+      "ganadores": "33",
+      "ganadores_eu": "142",
+      "premio": "417,17",
+      "tipo": "3ª       5      +     0/1"
+    },
+    {
+      "ganadores": "1405",
+      "ganadores_eu": "6480",
+      "premio": "25,63",
+      "tipo": "4ª       4      +     0/1"
+    },
+    {
+      "ganadores": "19709",
+      "ganadores_eu": "85893",
+      "premio": "4,06",
+      "tipo": "5ª       3      +     0/1"
+    },
+    {
+      "ganadores": "113383",
+      "ganadores_eu": "476696",
+      "premio": "2,5",
+      "tipo": "6ª       2      +     0/1"
+    }
+  ],
+  "fecha_sorteo": "2026-11-23 20:59:00",
+  "fondo_bote": null,
+  "game_id": "EDMS",
+  "id_sorteo": "1329514094",
+  "premio_bote": "50000",
+  "premios": null,
+  "recaudacion": null
+}
