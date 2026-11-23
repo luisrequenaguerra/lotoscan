@@ -630,6 +630,70 @@ function officialUiCheck(t){
     message:'Comprobación orientativa con escrutinio oficial SELAE. Resguardo y participación no verificados.',
     source:'SELAE · histórico normalizado'};
  }
+ if(game==='LOTU'||game==='QUPL'){
+  const pending=message=>({state:'pending',message,source:'SELAE · histórico normalizado'});
+  const result=draw.result||{},rows=(draw.prizes||[]).filter(r=>r.product===game);
+  const expected=game==='LOTU'?8:5;
+  if(rows.length!==expected)return pending('Escrutinio oficial incompleto para las categorías de este juego.');
+  const amountFor=category=>{
+   const row=rows.find((r,i)=>Number(r.category_code??i+1)===category);
+   return row&&/^[0-9]+(?:\.[0-9]+)?$/.test(String(row.amount_eur))?{row,amount:Number(row.amount_eur)}:null;
+  };
+  if(game==='LOTU'){
+   const winning=result.numbers,horse=result.complementary,refund=result.reintegro;
+   if(!Array.isArray(winning)||winning.length!==6||new Set(winning).size!==6||
+      winning.some(n=>!Number.isInteger(n)||n<1||n>31)||
+      !Number.isInteger(horse)||horse<1||!Number.isInteger(refund)||refund<0||refund>9)
+     return pending('Resultado Lototurf incompleto: combinación, caballo ganador o reintegro.');
+   const entries=ticketEntries(t);
+   if(entries.length!==1||t.modality&&t.modality!=='simple')return pending('Solo se comprueban apuestas sencillas de Lototurf.');
+   const mine=reviewNumbers062(entries[0],6,31);
+   const horseMine=Number(t.horse??t.extra),refundText=String(t.reintegro??'').trim();
+   if(!mine||!Number.isInteger(horseMine)||horseMine<1||!/^\d$/.test(refundText))
+     return pending('Faltan números, caballo o reintegro del resguardo.');
+   const hits=mine.filter(n=>winning.includes(n)).length,horses=horseMine===horse;
+   const category=hits===6?(horses?1:2):hits===5?(horses?3:4):
+     hits===4?(horses?5:6):hits===3&&horses?7:null;
+   const components=[];
+   if(category!==null){
+    const item=amountFor(category);
+    if(!item||item.amount<=0)return pending('Premio de categoría '+category+' no liquidado o importe pendiente.');
+    components.push({label:item.row.category_label||'Categoría '+category,amount:item.amount});
+   }
+   if(Number(refundText)===refund){
+    const item=amountFor(8);
+    if(!item||item.amount<=0)return pending('Reintegro coincidente, pero importe oficial pendiente.');
+    components.push({label:'Reintegro · importe unitario',amount:item.amount});
+   }
+   const total=components.reduce((n,c)=>n+c.amount,0);
+   return {state:total>0?'won':'lost',prize:total,components,grossEstimate:total>0,receiptVerified:false,
+    category:total>0?'Premio bruto orientativo':'Sin premio en categorías comprobadas',
+    message:'Importe unitario orientativo de apuesta sencilla. Participación y validez del resguardo no verificadas.',
+    source:'SELAE · histórico normalizado'};
+  }
+  const winners=result.races,second=result.second_fifth_race;
+  if(!Array.isArray(winners)||winners.length!==5||winners.some(n=>!Number.isInteger(n)||n<1)||
+     !Number.isInteger(second)||second<1||second===winners[4])
+    return pending('Resultado Quíntuple Plus incompleto: cinco ganadores o segundo de quinta carrera.');
+  const picks=Array.isArray(t.racePicks)?t.racePicks.map(Number):null;
+  if(t.modality&&t.modality!=='simple'||!picks||picks.length!==6||
+     picks.some(n=>!Number.isInteger(n)||n<1)||picks[4]===picks[5])
+    return pending('Solo se comprueban apuestas sencillas con los seis dorsales registrados.');
+  const hits=winners.filter((n,i)=>picks[i]===n).length;
+  const secondHit=picks[5]===second;
+  // El premio especial depende de condiciones adicionales del resguardo.
+  if(hits===5&&secondHit)return pending('Coincidencia de primera categoría: premio especial y condiciones del resguardo pendientes de verificar.');
+  const category=hits===5?3:hits===4?(secondHit?4:5):null;
+  if(category===null)return {state:'lost',prize:0,receiptVerified:false,
+   message:'Sin coincidencia en las categorías ordinarias de Quíntuple Plus. Resguardo no verificado.',
+   source:'SELAE · histórico normalizado'};
+  const item=amountFor(category);
+  if(!item||item.amount<=0)return pending('Categoría '+category+' sin importe abonable publicado.');
+  return {state:'won',prize:item.amount,grossEstimate:true,receiptVerified:false,
+   category:'Premio bruto orientativo',components:[{label:item.row.category_label||'Categoría '+category,amount:item.amount}],
+   message:'Importe unitario orientativo; condiciones y resguardo no verificados.',
+   source:'SELAE · histórico normalizado'};
+ }
  if(!['BONO','LAPR','EMIL'].includes(game))return {state:'pending',message:'Resultado oficial SELAE disponible para esta fecha. El cálculo de premios de este juego está en integración; no se atribuye premio ni ausencia de premio.',source:'SELAE · histórico normalizado'};
  const entries=ticketEntries(t),count=game==='EMIL'?5:6,max=game==='EMIL'?50:49;
  const winning=draw.result?.numbers;
