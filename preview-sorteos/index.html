@@ -146,7 +146,10 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .draws-name{font-size:15px;font-weight:750;line-height:1.25}.draws-date{font-size:11px;color:var(--muted);white-space:nowrap}
 .draws-balls{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.draws-ball{min-width:37px;height:37px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;background:#75836a;color:white;font-size:15px;font-weight:750;font-variant-numeric:tabular-nums}
 .draws-ball.extra{background:#f0eee7;color:#525b4b;border:1px solid #cbd0c4}
-.draws-extra{font-size:12px;color:#636c60;line-height:1.65;margin-top:8px;overflow-wrap:anywhere}
+.draws-extra{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;overflow-wrap:anywhere}
+.draws-extra-item{display:inline-flex;align-items:baseline;gap:5px;border:1px solid #e0e1d9;border-radius:9px;background:#f6f6f1;padding:7px 10px;color:#525a4c;font-size:14px;line-height:1.35}
+.draws-extra-item strong{font-weight:800;font-size:15px;color:#333d32;font-variant-numeric:tabular-nums}
+@media(max-width:370px){.draws-extra-item{font-size:13px;padding:6px 8px}.draws-extra-item strong{font-size:14px}}
 .draws-card details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.draws-card summary{cursor:pointer;color:#58684d;font-size:12px;font-weight:650}
 .draws-matches{margin-top:10px;display:grid;gap:7px}.draws-match{display:flex;justify-content:space-between;gap:10px;font-size:12px;line-height:1.45}.draws-match span:last-child{font-weight:700;white-space:nowrap}
 .draws-match .draws-pick{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:3px 7px;border:1px solid #d6d8d0;border-radius:7px;background:#f1f2ed;color:#354032;font-weight:750;font-variant-numeric:tabular-nums}
@@ -1852,7 +1855,7 @@ renderOfficialResults();
 const DRAWS_LATEST_GAMES=[
  ['BONO','Bonoloto'],['LAPR','La Primitiva'],['EMIL','Euromillones'],
  ['ELGR','El Gordo de la Primitiva'],['EDMS','EuroDreams'],
- ['LAQU','La Quiniela · Elige8'],['QGOL','Quinigol'],['LOTU','Lototurf'],['QUPL','Quíntuple Plus']
+ ['LAQU','La Quiniela'],['QGOL','Quinigol'],['LOTU','Lototurf'],['QUPL','Quíntuple Plus']
 ];
 function drawsEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function drawsBall(v,extra=false,pad=true){return '<span class="draws-ball'+(extra?' extra':'')+'">'+drawsEsc(pad?String(v).padStart(2,'0'):String(v))+'</span>'}
@@ -1869,12 +1872,12 @@ function drawsLatestCard(code,name){
  if(code==='ELGR'&&r.key_number!=null)extras.push('Número clave: '+r.key_number);
  if(['BONO','LAPR','LOTU'].includes(code)){if(r.complementary!=null)extras.push('Complementario: '+String(r.complementary).padStart(2,'0'));if(r.reintegro!=null)extras.push('Reintegro: '+r.reintegro)}
  if(code==='LAPR'&&r.joker?.combinacion)extras.push('Joker: '+r.joker.combinacion);
- if(code==='LAQU'){balls=(r.quiniela_signs||[]).map(n=>drawsBall(String(n).replace(/^0(?=[12Xx]$)/,''),false,false)).join('');if(r.pleno_15!=null)extras.push('Pleno al 15: '+r.pleno_15);if(r.elige8?.activo==='1')extras.push('Incluye Elige8')}
+ if(code==='LAQU'){balls=(r.quiniela_signs||[]).map(n=>drawsBall(String(n).replace(/^0(?=[12Xx]$)/,''),false,false)).join('');if(r.pleno_15!=null)extras.push('Pleno al 15: '+r.pleno_15);}
  if(code==='QGOL')balls=(r.quinigol_scores||[]).map(n=>drawsBall(String(n).replace(/^([0-9Mm])([0-9Mm])$/,'$1-$2'))).join('');
  if(code==='QUPL'){balls=(r.races||[]).map(n=>drawsBall(n)).join('');if(r.second_fifth_race!=null)extras.push('Segundo caballo de la 5.ª carrera: '+r.second_fifth_race)}
  const matches=Array.isArray(r.matches)?r.matches:[];
  const detail=matches.length?'<details><summary>Ver '+matches.length+' partidos y marcadores</summary><div class="draws-matches">'+matches.map((m,i)=>'<div class="draws-match"><span>'+drawsEsc((i+1)+'. '+(m.local||'')+' – '+(m.visitante||''))+'</span><span><span class="draws-score">'+drawsEsc(m.marcador||'')+'</span> <span class="draws-pick">'+drawsEsc(m.signo||'')+'</span></span></div>').join('')+'</div></details>':'';
- return '<article class="draws-card" data-game="'+code+'">'+heading+(balls?'<div class="draws-balls">'+balls+'</div>':'<p class="notice">Combinación no disponible.</p>')+(extras.length?'<div class="draws-extra">'+extras.map(drawsEsc).join(' · ')+'</div>':'')+detail+'</article>';
+ return '<article class="draws-card" data-game="'+code+'">'+heading+(balls?'<div class="draws-balls">'+balls+'</div>':'<p class="notice">Combinación no disponible.</p>')+(extras.length?'<div class="draws-extra">'+extras.map(x=>{const pos=x.indexOf(': ');return pos>=0?'<span class="draws-extra-item">'+drawsEsc(x.slice(0,pos))+': <strong>'+drawsEsc(x.slice(pos+2))+'</strong></span>':'<span class="draws-extra-item">'+drawsEsc(x)+'</span>'}).join('')+'</div>':'')+detail+'</article>';
 }
 function renderLatestDraws(){
  const list=document.getElementById('drawsLatestList');if(!list)return;
