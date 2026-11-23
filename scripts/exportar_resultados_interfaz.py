@@ -5,7 +5,7 @@ from pathlib import Path
 from normalizar_resultados_selae import parse
 
 ROOT=Path(__file__).resolve().parents[1]
-GAMES=("BONO","LAPR","EMIL")
+GAMES=("BONO","LAPR","EMIL","ELGR","EDMS","LAQU","QGOL","LOTU","QUPL")
 def build(root=ROOT):
     output={"schema_version":"1","provider":"SELAE","games":{}}
     for game in GAMES:
