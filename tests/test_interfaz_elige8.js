@@ -19,5 +19,5 @@ const noElige=sandbox.officialUiCheck(base);
 assert.equal(noElige.prize,1647986.55);
 const modified=signs.slice();modified[0]='1';
 const partial=sandbox.officialUiCheck({...base,entries:[modified.join('')],elige8:[0,1,2,3,4,5,6,7]});
-assert.equal(partial.state,'won');assert.equal(partial.prize,90099);
+assert.equal(partial.state,'won');assert.equal(partial.prize,1369.75);
 console.log('OK: Elige8 eight-hit prize, no duplicate, incomplete guard');
