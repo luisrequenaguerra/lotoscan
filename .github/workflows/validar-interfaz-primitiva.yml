@@ -12,6 +12,7 @@ on:
       - 'tests/test_exportador_oficial.py'
       - 'tests/test_premios_historico_real.js'
       - 'tests/test_reintegros_reales.js'
+      - 'tests/test_estados_sin_autenticidad.js'
       - 'tests/test_complementarios_reales.js'
       - 'tests/test_euromillones_13_categorias.js'
       - 'tests/test_guardado_recuperacion_boletos.js'
@@ -31,6 +32,7 @@ on:
       - 'tests/test_exportador_oficial.py'
       - 'tests/test_premios_historico_real.js'
       - 'tests/test_reintegros_reales.js'
+      - 'tests/test_estados_sin_autenticidad.js'
       - 'tests/test_complementarios_reales.js'
       - 'tests/test_euromillones_13_categorias.js'
       - 'tests/test_guardado_recuperacion_boletos.js'
@@ -55,6 +57,7 @@ jobs:
       - run: python tests/test_exportador_oficial.py
       - run: node tests/test_premios_historico_real.js
       - run: node tests/test_reintegros_reales.js
+      - run: node tests/test_estados_sin_autenticidad.js
       - run: node tests/test_complementarios_reales.js
       - run: node tests/test_euromillones_13_categorias.js
       - run: node tests/test_guardado_recuperacion_boletos.js
