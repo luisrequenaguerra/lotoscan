@@ -637,7 +637,7 @@ function officialUiCheck(t){
   if(rows.length!==expected)return pending('Escrutinio oficial incompleto para las categorías de este juego.');
   const amountFor=category=>{
    const row=rows.find((r,i)=>Number(r.category_code??i+1)===category);
-   return row&&/^[0-9]+(?:\\.[0-9]+)?$/.test(String(row.amount_eur))?{row,amount:Number(row.amount_eur)}:null;
+   return row&&/^[0-9]+(?:\.[0-9]+)?$/.test(String(row.amount_eur))?{row,amount:Number(row.amount_eur)}:null;
   };
   if(game==='LOTU'){
    const winning=result.numbers,horse=result.complementary,refund=result.reintegro;
@@ -649,7 +649,7 @@ function officialUiCheck(t){
    if(entries.length!==1||t.modality&&t.modality!=='simple')return pending('Solo se comprueban apuestas sencillas de Lototurf.');
    const mine=reviewNumbers062(entries[0],6,31);
    const horseMine=Number(t.horse??t.extra),refundText=String(t.reintegro??'').trim();
-   if(!mine||!Number.isInteger(horseMine)||horseMine<1||!/^\\d$/.test(refundText))
+   if(!mine||!Number.isInteger(horseMine)||horseMine<1||!/^\d$/.test(refundText))
      return pending('Faltan números, caballo o reintegro del resguardo.');
    const hits=mine.filter(n=>winning.includes(n)).length,horses=horseMine===horse;
    const category=hits===6?(horses?1:2):hits===5?(horses?3:4):
