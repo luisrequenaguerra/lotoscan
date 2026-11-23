@@ -1,0 +1,70 @@
+{
+  "anyo": "2026",
+  "apuestas": "2949678",
+  "cdc": "13294",
+  "combinacion": "09 - 13 - 16 - 19 - 45 R(6)",
+  "dia_semana": "domingo",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª   (5 + 1) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "2",
+      "premio": "82537,77",
+      "tipo": "2ª   (5 + 0) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "42",
+      "premio": "714,61",
+      "tipo": "3ª   (4 + 1) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "265",
+      "premio": "132,14",
+      "tipo": "4ª   (4 + 0) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "1325",
+      "premio": "30,2",
+      "tipo": "5ª   (3 + 1) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "11739",
+      "premio": "11,08",
+      "tipo": "6ª   (3 + 0) "
+    },
+    {
+      "categoria": 7,
+      "ganadores": "18357",
+      "premio": "5,45",
+      "tipo": "7ª   (2 + 1) "
+    },
+    {
+      "categoria": 8,
+      "ganadores": "172470",
+      "premio": "3",
+      "tipo": "8ª   (2 + 0) "
+    },
+    {
+      "categoria": 9,
+      "ganadores": "284509",
+      "premio": "1,5",
+      "tipo": "Reintegro"
+    }
+  ],
+  "fecha_sorteo": "2026-11-22 21:42:00",
+  "fondo_bote": "22150570",
+  "game_id": "ELGR",
+  "id_sorteo": "1329405047",
+  "premio_bote": "22900000",
+  "premios": "2433484",
+  "recaudacion": "4424517"
+}
