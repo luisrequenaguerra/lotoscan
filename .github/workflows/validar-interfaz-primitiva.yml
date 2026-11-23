@@ -6,6 +6,7 @@ on:
       - 'resultados/selae-interfaz.json'
       - 'tests/test_interfaz_primitiva.js'
       - 'tests/test_interfaz_gordo_eurodreams.js'
+      - 'tests/test_interfaz_hipica.js'
       - '.github/workflows/validar-interfaz-primitiva.yml'
   pull_request:
     paths:
@@ -13,6 +14,7 @@ on:
       - 'resultados/selae-interfaz.json'
       - 'tests/test_interfaz_primitiva.js'
       - 'tests/test_interfaz_gordo_eurodreams.js'
+      - 'tests/test_interfaz_hipica.js'
 permissions:
   contents: read
 jobs:
@@ -25,3 +27,4 @@ jobs:
           node-version: '22'
       - run: node tests/test_interfaz_primitiva.js
       - run: node tests/test_interfaz_gordo_eurodreams.js
+      - run: node tests/test_interfaz_hipica.js
