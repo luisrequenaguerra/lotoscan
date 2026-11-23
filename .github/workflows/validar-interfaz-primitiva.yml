@@ -7,6 +7,7 @@ on:
       - 'tests/test_interfaz_primitiva.js'
       - 'tests/test_interfaz_gordo_eurodreams.js'
       - 'tests/test_interfaz_hipica.js'
+      - 'tests/test_interfaz_deportivos.js'
       - '.github/workflows/validar-interfaz-primitiva.yml'
   pull_request:
     paths:
@@ -15,6 +16,7 @@ on:
       - 'tests/test_interfaz_primitiva.js'
       - 'tests/test_interfaz_gordo_eurodreams.js'
       - 'tests/test_interfaz_hipica.js'
+      - 'tests/test_interfaz_deportivos.js'
 permissions:
   contents: read
 jobs:
@@ -28,3 +30,4 @@ jobs:
       - run: node tests/test_interfaz_primitiva.js
       - run: node tests/test_interfaz_gordo_eurodreams.js
       - run: node tests/test_interfaz_hipica.js
+      - run: node tests/test_interfaz_deportivos.js
