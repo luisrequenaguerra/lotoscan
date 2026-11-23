@@ -9,6 +9,10 @@ on:
       - 'tests/test_interfaz_hipica.js'
       - 'tests/test_interfaz_deportivos.js'
       - 'tests/test_interfaz_elige8.js'
+      - 'tests/test_exportador_oficial.py'
+      - 'scripts/exportar_resultados_interfaz.py'
+      - 'scripts/normalizar_resultados_selae.py'
+      - 'datos/lotoscan/historico_oficial/**'
       - '.github/workflows/validar-interfaz-primitiva.yml'
   pull_request:
     paths:
@@ -19,6 +23,10 @@ on:
       - 'tests/test_interfaz_hipica.js'
       - 'tests/test_interfaz_deportivos.js'
       - 'tests/test_interfaz_elige8.js'
+      - 'tests/test_exportador_oficial.py'
+      - 'scripts/exportar_resultados_interfaz.py'
+      - 'scripts/normalizar_resultados_selae.py'
+      - 'datos/lotoscan/historico_oficial/**'
 permissions:
   contents: read
 jobs:
@@ -34,3 +42,4 @@ jobs:
       - run: node tests/test_interfaz_hipica.js
       - run: node tests/test_interfaz_deportivos.js
       - run: node tests/test_interfaz_elige8.js
+      - run: python tests/test_exportador_oficial.py
