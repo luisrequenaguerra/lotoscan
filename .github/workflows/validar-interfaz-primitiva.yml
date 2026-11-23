@@ -10,6 +10,7 @@ on:
       - 'tests/test_interfaz_deportivos.js'
       - 'tests/test_interfaz_elige8.js'
       - 'tests/test_exportador_oficial.py'
+      - 'tests/test_premios_historico_real.js'
       - 'scripts/exportar_resultados_interfaz.py'
       - 'scripts/normalizar_resultados_selae.py'
       - 'datos/lotoscan/historico_oficial/**'
@@ -24,6 +25,7 @@ on:
       - 'tests/test_interfaz_deportivos.js'
       - 'tests/test_interfaz_elige8.js'
       - 'tests/test_exportador_oficial.py'
+      - 'tests/test_premios_historico_real.js'
       - 'scripts/exportar_resultados_interfaz.py'
       - 'scripts/normalizar_resultados_selae.py'
       - 'datos/lotoscan/historico_oficial/**'
@@ -43,3 +45,4 @@ jobs:
       - run: node tests/test_interfaz_deportivos.js
       - run: node tests/test_interfaz_elige8.js
       - run: python tests/test_exportador_oficial.py
+      - run: node tests/test_premios_historico_real.js

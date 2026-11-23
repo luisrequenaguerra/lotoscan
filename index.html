@@ -594,10 +594,10 @@ function officialUiCheck(t){
   const pending=message=>({state:'pending',message,source:'SELAE · histórico normalizado'});
   if(!Array.isArray(winning)||winning.length!==count||new Set(winning).size!==count||
     winning.some(n=>!Number.isInteger(n)||n<1||n>max)||
-    !Number.isInteger(extraWinner)||extraWinner<1||extraWinner>extraMax||
+    !Number.isInteger(extraWinner)||extraWinner<(game==='ELGR'?0:1)||extraWinner>extraMax||
     !Array.isArray(draw.prizes)||draw.prizes.length<(game==='ELGR'?9:6))
     return pending('Resultado oficial incompleto: combinación, número especial o escrutinio pendiente.');
-  const extra=reviewNumbers062(t.extra,1,extraMax);
+  const extra=game==='ELGR'&&/^[0-9]$/.test(String(t.extra??'').trim())?[Number(t.extra)]:reviewNumbers062(t.extra,1,extraMax);
   if(!extra)return pending('Indica el '+(game==='ELGR'?'número clave':'número sueño')+' del resguardo.');
   const entries=ticketEntries(t);
   if(!entries.length)return pending('No hay apuestas válidas para comprobar.');
@@ -618,6 +618,7 @@ function officialUiCheck(t){
     }
     if(category===null)continue;
     const row=rows.find((r,j)=>Number(r.category_code??(j+1))===category);
+    if(game==='EDMS'&&category===1)return pending('EuroDreams: primera categoría con premio periódico; no se puede representar como importe único. Consulta las condiciones oficiales.');
     const amount=row?.amount_eur;
     if(!row||amount===null||amount===undefined||!/^[0-9]+(?:\.[0-9]+)?$/.test(String(amount)))
       return pending('Importe oficial incompleto para la categoría '+category+'.');
