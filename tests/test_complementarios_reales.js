@@ -1,0 +1,28 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const html=fs.readFileSync('index.html','utf8'),start=html.indexOf('function officialUiCheck(t)'),end=html.indexOf('loadOfficialUi();',start);
+assert(start>=0&&end>start);
+const data=JSON.parse(fs.readFileSync('resultados/selae-interfaz.json','utf8'));
+const sandbox={OFFICIAL_DRAWS_UI:data.games,ticketEntries:t=>t.entries,reviewNumbers062:(v,count,max)=>{
+ const a=Array.isArray(v)?v.map(Number):String(v??'').match(/\d+/g)?.map(Number)||[];
+ return a.length===count&&new Set(a).size===count&&a.every(n=>Number.isInteger(n)&&n>=1&&n<=max)?a:null;
+}};
+vm.createContext(sandbox);vm.runInContext(html.slice(start,end),sandbox);
+const check=t=>sandbox.officialUiCheck(t);
+const [pDate,pDraw]=Object.entries(data.games.LAPR).find(([d,v])=>v.result.joker?.combinacion&&v.prizes.some(x=>x.product==='JOKER'));
+assert(pDraw,'Primitiva official Joker fixture missing');
+const joker=pDraw.result.joker.combinacion;
+const pBase={game:'primitiva',date:pDate,entries:['2 7 11 19 28 41'],extra:'9'};
+const exact=check({...pBase,joker});
+assert.equal(exact.receiptVerified,false);
+assert(exact.components.some(c=>c.label.startsWith('Joker')&&c.amount===1000000),'Exact Joker must show official 1M');
+const noJoker=check({...pBase,joker:'9999999'});
+assert(!noJoker.components?.some(c=>c.label.startsWith('Joker')&&c.amount===1000000),'Nonmatching Joker must not get jackpot');
+const [eDate,eDraw]=Object.entries(data.games.EMIL).find(([d,v])=>v.result.millon?.combinacion&&v.prizes.some(x=>x.product==='EL_MILLON'));
+assert(eDraw,'Euromillones official El Millon fixture missing');
+const eBase={game:'euromillones',date:eDate,entries:['2 7 11 19 28'],extra:'2 7'};
+const million=check({...eBase,elMillon:eDraw.result.millon.combinacion});
+assert.equal(million.receiptVerified,false);
+assert(million.components.some(c=>c.label.startsWith('El Millón')&&c.amount===1000000),'Exact El Millon must show official 1M');
+const wrong=check({...eBase,elMillon:'ZZZ99999'});
+assert(!wrong.components?.some(c=>c.label.startsWith('El Millón')),'Nonmatching El Millon must not get prize');
+console.log('OK: official Joker and El Millon positive and negative cases');
