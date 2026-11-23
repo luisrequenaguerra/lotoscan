@@ -1505,7 +1505,7 @@ function toggleScanManualChooser(){
  const panel=document.getElementById('scanManualChooser'),button=document.getElementById('scanManualButton');
  const open=panel.style.display==='none';panel.style.display=open?'block':'none';button.setAttribute('aria-expanded',String(open));
  if(open){const games=['loteria_nacional','bonoloto','primitiva','euromillones','gordo','eurodreams','quiniela','quinigol','lototurf','quintuple_plus'];
-  document.getElementById('scanManualGames').innerHTML=games.map(game=>'<button class="game game-tile" type="button" onclick="selectScanManualGame(\\''+game+'\\')"><strong>'+GAME_DEFS[game].label+'</strong></button>').join('');
+  document.getElementById('scanManualGames').innerHTML=games.map(game=>'<button class="game game-tile" type="button" onclick="selectScanManualGame(&quot;'+game+'&quot;)"><strong>'+GAME_DEFS[game].label+'</strong></button>').join('');
   panel.scrollIntoView({behavior:'smooth',block:'nearest'});
  }
 }
