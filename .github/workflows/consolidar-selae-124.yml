@@ -10,8 +10,6 @@ on:
         description: 'IDs recientes que se comprueban por juego'
         required: false
         default: '2'
-  schedule:
-    - cron: '17 8 * * *'
 permissions:
   contents: read
 jobs:
