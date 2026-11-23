@@ -3,7 +3,7 @@ const html=fs.readFileSync('index.html','utf8'),start=html.indexOf('function off
 assert(start>=0&&end>start);
 const data=JSON.parse(fs.readFileSync('resultados/selae-interfaz.json','utf8'));
 const sandbox={OFFICIAL_DRAWS_UI:data.games,ticketEntries:t=>t.entries,reviewNumbers062:(v,count,max)=>{
- const a=Array.isArray(v)?v.map(Number):String(v??'').match(/\\d+/g)?.map(Number)||[];
+ const a=Array.isArray(v)?v.map(Number):String(v??'').match(/\d+/g)?.map(Number)||[];
  return a.length===count&&new Set(a).size===count&&a.every(n=>Number.isInteger(n)&&n>=1&&n<=max)?a:null;
 }};
 vm.createContext(sandbox);vm.runInContext(html.slice(start,end),sandbox);
@@ -29,7 +29,7 @@ for(const [key,game] of [['BONO','bonoloto'],['LAPR','primitiva']]){
  assert.equal(withRefund.state,'won',key+' single bet with matching refund should be won');
  if(key==='LAPR'){
   const winner=String(draw.result.joker?.combinacion??'').padStart(7,'0');
-  if(/^\\d{7}$/.test(winner)){
+  if(/^\d{7}$/.test(winner)){
    const first=String((Number(winner[0])+1)%10),last=String((Number(winner[6])+1)%10);
    const noJoker=check({...base,joker:first+'00000'+last});
    assert.equal(noJoker.state,'lost','Nonmatching Joker should not create pending state');
