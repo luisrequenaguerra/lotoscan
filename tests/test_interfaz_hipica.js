@@ -20,6 +20,17 @@ const missing=sandbox.officialUiCheck({game:'lototurf',date:'2026-11-22',entries
 assert.equal(missing.state,'pending');
 const quintuple=sandbox.officialUiCheck({game:'quintuple_plus',date:'2026-11-22',racePicks:[4,2,10,2,3,6],modality:'simple'});
 assert.equal(quintuple.state,'won');assert.equal(quintuple.prize,781.97);
+// Caso real: SELAE publica 0 acertantes y 0 € para primera categoría.
+sandbox.OFFICIAL_DRAWS_UI.QUPL['2026-11-22'].prizes[1].winners='0';
 const special=sandbox.officialUiCheck({game:'quintuple_plus',date:'2026-11-22',racePicks:[4,2,10,2,11,7],modality:'simple'});
-assert.equal(special.state,'pending');
+assert.equal(special.state,'matched_unpaid');
+assert.equal(special.prize,0);
+assert.equal(special.receiptVerified,false);
+assert(/cero acertantes/.test(special.message));
+const second=sandbox.officialUiCheck({game:'quintuple_plus',date:'2026-11-22',racePicks:[4,2,10,2,11,6],modality:'simple'});
+assert.equal(second.state,'pending','Without official winners data, zero amount must not be treated as confirmed no-winners');
+sandbox.OFFICIAL_DRAWS_UI.QUPL['2026-11-22'].prizes[2].winners='0';
+const secondConfirmed=sandbox.officialUiCheck({game:'quintuple_plus',date:'2026-11-22',racePicks:[4,2,10,2,11,6],modality:'simple'});
+assert.equal(secondConfirmed.state,'matched_unpaid');
+assert.equal(secondConfirmed.prize,0);
 console.log('OK: Lototurf and Quintuple Plus conservative prize checks');
