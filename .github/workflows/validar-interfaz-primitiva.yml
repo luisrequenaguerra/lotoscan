@@ -13,6 +13,7 @@ on:
       - 'tests/test_premios_historico_real.js'
       - 'tests/test_reintegros_reales.js'
       - 'tests/test_complementarios_reales.js'
+      - 'tests/test_euromillones_13_categorias.js'
       - 'scripts/exportar_resultados_interfaz.py'
       - 'scripts/normalizar_resultados_selae.py'
       - 'datos/lotoscan/historico_oficial/**'
@@ -30,6 +31,7 @@ on:
       - 'tests/test_premios_historico_real.js'
       - 'tests/test_reintegros_reales.js'
       - 'tests/test_complementarios_reales.js'
+      - 'tests/test_euromillones_13_categorias.js'
       - 'scripts/exportar_resultados_interfaz.py'
       - 'scripts/normalizar_resultados_selae.py'
       - 'datos/lotoscan/historico_oficial/**'
@@ -52,3 +54,4 @@ jobs:
       - run: node tests/test_premios_historico_real.js
       - run: node tests/test_reintegros_reales.js
       - run: node tests/test_complementarios_reales.js
+      - run: node tests/test_euromillones_13_categorias.js
