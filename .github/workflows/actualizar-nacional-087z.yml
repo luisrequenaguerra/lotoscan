@@ -7,9 +7,6 @@ on:
         required: false
         type: boolean
         default: true
-  schedule:
-    # Comprobaciones diarias (UTC); incluye margen para resultados publicados con retraso.
-    - cron: '17 12,20,22 * * *'
 permissions:
   contents: write
 concurrency:
