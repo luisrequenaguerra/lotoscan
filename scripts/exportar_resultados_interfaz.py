@@ -23,6 +23,8 @@ def build(root=ROOT):
                 if len(result["quiniela_signs"])!=14 or not result["pleno_15"]:continue
             elif game=="QGOL":
                 if len(result["quinigol_scores"])!=6:continue
+            elif game=="QUPL":
+                if len(result["races"])!=5 or result.get("second_fifth_race") is None:continue
             elif not result["numbers"]:continue
             safe={k:normalized[k] for k in ("draw","result","prizes","issues")}
             safe["source"]={"provider":"SELAE","endpoint":"fechav3"}
