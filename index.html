@@ -569,7 +569,7 @@ function jokerResult081(ticketCode,draw){
  return amount>0?{state:'won',amount,message:'Joker · '+(first?'primeras '+first+' cifras':'')+(first&&last?' y ':'')+(last?'últimas '+last+' cifras':'')}:{state:'lost',amount:0,message:'Joker sin coincidencias premiadas'};
 }
 // Datos oficiales SELAE normalizados por el motor Python; nunca certificar cobro.
-const OFFICIAL_DRAWS_UI={BONO:{},LAPR:{},EMIL:{}};
+const OFFICIAL_DRAWS_UI={BONO:{},LAPR:{},EMIL:{},ELGR:{},EDMS:{},LAQU:{},QGOL:{},LOTU:{},QUPL:{}};
 let officialUiState='Resultados oficiales pendientes de sincronización';
 async function loadOfficialUi(){
  try{
@@ -577,17 +577,18 @@ async function loadOfficialUi(){
   if(!response.ok)throw new Error('HTTP '+response.status);
   const body=await response.json();
   if(body?.schema_version!=='1'||body.provider!=='SELAE')throw new Error('Contrato oficial incompatible');
-  for(const game of ['BONO','LAPR','EMIL'])OFFICIAL_DRAWS_UI[game]=body.games?.[game]||{};
+  for(const game of ['BONO','LAPR','EMIL','ELGR','EDMS','LAQU','QGOL','LOTU','QUPL'])OFFICIAL_DRAWS_UI[game]=body.games?.[game]||{};
   officialUiState='Resultados oficiales SELAE cargados';
  }catch(error){officialUiState='Resultados oficiales no disponibles: '+error.message}
  renderTickets();renderOfficialResults();
 }
 function officialUiCheck(t){
- const game={bonoloto:'BONO',primitiva:'LAPR',euromillones:'EMIL'}[t.game];
+ const game={bonoloto:'BONO',primitiva:'LAPR',euromillones:'EMIL',gordo:'ELGR',eurodreams:'EDMS',quiniela:'LAQU',quinigol:'QGOL',lototurf:'LOTU',quintuple_plus:'QUPL',quintuple:'QUPL'}[t.game];
  if(!game)return null;
  if(!t.date)return {state:'pending',message:'Indica la fecha del sorteo.'};
  const draw=OFFICIAL_DRAWS_UI[game]?.[t.date];
  if(!draw)return {state:'pending',message:'No hay escrutinio oficial normalizado disponible para esta fecha. No se atribuye premio ni ausencia de premio.'};
+ if(!['BONO','LAPR','EMIL'].includes(game))return {state:'pending',message:'Resultado oficial SELAE disponible para esta fecha. El cálculo de premios de este juego está en integración; no se atribuye premio ni ausencia de premio.',source:'SELAE · histórico normalizado'};
  const entries=ticketEntries(t),count=game==='EMIL'?5:6,max=game==='EMIL'?50:49;
  const winning=draw.result?.numbers;
  if(!Array.isArray(winning)||winning.length!==count||!Array.isArray(draw.prizes)||!draw.prizes.length)
