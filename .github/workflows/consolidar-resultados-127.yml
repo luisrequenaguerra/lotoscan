@@ -6,8 +6,6 @@ on:
         description: 'No guardar historico (diagnostico)'
         type: boolean
         default: true
-  schedule:
-    - cron: '23 8,14,20 * * *'
 permissions:
   contents: write
 concurrency:
