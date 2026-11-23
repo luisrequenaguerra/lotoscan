@@ -15,7 +15,7 @@ function first(game){const [date,draw]=Object.entries(data.games[game])[0];asser
 {
  const {date,draw}=first('ELGR'),winning=draw.result.numbers;
  const noKey=sandbox.officialUiCheck({game:'gordo',date,entries:[winning.join(' ')],extra:String(draw.result.key_number)});
- assert(['won','pending'].includes(noKey.state));
+ assert(['won','pending','matched_unpaid'].includes(noKey.state));
  const copy=JSON.parse(JSON.stringify(draw)),old=data.games.ELGR[date];
  copy.result.key_number=0;copy.prizes[0].amount_eur='1000';copy.prizes[0].winners='1';
  data.games.ELGR[date]=copy;
@@ -42,7 +42,7 @@ function first(game){const [date,draw]=Object.entries(data.games[game])[0];asser
 {
  const {date,draw}=first('QGOL');
  const result=check({game:'quinigol',date,entries:[draw.result.quinigol_scores.map(x=>x[0]+'-'+x[1]).join(', ')]});
- assert(['won','lost','pending'].includes(result.state));
+ assert(['won','lost','pending','matched_unpaid'].includes(result.state));
  assert.equal(result.receiptVerified,false);
 }
 {
@@ -55,3 +55,29 @@ function first(game){const [date,draw]=Object.entries(data.games[game])[0];asser
  }else assert.equal(result.state,'pending');
 }
 console.log('OK: real archived SELAE draws and Gordo zero / EuroDreams periodic prize safeguards');
+
+for(const [key,game] of [['BONO','bonoloto'],['LAPR','primitiva'],['EMIL','euromillones'],['ELGR','gordo'],['EDMS','eurodreams'],['LAQU','quiniela'],['QGOL','quinigol'],['LOTU','lototurf'],['QUPL','quintuple_plus']]){
+ const {date,draw}=first(key),copy=JSON.parse(JSON.stringify(draw)),r=copy.result;
+ const t={game,date,entries:[(r.numbers||[]).join(' ')],extra:String((Number(r.reintegro)+1)%10)};
+ let cat=1;
+ if(key==='LAPR')cat=2;
+ if(key==='EMIL'){t.extra=r.stars.join(' ');t.elMillon=r.millon.combinacion==='ZZZ99999'?'AAA00000':'ZZZ99999'}
+ if(key==='ELGR')t.extra=String(r.key_number);
+ if(key==='EDMS')t.extra=String(r.dream);
+ if(key==='LAQU'){t.entries=[r.quiniela_signs.join('')];t.extra=r.pleno_15}
+ if(key==='QGOL')t.entries=[r.quinigol_scores.map(x=>String(x).replace('-','').split('').join('-')).join(', ')];
+ if(key==='LOTU'){t.horse=String(r.complementary);t.reintegro=t.extra}
+ if(key==='QUPL'){cat=2;t.racePicks=[...r.races,r.second_fifth_race]}
+ const row=copy.prizes.filter(x=>x.product===key).find((x,i)=>Number(x.category_code??i+1)===cat);
+ assert(row,key+' category missing');
+ row.amount_eur='0';row.winners='0';data.games[key][date]=copy;
+ assert.equal(check(t).state,'matched_unpaid',key+' zero winners');
+ row.winners=null;
+ assert.equal(check(t).state,'pending',key+' unknown winners');
+ data.games[key][date]=draw;
+}
+const real=data.games.BONO['2026-11-23'];
+if(real){
+ const result=check({game:'bonoloto',date:'2026-11-23',entries:['08 15 16 21 34 36'],extra:'05'});
+ assert.equal(result.state,'matched_unpaid');
+}
