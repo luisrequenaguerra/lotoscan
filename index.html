@@ -280,7 +280,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <p class="notice">La comprobación se actualiza al guardar los cambios. Revisa siempre los datos con el boleto original.</p>
 </section>
 <section id="addTicket" class="screen">
-<button class="back" onclick="go('tickets')">← Volver a mis boletos</button><div class="eyebrow">ENTRADA MANUAL</div><h1>Añadir décimo.</h1><p class="lead">Introduce los datos impresos en tu décimo de Lotería Nacional.</p>
+<button class="back" onclick="go('gameForms')">← Elegir otro juego</button><div class="eyebrow">ENTRADA MANUAL</div><h1>Añadir décimo.</h1><p class="lead">Introduce los datos impresos en tu décimo de Lotería Nacional.</p>
 <form class="panel" onsubmit="saveManualTicket(event)">
   <label class="formlabel" for="manualNumber">Número (5 cifras)</label><input id="manualNumber" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" placeholder="Ej. 25389" required>
   <div class="formrow"><div><label class="formlabel" for="manualSeries">Serie</label><input id="manualSeries" type="number" min="1" placeholder="28" required></div><div><label class="formlabel" for="manualFraction">Fracción</label><input id="manualFraction" type="number" min="1" placeholder="7" required></div></div>
