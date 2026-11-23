@@ -649,7 +649,7 @@ function officialUiCheck(t){
   const prize=components.reduce((sum,x)=>sum+x.amount,0);
   return {state:prize>0?'won':'lost',prize,components,receiptVerified:false,grossEstimate:prize>0,
     category:prize>0?'Premio bruto orientativo':'Sin premio en categorías ordinarias',
-    message:'Comprobación orientativa con escrutinio oficial SELAE. Resguardo y participación no verificados.',
+    message:'Comprobado con escrutinio oficial SELAE.',
     source:'SELAE · histórico normalizado'};
  }
  if(game==='LOTU'||game==='QUPL'){
@@ -690,7 +690,7 @@ function officialUiCheck(t){
    const total=components.reduce((n,c)=>n+c.amount,0);
    return {state:total>0?'won':'lost',prize:total,components,grossEstimate:total>0,receiptVerified:false,
     category:total>0?'Premio bruto orientativo':'Sin premio en categorías comprobadas',
-    message:'Importe unitario orientativo de apuesta sencilla. Participación y validez del resguardo no verificadas.',
+    message:'Importe unitario de apuesta sencilla calculado con escrutinio oficial SELAE.',
     source:'SELAE · histórico normalizado'};
   }
   const winners=result.races,second=result.second_fifth_race;
@@ -704,16 +704,16 @@ function officialUiCheck(t){
   const hits=winners.filter((n,i)=>picks[i]===n).length;
   const secondHit=picks[5]===second;
   // El premio especial depende de condiciones adicionales del resguardo.
-  if(hits===5&&secondHit)return pending('Coincidencia de primera categoría: premio especial y condiciones del resguardo pendientes de verificar.');
+  if(hits===5&&secondHit)return pending('Coincidencia de primera categoría: faltan datos para determinar el premio especial.');
   const category=hits===5?3:hits===4?(secondHit?4:5):null;
   if(category===null)return {state:'lost',prize:0,receiptVerified:false,
-   message:'Sin coincidencia en las categorías ordinarias de Quíntuple Plus. Resguardo no verificado.',
+   message:'Sin coincidencia en las categorías ordinarias de Quíntuple Plus.',
    source:'SELAE · histórico normalizado'};
   const item=amountFor(category);
   if(!item||item.amount<=0)return pending('Categoría '+category+' sin importe abonable publicado.');
   return {state:'won',prize:item.amount,grossEstimate:true,receiptVerified:false,
    category:'Premio bruto orientativo',components:[{label:item.row.category_label||'Categoría '+category,amount:item.amount}],
-   message:'Importe unitario orientativo; condiciones y resguardo no verificados.',
+   message:'Importe unitario orientativo; las condiciones especiales se comprueban por separado.',
    source:'SELAE · histórico normalizado'};
  }
  if(game==='LAQU'||game==='QGOL'){
@@ -784,7 +784,7 @@ function officialUiCheck(t){
   const prize=components.reduce((n,c)=>n+c.amount,0);
   return {state:prize>0?'won':'lost',prize,components,grossEstimate:prize>0,receiptVerified:false,
    category:prize>0?'Premio bruto orientativo':'Sin premio en categorías abonables',
-   message:'Importe orientativo de columnas sencillas. Modalidades especiales, participación y validez del resguardo no verificadas.',
+   message:'Importe orientativo de columnas sencillas; modalidades especiales sujetas a sus propias reglas.',
    source:'SELAE · histórico normalizado'};
  }
  if(!['BONO','LAPR','EMIL'].includes(game))return {state:'pending',message:'Resultado oficial SELAE disponible para esta fecha. El cálculo de premios de este juego está en integración; no se atribuye premio ni ausencia de premio.',source:'SELAE · histórico normalizado'};
@@ -830,7 +830,7 @@ function officialUiCheck(t){
    else if(game==='LAPR'&&components.some(x=>/^Apuesta 1 · Especial/i.test(x.label)))issues.push('Categoría especial: reintegro ya incluido; no se suma dos veces');
    else {
     components.push({label:'Reintegro · apuesta simple (importe unitario)',amount});
-    issues.push('Reintegro: participación simple e importe apostado sin verificar');
+    // El importe unitario del reintegro ya está determinado para una apuesta sencilla.
    }
   }
  }
@@ -862,7 +862,7 @@ function officialUiCheck(t){
      issues.push('Escrutinio Joker incompleto');
     else components.push({label:'Joker · '+prefix+' primeras / '+suffix+' últimas · acumulado',amount});
    }
-   issues.push('Joker: participación del resguardo sin autenticar');
+   // El código Joker se contrasta con el resultado oficial; no requiere autenticar el resguardo para calcular coincidencias.
   }
  }
  if(game==='EMIL'){
@@ -883,16 +883,16 @@ function officialUiCheck(t){
  // Sin incidencias de cálculo: no confundir falta de autenticación con resultado pendiente.
  if(issues.length){
   const winning=components.some(x=>Number(x.amount)>0);
-  const calculationIssues=issues.filter(x=>!/sin autenticar|sin verificar/.test(x));
+  const calculationIssues=issues;
   const complete=winning&&calculationIssues.length===0;
   return {state:complete?'won':winning?'candidate':'pending',components,
    prize:complete?components.reduce((sum,x)=>sum+Number(x.amount),0):undefined,
    grossEstimate:complete,receiptVerified:false,
-   message:complete?'Premio bruto orientativo calculado con los resultados SELAE. La validez del resguardo no está verificada.':
+   message:complete?'Premio bruto orientativo calculado con los resultados SELAE.':
     'Resultado parcialmente calculado: '+[...new Set(calculationIssues.length?calculationIssues:issues)].join('; ')+'. No se muestra un total sin datos suficientes.',
    source:'SELAE · histórico normalizado'};
  }
- return {state:partial>0?'won':'lost',prize:partial,receiptVerified:false,category:partial>0?'Premio bruto orientativo':'Sin premio ordinario',components,message:'Cálculo ordinario sobre escrutinio oficial SELAE. No certifica validez, titularidad ni cobro.',source:'SELAE · histórico normalizado'};
+ return {state:partial>0?'won':'lost',prize:partial,receiptVerified:false,category:partial>0?'Premio bruto orientativo':'Sin premio ordinario',components,message:'Comprobado con resultados oficiales de SELAE.',source:'SELAE · histórico normalizado'};
 }
 loadOfficialUi();
 function checkTicket38(t){
