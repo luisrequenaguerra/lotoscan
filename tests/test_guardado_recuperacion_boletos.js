@@ -21,7 +21,7 @@ const sandbox={document,alert:m=>alerts.push(m),Date,Number,String,Array,Set,
 };
 vm.createContext(sandbox);vm.runInContext(html.slice(start,end),sandbox);
 function save(game,main,extra,opts={}){
- sandbox.selectedGame=game;fields.entryMain.value=main;fields.entryExtra.value=extra;
+ sandbox.selectedGame=game;if(game==='quinigol')sandbox.sportsPicks=Array.from({length:6},()=>['1','0']);fields.entryMain.value=main;fields.entryExtra.value=extra;
  fields.entryJoker.value=opts.joker||'';fields.gameEntryDate.value='2026-11-08';fields.gameEntryPrice.value='';
  const before=sandbox.tickets.length;
  sandbox.saveGameEntry({preventDefault(){},target:{reset(){}}});
