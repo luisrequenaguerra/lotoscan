@@ -619,7 +619,7 @@ function officialUiCheck(t){
     if(category===null)continue;
     const row=rows.find((r,j)=>Number(r.category_code??(j+1))===category);
     const amount=row?.amount_eur;
-    if(!row||amount===null||amount===undefined||!/^[0-9]+(?:\\.[0-9]+)?$/.test(String(amount)))
+    if(!row||amount===null||amount===undefined||!/^[0-9]+(?:\.[0-9]+)?$/.test(String(amount)))
       return pending('Importe oficial incompleto para la categoría '+category+'.');
     if(Number(amount)===0)return pending('La categoría '+category+' figura sin premio abonable en el escrutinio; se requiere validación adicional.');
     components.push({label:'Apuesta '+(i+1)+' · '+(row.category_label||'Categoría '+category),amount:Number(amount)});
