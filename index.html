@@ -725,8 +725,25 @@ function officialUiCheck(t){
     if(item.amount===0)continue;
     components.push({label:'Columna '+(i+1)+' · '+item.row.category_label,amount:item.amount});
    }
-   // Elige8 requiere la selección de ocho partidos del resguardo, distinta de la columna ordinaria.
-   if(t.elige8)return pending('Elige8: falta comprobar los ocho partidos seleccionados y su escrutinio específico.');
+   if(t.elige8!==undefined&&t.elige8!==null){
+    const selected=t.elige8,eligible=result.elige8;
+    if(!Array.isArray(selected)||selected.length!==8||new Set(selected).size!==8||
+       selected.some(i=>!Number.isInteger(i)||i<0||i>13))
+     return pending('Elige8: selección de ocho partidos inválida o incompleta.');
+    if(!eligible||String(eligible.activo)!=='1')
+     return pending('Elige8: modalidad no confirmada como activa en el sorteo.');
+    const eligeRows=(draw.prizes||[]).filter(r=>r.product==='ELIGE8');
+    if(eligeRows.length!==1||!/^[0-9]+(?:\.[0-9]+)?$/.test(String(eligeRows[0].amount_eur)))
+     return pending('Elige8: escrutinio específico oficial no disponible.');
+    if(entries.length!==1)return pending('Elige8: no se puede asociar la selección a una columna única.');
+    const mine=String(entries[0]).trim().toUpperCase().replace(/\s/g,'');
+    const hits=selected.filter(i=>mine[i]===String(signs[i]).trim().toUpperCase()).length;
+    if(hits===8){
+     const amount=Number(eligeRows[0].amount_eur);
+     if(amount<=0)return pending('Elige8: ocho aciertos, pero importe oficial pendiente de liquidación.');
+     components.push({label:'Elige8 · ocho aciertos',amount});
+    }
+   }
   }else{
    const scores=result.quinigol_scores;
    if(!Array.isArray(scores)||scores.length!==6||scores.some(x=>!/^[012M]{2}$/.test(String(x).trim().toUpperCase().replace(/-/g,''))))
@@ -1524,11 +1541,12 @@ function toggleVisual(id,n){const d=GAME_DEFS[selectedGame],main=id==='mainGrid'
 function clearVisual(id){if(id==='mainGrid')visualMain=[];else visualExtra=[];renderVisuals()}
 
 // Selectores táctiles para modalidades sencillas deportivas.
-let sportsPicks=[], sportsPleno=['',''];
+let sportsPicks=[], sportsPleno=['',''], sportsElige8=[];
+function toggleElige8(i){sportsElige8=sportsElige8.includes(i)?sportsElige8.filter(n=>n!==i):sportsElige8.length<8?[...sportsElige8,i]:sportsElige8;renderSportsBoard();}
 function sportButton(value,active,callback){return `<button type="button" aria-pressed="${active}" onclick="${callback}" style="min-width:0;min-height:43px;border:1px solid #d8d7cc;border-radius:11px;background:${active?'#64735b':'#f5f3eb'};color:${active?'white':'#30382b'};font-weight:700;font-size:16px">${value}</button>`}
 function sportsFormHtml(game){
  const notice='<p class="ticketmeta" style="padding:12px;border:1px solid #deddd3;border-radius:12px">Solo apuestas sencillas. No se admiten dobles, triples, reducidas, condicionadas ni otras modalidades especiales. Comprueba que el resguardo corresponde a una apuesta sencilla.</p>';
- if(game==='quiniela')return notice+'<p class="ticketmeta">Marca un signo por partido. El Pleno al 15 se indica con goles 0, 1, 2 o M (3 o más).</p><div id="sportsBoard"></div><input type="hidden" id="entryMain" required><input type="hidden" id="entryExtra">';
+ if(game==='quiniela')return notice+'<p class="ticketmeta">Marca un signo por partido. El Pleno al 15 se indica con goles 0, 1, 2 o M (3 o más). Si has jugado Elige8, marca también los ocho partidos seleccionados en tu resguardo.</p><div id="sportsBoard"></div><input type="hidden" id="entryMain" required><input type="hidden" id="entryExtra">';
  return notice+'<p class="ticketmeta">Selecciona los goles de local y visitante en cada uno de los seis partidos. M = 3 o más goles.</p><div id="sportsBoard"></div><input type="hidden" id="entryMain" required>';
 }
 function setSportPick(i,side,value){
@@ -1542,6 +1560,8 @@ function renderSportsBoard(){
  let html='';
  if(selectedGame==='quiniela'){
   for(let i=0;i<14;i++)html+=`<div style="display:grid;grid-template-columns:90px repeat(3,minmax(0,1fr));align-items:center;gap:8px;margin:8px 0"><strong style="font-size:13px">Partido ${i+1}</strong>${['1','X','2'].map(x=>sportButton(x,sportsPicks[i]===x,`setSportPick(${i},0,'${x}')`)).join('')}</div>`;
+  html+='<h3 style="margin:20px 0 8px">Elige8 (opcional)</h3><p class="ticketmeta">Selecciona exactamente los ocho partidos que figuran en tu apuesta Elige8. No marques ninguno si no has jugado esta modalidad.</p>';
+  html+='<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0">'+Array.from({length:14},(_,i)=>sportButton(String(i+1),sportsElige8.includes(i),`toggleElige8(${i})`)).join('')+'</div><p class="ticketmeta">'+sportsElige8.length+'/8 partidos seleccionados</p>';
   html+='<h3 style="margin:20px 0 8px">Pleno al 15</h3>';
   for(let side=0;side<2;side++)html+=`<div style="margin:12px 0"><strong>${side===0?'Equipo local':'Equipo visitante'}</strong><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px">${['0','1','2','M'].map(x=>sportButton(x,sportsPleno[side]===x,`setSportPick(14,${side},'${x}')`)).join('')}</div></div>`;
   document.getElementById('entryMain').value=sportsPicks.join('');document.getElementById('entryExtra').value=sportsPleno.every(Boolean)?sportsPleno.join('-'):'';
@@ -1612,7 +1632,7 @@ if(d.kind==='quinigol')fields+=sportsFormHtml(game);
 if(['turf','horses'].includes(d.kind))fields+=hippoFormHtml(game);
 if(!VISUAL_GAMES.includes(game)&&!['quiniela','quinigol','lototurf','quintuple_plus'].includes(game))fields+='<div class="status-note" style="margin:12px 0">Para guardar varias apuestas del mismo resguardo, escribe una apuesta por línea. En Quiniela y Quinigol, cada línea representa una columna.</div>';
 document.getElementById('gameEntryFields').innerHTML=(VISUAL_GAMES.includes(game)||['quiniela','quinigol','lototurf','quintuple_plus'].includes(game))?fields:fields.replace(/<input id="entryMain"([^>]*)>/,'<textarea id="entryMain" rows="3" style="width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;background:#fffefa;font-size:14px;margin:8px 0 12px" required></textarea>');
-document.getElementById('gameEntryForm').reset();if(['quiniela','quinigol'].includes(game)){sportsPicks=game==='quiniela'?Array(14).fill(''):Array.from({length:6},()=>['','']);sportsPleno=['',''];renderSportsBoard();document.getElementById('gameEntryIntro').textContent='Toca las opciones que figuran en tu resguardo.'}if(['lototurf','quintuple_plus'].includes(game)){turfNumbers=[];turfHorse=null;turfRefund=null;quintuplePicks=Array(6).fill(null);renderHippoBoard();document.getElementById('gameEntryIntro').textContent='Toca los números y dorsales que figuran en tu resguardo.'}if(VISUAL_GAMES.includes(game)){renderVisuals();document.getElementById('gameEntryIntro').textContent='Toca los números que aparecen en tu resguardo.'}configureDrawDate39('gameEntryDate',game,'');go('gameEntry')}
+document.getElementById('gameEntryForm').reset();if(['quiniela','quinigol'].includes(game)){sportsPicks=game==='quiniela'?Array(14).fill(''):Array.from({length:6},()=>['','']);sportsPleno=['',''];sportsElige8=[];renderSportsBoard();document.getElementById('gameEntryIntro').textContent='Toca las opciones que figuran en tu resguardo.'}if(['lototurf','quintuple_plus'].includes(game)){turfNumbers=[];turfHorse=null;turfRefund=null;quintuplePicks=Array(6).fill(null);renderHippoBoard();document.getElementById('gameEntryIntro').textContent='Toca los números y dorsales que figuran en tu resguardo.'}if(VISUAL_GAMES.includes(game)){renderVisuals();document.getElementById('gameEntryIntro').textContent='Toca los números que aparecen en tu resguardo.'}configureDrawDate39('gameEntryDate',game,'');go('gameEntry')}
 function parseNumbers(value,count,max,min=1){const values=value.trim().split(/[\s,;]+/).filter(Boolean);if(values.length!==count)return null;const nums=values.map(Number);if(nums.some(n=>!Number.isInteger(n)||n<min||n>max)||new Set(nums).size!==nums.length)return null;return nums.map(n=>String(n).padStart(2,'0')).join(' ')}
 function saveGameEntry(e){e.preventDefault();const d=GAME_DEFS[selectedGame];const raw=document.getElementById('entryMain').value.trim();if(selectedGame==='quiniela'&&(sportsPicks.some(x=>!x)||sportsPleno.some(x=>!x))){alert('Completa los 14 partidos y los dos resultados del Pleno al 15.');return}if(selectedGame==='quinigol'&&sportsPicks.some(p=>p.some(x=>!x))){alert('Completa los seis partidos, tanto local como visitante.');return}if(selectedGame==='lototurf'&&(turfNumbers.length!==6||turfHorse===null||turfRefund===null)){alert('Completa los seis números, el caballo de la cuarta carrera y el reintegro impreso.');return}if(selectedGame==='quintuple_plus'&&(quintuplePicks.some(x=>x===null)||quintuplePicks[4]===quintuplePicks[5])){alert('Selecciona los seis dorsales. En la quinta carrera el primero y el segundo deben ser distintos.');return}const lines=raw.split(/\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length||lines.length>20){alert('Introduce entre 1 y 20 apuestas.');return}let entries=[];
 for(const line of lines){let val=line;if(d.kind==='balls'){val=parseNumbers(line,d.count,d.max);if(!val){alert('Comprueba los números y el rango de cada apuesta.');return}}
@@ -1623,10 +1643,10 @@ entries.push(val)}
 const extra=(document.getElementById('entryExtra')?.value||'').trim();
 if(VISUAL_GAMES.includes(selectedGame)&&(visualMain.length!==d.count||visualExtra.length!==d.extraCount||lines.length!==1)){alert('Completa los números y '+(selectedGame==='euromillones'?'las dos estrellas.':selectedGame==='gordo'?'el número clave.':selectedGame==='eurodreams'?'el número sueño.':'el reintegro del resguardo.'));return}
 const joker=(document.getElementById('entryJoker')?.value||'').trim();if(selectedGame==='primitiva'&&joker&&!/^\d{7}$/.test(joker)){alert('El código Joker debe tener siete cifras.');return}
-if(selectedGame==='quiniela'&&!/^[012M]-[012M]$/.test(extra)){alert('Completa el Pleno al 15.');return}if(d.kind==='balls'&&extra){const parsed=parseNumbers(extra,d.extraCount,d.extraMax,d.extraCount===2?1:0);if(!parsed){alert('Comprueba los valores de '+d.extraLabel+'.');return}}
+if(selectedGame==='quiniela'&&sportsElige8.length!==0&&sportsElige8.length!==8){alert('Elige8 requiere seleccionar exactamente ocho partidos o ninguno si no has jugado esa modalidad.');return}if(selectedGame==='quiniela'&&!/^[012M]-[012M]$/.test(extra)){alert('Completa el Pleno al 15.');return}if(d.kind==='balls'&&extra){const parsed=parseNumbers(extra,d.extraCount,d.extraMax,d.extraCount===2?1:0);if(!parsed){alert('Comprueba los valores de '+d.extraLabel+'.');return}}
 const date=document.getElementById('gameEntryDate').value,priceText=document.getElementById('gameEntryPrice').value.trim(),price=priceText===''?null:Number(priceText);if(!date||!validateDrawDate39(selectedGame,date)||(price!==null&&(!Number.isFinite(price)||price<0))){alert('Comprueba fecha e importe.');return}
 const t={id:Date.now(),modality:['quiniela','quinigol','lototurf','quintuple_plus'].includes(selectedGame)?'simple':undefined,game:selectedGame,number:entries[0],entries,extra,joker,series:null,fraction:null,date,price,code:'',draw:d.label,source:'manual',status:'pending'};
-if(selectedGame==='lototurf'){t.extra=String(turfHorse);t.reintegro=String(turfRefund);t.horse=String(turfHorse)}if(selectedGame==='quintuple_plus'){t.racePicks=quintuplePicks.slice();t.extra=String(quintuplePicks[5])}tickets.unshift(t);if(!persistTickets()){tickets.shift();return}document.getElementById('gameFilter').value='all';renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
+if(selectedGame==='quiniela'&&sportsElige8.length===8)t.elige8=sportsElige8.slice().sort((a,b)=>a-b);if(selectedGame==='lototurf'){t.extra=String(turfHorse);t.reintegro=String(turfRefund);t.horse=String(turfHorse)}if(selectedGame==='quintuple_plus'){t.racePicks=quintuplePicks.slice();t.extra=String(quintuplePicks[5])}tickets.unshift(t);if(!persistTickets()){tickets.shift();return}document.getElementById('gameFilter').value='all';renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
 
 // Mantener exactamente la iconografía de la versión 0.29, salvo Quinigol.
 const GAME_GLYPHS={loteria_nacional:'◉',euromillones:'✦',primitiva:'◯',bonoloto:'●',gordo:'◒',eurodreams:'✧',quiniela:'1 X 2',lototurf:'♞',quintuple_plus:'▥'};
