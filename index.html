@@ -892,7 +892,7 @@ function officialUiCheck(t){
     'Resultado parcialmente calculado: '+[...new Set(calculationIssues.length?calculationIssues:issues)].join('; ')+'. No se muestra un total sin datos suficientes.',
    source:'SELAE · histórico normalizado'};
  }
- return {state:partial>0?'won':'lost',prize:partial,receiptVerified:false,category:partial>0?'Premio bruto orientativo':'Sin premio ordinario',components,message:'Comprobado con resultados oficiales de SELAE.',source:'SELAE · histórico normalizado'};
+ return {state:partial>0?'won':'lost',prize:partial,grossEstimate:partial>0,receiptVerified:false,category:partial>0?'Premio bruto orientativo':'Sin premio ordinario',components,message:'Comprobado con resultados oficiales de SELAE.',source:'SELAE · histórico normalizado'};
 }
 loadOfficialUi();
 function checkTicket38(t){
