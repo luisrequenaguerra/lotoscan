@@ -12,8 +12,6 @@ on:
         required: false
         type: string
   # Sondeo diario en modo diagnostico; no publica resultados.
-  schedule:
-    - cron: '20 6,12,18,23 * * *'
 permissions:
   contents: read
 concurrency:
