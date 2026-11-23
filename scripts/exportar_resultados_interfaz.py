@@ -17,7 +17,13 @@ def build(root=ROOT):
                 continue
             meta=normalized["draw"]
             date=meta["date"]
-            if not date or not normalized["result"]["numbers"]:continue
+            if not date:continue
+            result=normalized["result"]
+            if game=="LAQU":
+                if len(result["quiniela_signs"])!=14 or not result["pleno_15"]:continue
+            elif game=="QGOL":
+                if len(result["quinigol_scores"])!=6:continue
+            elif not result["numbers"]:continue
             safe={k:normalized[k] for k in ("draw","result","prizes","issues")}
             safe["source"]={"provider":"SELAE","endpoint":"fechav3"}
             # Multiple official draws on one date must not be silently overwritten.
