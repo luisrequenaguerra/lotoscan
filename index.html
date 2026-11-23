@@ -138,7 +138,27 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .ticket-entry.state-won .ticketicon::after{content:none!important}
 .ticket-entry.is-winner>.ticket{border-color:#3F805C!important}
 .ticket-detail-winner{border-color:#3F805C!important}
-</style></head>
+</style><style>
+.draws-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 18px;font-size:12px;color:var(--muted)}
+.draws-refresh{border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:var(--paper);color:var(--ink);font-weight:650;white-space:nowrap}
+.draws-card{background:var(--paper);border:1px solid var(--line);border-radius:19px;padding:17px;margin:0 0 12px;box-shadow:0 3px 14px rgba(35,39,29,.035)}
+.draws-head{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:13px}
+.draws-name{font-size:15px;font-weight:750;line-height:1.25}.draws-date{font-size:11px;color:var(--muted);white-space:nowrap}
+.draws-balls{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.draws-ball{min-width:37px;height:37px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;background:#75836a;color:white;font-size:15px;font-weight:750;font-variant-numeric:tabular-nums}
+.draws-ball.extra{background:#f0eee7;color:#525b4b;border:1px solid #cbd0c4}
+.draws-extra{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;overflow-wrap:anywhere}
+.draws-extra-item{display:inline-flex;align-items:baseline;gap:5px;border:1px solid #e0e1d9;border-radius:9px;background:#f6f6f1;padding:7px 10px;color:#525a4c;font-size:14px;line-height:1.35}
+.draws-extra-item strong{font-weight:800;font-size:15px;color:#333d32;font-variant-numeric:tabular-nums}
+@media(max-width:370px){.draws-extra-item{font-size:13px;padding:6px 8px}.draws-extra-item strong{font-size:14px}}
+.draws-card details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}.draws-card summary{cursor:pointer;color:#58684d;font-size:12px;font-weight:650}
+.draws-matches{margin-top:10px;display:grid;gap:7px}.draws-match{display:flex;justify-content:space-between;gap:10px;font-size:12px;line-height:1.45}.draws-match span:last-child{font-weight:700;white-space:nowrap}
+.draws-match .draws-pick{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:3px 7px;border:1px solid #d6d8d0;border-radius:7px;background:#f1f2ed;color:#354032;font-weight:750;font-variant-numeric:tabular-nums}
+.draws-match .draws-score{font-variant-numeric:tabular-nums;color:#50534b}
+.draws-card[data-game="LAQU"] .draws-ball:not(.extra){background:#a95755}
+.draws-card[data-game="QUPL"] .draws-ball:not(.extra){background:#c6a23f}
+.draws-card[data-game="EMIL"] .draws-ball:not(.extra){background:#172c65}.draws-card[data-game="LAPR"] .draws-ball:not(.extra){background:#368058}.draws-card[data-game="BONO"] .draws-ball:not(.extra){background:#7a853f}.draws-card[data-game="ELGR"] .draws-ball:not(.extra){background:#bd5652}.draws-card[data-game="EDMS"] .draws-ball:not(.extra){background:#71509a}.draws-card[data-game="LOTU"] .draws-ball:not(.extra){background:#bb7c4b}.draws-card[data-game="QUPL"] .draws-ball:not(.extra){background:#c6a23f}
+</style>
+</head>
 <body>
 <div class="app">
 <header>
@@ -282,12 +302,12 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 </section>
 
 <section id="draws" class="screen">
-<button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">CALENDARIO</div><h1>Próximos sorteos.</h1><p class="lead">Una vista sencilla de los juegos que sigues.</p>
-<div class="panel"><div class="row"><strong style="font-size:13px">Euromillones</strong><span class="pill">Martes · Viernes</span></div><p class="ticketmeta">Próximo sorteo según calendario oficial.</p></div>
-<div class="panel"><div class="row"><strong style="font-size:13px">La Primitiva</strong><span class="pill">Lun · Jue · Sáb</span></div><p class="ticketmeta">Incluye Joker cuando corresponda.</p></div>
-<div class="panel"><div class="row"><strong style="font-size:13px">Bonoloto</strong><span class="pill">Diario</span></div><p class="ticketmeta">Sorteos de lunes a domingo.</p></div>
-<div class="panel"><div class="row"><strong style="font-size:13px">Lotería Nacional</strong><span class="pill">Jue · Sáb</span></div><p class="ticketmeta">Sorteos ordinarios y extraordinarios.</p></div>
-<p class="notice">Calendario ilustrativo. La información definitiva se conectará con fuentes oficiales.</p>
+<button class="back" onclick="go('home')">← Volver</button>
+<div class="eyebrow">RESULTADOS OFICIALES · SELAE</div><h1>Últimos sorteos.</h1>
+<p class="lead">Los resultados más recientes de cada juego, actualizados desde el mismo histórico oficial que utiliza LotoScan para comprobar tus boletos.</p>
+<div class="draws-toolbar"><span id="drawsStatus" role="status">Consultando resultados…</span><button type="button" class="draws-refresh" onclick="loadOfficialUi()">↻ Actualizar</button></div>
+<div id="drawsLatestList" aria-live="polite"><p class="notice">Cargando los últimos sorteos oficiales disponibles…</p></div>
+<p class="notice">La fecha indicada corresponde al sorteo, no a la última consulta. Los resultados pendientes no se sustituyen por datos inventados. La comprobación de premios debe realizarse en el apartado de boletos.</p>
 </section>
 
 <section id="results" class="screen">
@@ -581,7 +601,7 @@ async function loadOfficialUi(){
   for(const game of ['BONO','LAPR','EMIL','ELGR','EDMS','LAQU','QGOL','LOTU','QUPL'])OFFICIAL_DRAWS_UI[game]=body.games?.[game]||{};
   officialUiState='Resultados oficiales SELAE cargados';
  }catch(error){officialUiState='Resultados oficiales no disponibles: '+error.message}
- renderTickets();renderOfficialResults();
+ renderTickets();renderOfficialResults();renderLatestDraws();
 }
 function officialUiCheck(t){
  const game={bonoloto:'BONO',primitiva:'LAPR',euromillones:'EMIL',gordo:'ELGR',eurodreams:'EDMS',quiniela:'LAQU',quinigol:'QGOL',lototurf:'LOTU',quintuple_plus:'QUPL',quintuple:'QUPL'}[t.game];
@@ -1094,7 +1114,7 @@ function saveEditedGameTicket(event){event.preventDefault();const t=tickets.find
 }
 function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||!Number.isInteger(series)||series<1||!Number.isInteger(fraction)||fraction<1||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(!dateAllowed39('loteria_nacional',date)){alert('Selecciona un jueves o sábado válido para Lotería Nacional.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}const replacement={...t,number,series,fraction,date,price,code:document.getElementById('editCode').value.trim()};const idx=tickets.indexOf(t);tickets[idx]=replacement;if(!persistTickets()){tickets[idx]=t;return}renderTickets();openTicket(replacement.id)}
 function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}if(!dateAllowed39('loteria_nacional',document.getElementById('manualDate').value)){alert('Selecciona un jueves o sábado válido para Lotería Nacional.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);persistTickets();document.getElementById('gameFilter').value='all';renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}go('tickets')}
-function go(id){if(id==='manualTicket' && document.getElementById('manualDate')?.type==='date')configureDrawDate39('manualDate','loteria_nacional','');if(id==='tickets'){const f=document.getElementById('gameFilter');if(f){f.value='all';renderTickets()}}if(id==='results'){try{renderOfficialResults()}catch(error){console.error('LotoScan: resultados',error)}}if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
+function go(id){if(id==='draws')renderLatestDraws();if(id==='manualTicket' && document.getElementById('manualDate')?.type==='date')configureDrawDate39('manualDate','loteria_nacional','');if(id==='tickets'){const f=document.getElementById('gameFilter');if(f){f.value='all';renderTickets()}}if(id==='results'){try{renderOfficialResults()}catch(error){console.error('LotoScan: resultados',error)}}if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
 let cameraStream=null, selectedImage=null;
 function scanMessage(msg,working=false){document.getElementById('scanStatus').innerHTML=working?'<span class="processing"><span class="spinner"></span>'+msg+'</span>':msg}
 async function startCamera(){
@@ -1829,5 +1849,41 @@ window.addEventListener('focus',()=>refreshResults068());
 function gameInfo(name){const key=Object.keys(GAME_DEFS).find(k=>GAME_DEFS[k].label===name)||({ 'La Primitiva':'primitiva','Bonoloto':'bonoloto','Lotería Nacional':'loteria_nacional' })[name];if(key)openGameForm(key);else go('gameForms')}
 renderTickets();
 renderOfficialResults();
+
+/* Últimos sorteos: reutiliza exclusivamente OFFICIAL_DRAWS_UI (SELAE fechav3).
+   No consulta fuentes adicionales ni modifica el comprobador de premios. */
+const DRAWS_LATEST_GAMES=[
+ ['BONO','Bonoloto'],['LAPR','La Primitiva'],['EMIL','Euromillones'],
+ ['ELGR','El Gordo de la Primitiva'],['EDMS','EuroDreams'],
+ ['LAQU','La Quiniela'],['QGOL','Quinigol'],['LOTU','Lototurf'],['QUPL','Quíntuple Plus']
+];
+function drawsEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function drawsBall(v,extra=false,pad=true){return '<span class="draws-ball'+(extra?' extra':'')+'">'+drawsEsc(pad?String(v).padStart(2,'0'):String(v))+'</span>'}
+function drawsLatestCard(code,name){
+ const catalog=OFFICIAL_DRAWS_UI[code]||{};
+ const dates=Object.keys(catalog).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&catalog[d]?.result).sort().reverse();
+ const date=dates[0],item=date?catalog[date]:null,r=item?.result||{};
+ const heading='<div class="draws-head"><span class="draws-name">'+drawsEsc(name)+'</span><span class="draws-date">'+(date?drawsEsc(date.split('-').reverse().join('/')):'Sin publicar')+'</span></div>';
+ if(!item)return '<article class="draws-card" data-game="'+code+'">'+heading+'<p class="notice">Todavía no hay resultados oficiales disponibles para este juego.</p></article>';
+ let balls='',extras=[];
+ if(Array.isArray(r.numbers)&&r.numbers.length)balls=r.numbers.map(n=>drawsBall(n)).join('');
+ if(code==='EMIL'){balls+=(r.stars||[]).map(n=>drawsBall('★'+String(n).padStart(2,'0'),true)).join('');if(r.millon?.combinacion)extras.push('El Millón: '+r.millon.combinacion)}
+ if(code==='EDMS'&&r.dream!=null)extras.push('Sueño: '+r.dream);
+ if(code==='ELGR'&&r.key_number!=null)extras.push('Número clave: '+r.key_number);
+ if(['BONO','LAPR','LOTU'].includes(code)){if(r.complementary!=null)extras.push('Complementario: '+String(r.complementary).padStart(2,'0'));if(r.reintegro!=null)extras.push('Reintegro: '+r.reintegro)}
+ if(code==='LAPR'&&r.joker?.combinacion)extras.push('Joker: '+r.joker.combinacion);
+ if(code==='LAQU'){balls=(r.quiniela_signs||[]).map(n=>drawsBall(String(n).replace(/^0(?=[12Xx]$)/,''),false,false)).join('');if(r.pleno_15!=null)extras.push('Pleno al 15: '+String(r.pleno_15).replace(/^([0-9Mm])([0-9Mm])$/,'$1-$2'));}
+ if(code==='QGOL')balls=(r.quinigol_scores||[]).map(n=>drawsBall(String(n).replace(/^([0-9Mm])([0-9Mm])$/,'$1-$2'))).join('');
+ if(code==='QUPL'){balls=(r.races||[]).map(n=>drawsBall(n)).join('');if(r.second_fifth_race!=null)extras.push('Segundo caballo de la 5.ª carrera: '+r.second_fifth_race)}
+ const matches=Array.isArray(r.matches)?r.matches:[];
+ const detail=matches.length?'<details><summary>Ver '+matches.length+' partidos y marcadores</summary><div class="draws-matches">'+matches.map((m,i)=>'<div class="draws-match"><span>'+drawsEsc((i+1)+'. '+(m.local||'')+' – '+(m.visitante||''))+'</span><span><span class="draws-score">'+drawsEsc(m.marcador||'')+'</span> <span class="draws-pick">'+drawsEsc(m.signo||'')+'</span></span></div>').join('')+'</div></details>':'';
+ return '<article class="draws-card" data-game="'+code+'">'+heading+(balls?'<div class="draws-balls">'+balls+'</div>':'<p class="notice">Combinación no disponible.</p>')+(extras.length?'<div class="draws-extra">'+extras.map(x=>{const pos=x.indexOf(': ');return pos>=0?'<span class="draws-extra-item">'+drawsEsc(x.slice(0,pos))+': <strong>'+drawsEsc(x.slice(pos+2))+'</strong></span>':'<span class="draws-extra-item">'+drawsEsc(x)+'</span>'}).join('')+'</div>':'')+detail+'</article>';
+}
+function renderLatestDraws(){
+ const list=document.getElementById('drawsLatestList');if(!list)return;
+ list.innerHTML=DRAWS_LATEST_GAMES.map(([code,name])=>drawsLatestCard(code,name)).join('');
+ const status=document.getElementById('drawsStatus');if(status)status.textContent=officialUiState;
+}
+
 </script>
 </body></html>
