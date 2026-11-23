@@ -42,7 +42,8 @@ function first(game){const [date,draw]=Object.entries(data.games[game])[0];asser
 {
  const {date,draw}=first('QGOL');
  const result=check({game:'quinigol',date,entries:[draw.result.quinigol_scores.map(x=>x[0]+'-'+x[1]).join(', ')]});
- assert(['won','pending'].includes(result.state));
+ assert(['won','lost','pending'].includes(result.state));
+ assert.equal(result.receiptVerified,false);
 }
 {
  const {date,draw}=first('QUPL');
