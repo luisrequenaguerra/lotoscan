@@ -10,8 +10,6 @@ on:
         description: 'No guardar historico (true/false)'
         required: false
         default: 'false'
-  schedule:
-    - cron: '23 8,14,20 * * *'
 permissions:
   contents: write
 jobs:

@@ -1,11 +1,6 @@
 name: LotoScan - Conservar cuatro juegos 0.60
 'on':
   workflow_dispatch:
-  schedule:
-    # UTC: consultas frecuentes tras los sorteos, sin asumir publicación instantánea.
-    - cron: '12,27,42,57 16-23 * * *'
-    - cron: '12,27,42,57 0-1 * * *'
-    - cron: '22 5,9,13 * * *'
 permissions:
   contents: write
 concurrency:

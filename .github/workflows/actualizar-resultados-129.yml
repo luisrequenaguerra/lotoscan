@@ -10,8 +10,6 @@ on:
         description: 'Dias naturales a revisar (1-21)'
         type: number
         default: 8
-  schedule:
-    - cron: '23 8,14,20 * * *'
 permissions:
   contents: write
 concurrency:

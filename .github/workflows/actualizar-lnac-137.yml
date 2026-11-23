@@ -1,8 +1,6 @@
 name: LotoScan - Historico completo Loteria Nacional 1.37
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '25 8,14,22 * * *'
 permissions:
   contents: write
 concurrency:

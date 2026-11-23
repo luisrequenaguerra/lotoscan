@@ -1,11 +1,6 @@
 name: LotoScan - Conservar historico 0.52
 'on':
   workflow_dispatch:
-  schedule:
-    # UTC: cubre tardes/noches en España tanto en verano como en invierno.
-    - cron: '7,22,37,52 16-23 * * *'
-    - cron: '7,22,37,52 0-1 * * *'
-    - cron: '17 5,9,13 * * *'
 permissions:
   contents: write
 concurrency:
