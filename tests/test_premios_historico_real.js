@@ -68,7 +68,7 @@ for(const [key,game] of [['BONO','bonoloto'],['LAPR','primitiva'],['EMIL','eurom
  if(key==='QGOL')t.entries=[r.quinigol_scores.map(x=>String(x).replace('-','').split('').join('-')).join(', ')];
  if(key==='LOTU'){t.horse=String(r.complementary);t.reintegro=t.extra}
  if(key==='QUPL'){cat=2;t.racePicks=[...r.races,r.second_fifth_race]}
- const row=copy.prizes.find(x=>x.product===key&&Number(x.category_code)===cat);
+ const row=copy.prizes.filter(x=>x.product===key).find((x,i)=>Number(x.category_code??i+1)===cat);
  assert(row,key+' category missing');
  row.amount_eur='0';row.winners='0';data.games[key][date]=copy;
  assert.equal(check(t).state,'matched_unpaid',key+' zero winners');
