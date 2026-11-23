@@ -733,10 +733,10 @@ function officialUiCheck(t){
     if(!eligible||String(eligible.activo)!=='1')
      return pending('Elige8: modalidad no confirmada como activa en el sorteo.');
     const eligeRows=(draw.prizes||[]).filter(r=>r.product==='ELIGE8');
-    if(eligeRows.length!==1||!/^[0-9]+(?:\\.[0-9]+)?$/.test(String(eligeRows[0].amount_eur)))
+    if(eligeRows.length!==1||!/^[0-9]+(?:\.[0-9]+)?$/.test(String(eligeRows[0].amount_eur)))
      return pending('Elige8: escrutinio específico oficial no disponible.');
     if(entries.length!==1)return pending('Elige8: no se puede asociar la selección a una columna única.');
-    const mine=String(entries[0]).trim().toUpperCase().replace(/\\s/g,'');
+    const mine=String(entries[0]).trim().toUpperCase().replace(/\s/g,'');
     const hits=selected.filter(i=>mine[i]===String(signs[i]).trim().toUpperCase()).length;
     if(hits===8){
      const amount=Number(eligeRows[0].amount_eur);
