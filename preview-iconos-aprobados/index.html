@@ -182,7 +182,11 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .lotoscan-new-icon svg{display:none!important}
 </style>
 </head>
-<body>
+<body><svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="lotoscan-quitar-fondo" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -0.75 -0.75 -0.75 0 2.23"/></filter></defs></svg>
+<style>
+/* Prueba de recorte interior: símbolo sin fondo ni marco */
+.lotoscan-new-icon{background-size:800% 320%!important;filter:url(#lotoscan-quitar-fondo);background-color:transparent!important;aspect-ratio:1/1;overflow:hidden;flex-shrink:0}
+</style>
 <div class="app">
 <header>
 <button class="brand-home" type="button" onclick="go('home')" aria-label="Volver a la pantalla de inicio">
