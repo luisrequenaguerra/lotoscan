@@ -97,14 +97,14 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .chooser-group{margin:22px 0 28px}.chooser-heading{margin-bottom:12px}.chooser-heading h2{font-family:Georgia,serif;font-size:21px;font-weight:400;margin:0 0 5px}.chooser-heading p{font-size:12px;color:var(--muted);margin:0}.chooser-group .game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.chooser-group .game-tile{min-width:0;min-height:125px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:12px 8px}.chooser-group .game-tile-icon{display:flex;align-items:center;justify-content:center;height:44px}
 .detail-line{gap:12px}.detail-line>span{min-width:0;overflow-wrap:anywhere}.detail-line>strong{flex-shrink:0;white-space:nowrap;font-variant-numeric:tabular-nums;font-size:clamp(12px,3.5vw,16px)}
 /* Selector manual compacto: tres columnas uniformes, colores de LotoScan. */
-#scanManualGames{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:18px}
-#scanManualGames .scan-manual-tile{box-sizing:border-box;width:100%;min-width:0;min-height:112px;margin:0;padding:12px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;border:1px solid #e2ded4;border-radius:16px;background:#fffdf9;color:#343b31;text-align:center;white-space:normal;box-shadow:none}
-#scanManualGames .scan-manual-icon{width:31px;height:31px;display:flex;align-items:center;justify-content:center;color:#65715c;font-size:25px;line-height:1;font-weight:650;letter-spacing:-.06em}
-#scanManualGames .scan-manual-icon .quinigol-line{width:27px;height:27px}
-#scanManualGames .scan-manual-tile strong{display:block;max-width:100%;color:#343b31;font-size:11px;line-height:1.25;font-weight:700;overflow-wrap:break-word}
-#scanManualGames .scan-manual-tile:active{background:#edf0e9}
-#scanManualGames .scan-manual-tile:focus-visible{outline:3px solid #65715c;outline-offset:3px}
-@media(max-width:350px){#scanManualGames{gap:6px}#scanManualGames .scan-manual-tile{min-height:108px;padding:10px 4px}#scanManualGames .scan-manual-tile strong{font-size:10px}}
+:is(#scanManualGames,#gameChooser){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:18px}
+:is(#scanManualGames,#gameChooser) .scan-manual-tile{box-sizing:border-box;width:100%;min-width:0;min-height:112px;margin:0;padding:12px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;border:1px solid #e2ded4;border-radius:16px;background:#fffdf9;color:#343b31;text-align:center;white-space:normal;box-shadow:none}
+:is(#scanManualGames,#gameChooser) .scan-manual-icon{width:31px;height:31px;display:flex;align-items:center;justify-content:center;color:#65715c;font-size:25px;line-height:1;font-weight:650;letter-spacing:-.06em}
+:is(#scanManualGames,#gameChooser) .scan-manual-icon .quinigol-line{width:27px;height:27px}
+:is(#scanManualGames,#gameChooser) .scan-manual-tile strong{display:block;max-width:100%;color:#343b31;font-size:11px;line-height:1.25;font-weight:700;overflow-wrap:break-word}
+:is(#scanManualGames,#gameChooser) .scan-manual-tile:active{background:#edf0e9}
+:is(#scanManualGames,#gameChooser) .scan-manual-tile:focus-visible{outline:3px solid #65715c;outline-offset:3px}
+@media(max-width:350px){:is(#scanManualGames,#gameChooser){gap:6px}:is(#scanManualGames,#gameChooser) .scan-manual-tile{min-height:108px;padding:10px 4px}:is(#scanManualGames,#gameChooser) .scan-manual-tile strong{font-size:10px}}
 </style>
 <style>
 .detail-bubbles{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.detail-bubble{display:flex;align-items:center;justify-content:center;min-width:43px;height:43px;padding:0 7px;border-radius:50%;background:#65715c;color:white;font-size:16px;font-weight:600}.detail-bubble-extra{background:transparent;border:1.5px solid #65715c;color:#65715c}.detail-subtitle{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#737b69;font-weight:700;margin:16px 0 8px}.detail-line{display:flex;justify-content:space-between;gap:14px;align-items:baseline;border-top:1px solid #e5e1d7;padding:12px 0;font-size:13px}.detail-line span{color:#777c70}.detail-line strong{text-align:right;overflow-wrap:anywhere}.sports-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 20px}.sports-detail>div{display:flex;justify-content:space-between;gap:6px;background:#f2f0e9;border-radius:12px;padding:12px;align-items:center}.sports-detail small{font-size:11px;color:#737b69}.sports-detail strong{font-size:19px}.review-grid>div{min-width:0}.review-grid input{width:100%;min-width:0;box-sizing:border-box}
@@ -1703,15 +1703,12 @@ function renderHomeGames(){const el=document.getElementById('homeGameGrid');if(!
 
 function renderGameChooser(){
  const el=document.getElementById('gameChooser');if(!el)return;
- const groups=[
-  {title:'Loterías de números',description:'Selecciona los números de tu apuesta.',keys:['bonoloto','primitiva','euromillones','gordo','eurodreams']},
-  {title:'Lotería Nacional',description:'Décimos y sorteos especiales.',keys:['loteria_nacional']},
-  {title:'Pronósticos deportivos',description:'Resultados de fútbol.',keys:['quiniela','quinigol']},
-  {title:'Apuestas hípicas',description:'Carreras de caballos.',keys:['lototurf','quintuple_plus']}
- ];
+ // Mismo orden, iconografía y tarjetas que el selector manual de Escanear.
+ const games=['loteria_nacional','bonoloto','primitiva','euromillones','gordo','eurodreams','quiniela','quinigol','lototurf','quintuple_plus'];
  el.classList.remove('game-grid');
- el.innerHTML=groups.map(group=>`<section class="chooser-group" aria-label="${group.title}"><div class="chooser-heading"><h2>${group.title}</h2><p>${group.description}</p></div><div class="game-grid">${group.keys.map(k=>{const v=GAME_DEFS[k];return `<button type="button" class="game game-tile" onclick="openGameForm('${k}')" aria-label="Añadir boleto de ${v.label}"><span class="game-tile-icon" aria-hidden="true">${gameIcon(k)}</span><strong>${v.label}</strong></button>`}).join('')}</div></section>`).join('');
+ el.innerHTML=games.map(game=>'<button class="scan-manual-tile" type="button" onclick="openGameForm(&quot;'+game+'&quot;)" aria-label="Añadir boleto de '+GAME_DEFS[game].label+'"><span class="scan-manual-icon" aria-hidden="true">'+gameIcon(game)+'</span><strong>'+GAME_DEFS[game].label+'</strong></button>').join('');
 }
+
 window.addEventListener('error',event=>{console.error('LotoScan error:',event.error||event.message);});
 // Catch failures in form submissions, so Safari never appears to ignore the Save button.
 for(const formId of ['gameEntryForm','editGameForm']){
