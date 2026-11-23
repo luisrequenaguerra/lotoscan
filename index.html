@@ -876,10 +876,11 @@ function officialUiCheck(t){
    if(!row||!Number.isFinite(amount)||amount<=0)issues.push('El Millón: escrutinio incompleto');
    else components.push({label:'El Millón · código coincidente',amount});
   }
-  issues.push('El Millón: participación del resguardo sin autenticar');
+  // La autenticidad del resguardo se advierte por separado: no bloquea el resultado calculado.
  }
  // La categoría Especial de Primitiva incluye el reintegro: evitar cualquier acumulación adicional.
  const partial=components.reduce((n,x)=>n+x.amount,0);
+ // Sin incidencias de cálculo: no confundir falta de autenticación con resultado pendiente.
  if(issues.length){
   const winning=components.some(x=>Number(x.amount)>0);
   const calculationIssues=issues.filter(x=>!/sin autenticar|sin verificar/.test(x));
