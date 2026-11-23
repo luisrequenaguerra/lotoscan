@@ -1872,7 +1872,7 @@ function drawsLatestCard(code,name){
  if(code==='ELGR'&&r.key_number!=null)extras.push('Número clave: '+r.key_number);
  if(['BONO','LAPR','LOTU'].includes(code)){if(r.complementary!=null)extras.push('Complementario: '+String(r.complementary).padStart(2,'0'));if(r.reintegro!=null)extras.push('Reintegro: '+r.reintegro)}
  if(code==='LAPR'&&r.joker?.combinacion)extras.push('Joker: '+r.joker.combinacion);
- if(code==='LAQU'){balls=(r.quiniela_signs||[]).map(n=>drawsBall(String(n).replace(/^0(?=[12Xx]$)/,''),false,false)).join('');if(r.pleno_15!=null)extras.push('Pleno al 15: '+r.pleno_15);}
+ if(code==='LAQU'){balls=(r.quiniela_signs||[]).map(n=>drawsBall(String(n).replace(/^0(?=[12Xx]$)/,''),false,false)).join('');if(r.pleno_15!=null)extras.push('Pleno al 15: '+String(r.pleno_15).replace(/^([0-9Mm])([0-9Mm])$/,'$1-$2'));}
  if(code==='QGOL')balls=(r.quinigol_scores||[]).map(n=>drawsBall(String(n).replace(/^([0-9Mm])([0-9Mm])$/,'$1-$2'))).join('');
  if(code==='QUPL'){balls=(r.races||[]).map(n=>drawsBall(n)).join('');if(r.second_fifth_race!=null)extras.push('Segundo caballo de la 5.ª carrera: '+r.second_fifth_race)}
  const matches=Array.isArray(r.matches)?r.matches:[];
