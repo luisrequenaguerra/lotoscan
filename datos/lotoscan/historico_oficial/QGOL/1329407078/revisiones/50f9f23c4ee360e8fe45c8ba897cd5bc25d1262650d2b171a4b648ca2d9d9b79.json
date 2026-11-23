@@ -1,0 +1,86 @@
+{
+  "anyo": "2026",
+  "apuestas": "195134",
+  "cdc": "13294",
+  "combinacion": " M1 - 21 - M2 - M2 - 0M - 11",
+  "dia_semana": "domingo",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "2ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "35",
+      "premio": "947,79",
+      "tipo": "3ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "1112",
+      "premio": "14,04",
+      "tipo": "4ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "14769",
+      "premio": "2,64",
+      "tipo": "5ª  (2 Aciertos) "
+    }
+  ],
+  "fecha_sorteo": "2026-11-22 22:56:00",
+  "fondo_bote": "267481",
+  "game_id": "QGOL",
+  "id_sorteo": "1329407078",
+  "jornada": "25",
+  "partidos": [
+    {
+      "local": "Alavés",
+      "marcador": "3 - 1",
+      "signo": "M-1",
+      "visitante": "Deportivo"
+    },
+    {
+      "local": "Real Madrid",
+      "marcador": "2 - 1",
+      "signo": "2-1",
+      "visitante": "Celta"
+    },
+    {
+      "local": "Barcelona",
+      "marcador": "3 - 2",
+      "signo": "M-2",
+      "visitante": "Villarreal"
+    },
+    {
+      "local": "Racing Santander",
+      "marcador": "3 - 2",
+      "signo": "M-2",
+      "visitante": "Real Sociedad"
+    },
+    {
+      "local": "Getafe",
+      "marcador": "0 - 3",
+      "signo": "0-M",
+      "visitante": "At. Madrid"
+    },
+    {
+      "local": "Sevilla",
+      "marcador": "1 - 1",
+      "signo": "1-1",
+      "visitante": "Betis"
+    }
+  ],
+  "premio_bote": "275000",
+  "premios": "107323",
+  "recaudacion": "195134",
+  "temporada": "2026-2027"
+}

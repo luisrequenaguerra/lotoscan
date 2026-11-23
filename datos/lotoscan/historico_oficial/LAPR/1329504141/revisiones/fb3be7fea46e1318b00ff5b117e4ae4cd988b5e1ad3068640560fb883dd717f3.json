@@ -1,0 +1,23 @@
+{
+  "anyo": "2026",
+  "apuestas": "0",
+  "cdc": "13295",
+  "combinacion": null,
+  "dia_semana": "lunes",
+  "escrutinio": [],
+  "escrutinio_joker": [],
+  "fecha_sorteo": "2026-11-23 00:00:00",
+  "fondo_bote": "1806141",
+  "game_id": "LAPR",
+  "id_sorteo": "1329504141",
+  "joker": {
+    "activo": "1",
+    "bote_joker": 1000000,
+    "combinacion": "-",
+    "gameid": "LAJO",
+    "relsorteoid_asociado": "1329510141"
+  },
+  "premio_bote": "3000000",
+  "premios": "0",
+  "recaudacion": null
+}
