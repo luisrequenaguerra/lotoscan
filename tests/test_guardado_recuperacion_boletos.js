@@ -2,7 +2,7 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const html=fs.readFileSync('index.html','utf8');
 const start=html.indexOf('function saveGameEntry(e)'),end=html.indexOf('// Mantener exactamente la iconografía',start);
 assert(start>=0&&end>start);
-const storage=new Map(),alerts=[];
+const storage=new Map(),alerts=[],opened=[];
 const fields={entryMain:{value:''},entryExtra:{value:''},entryJoker:{value:''},gameEntryDate:{value:''},gameEntryPrice:{value:''},gameFilter:{value:'all'}};
 const document={getElementById:id=>fields[id]||null};
 const defs={
@@ -17,6 +17,7 @@ const sandbox={document,alert:m=>alerts.push(m),Date,Number,String,Array,Set,
  VISUAL_GAMES:[],visualMain:[],visualExtra:[],tickets:[],
  parseNumbers:(line,count,max)=>{const n=line.trim().split(/\s+/).map(Number);return n.length===count&&new Set(n).size===count&&n.every(x=>Number.isInteger(x)&&x>=1&&x<=max)?n.map(x=>String(x).padStart(2,'0')).join(' '):null},
  validateDrawDate39:()=>true,renderTickets:()=>{},go:()=>{},renderSportsBoard:()=>{},
+ openTicket:id=>{assert(storage.has('tickets'),'Must persist before opening ticket');opened.push(id)},
  persistTickets:()=>{storage.set('tickets',JSON.stringify(sandbox.tickets));return true}
 };
 vm.createContext(sandbox);vm.runInContext(html.slice(start,end),sandbox);
@@ -29,6 +30,7 @@ function save(game,main,extra,opts={}){
  const saved=JSON.parse(storage.get('tickets'))[0];
  assert.equal(saved.game,game);
  assert.equal(saved.date,'2026-11-08');
+ assert.equal(opened.at(-1),saved.id,game+': should open the ticket that was just saved');
  return saved;
 }
 const q=save('quiniela','11111111111111','1-0');
