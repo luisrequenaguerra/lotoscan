@@ -5,12 +5,14 @@ on:
       - 'index.html'
       - 'resultados/selae-interfaz.json'
       - 'tests/test_interfaz_primitiva.js'
+      - 'tests/test_interfaz_gordo_eurodreams.js'
       - '.github/workflows/validar-interfaz-primitiva.yml'
   pull_request:
     paths:
       - 'index.html'
       - 'resultados/selae-interfaz.json'
       - 'tests/test_interfaz_primitiva.js'
+      - 'tests/test_interfaz_gordo_eurodreams.js'
 permissions:
   contents: read
 jobs:
@@ -22,3 +24,4 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/test_interfaz_primitiva.js
+      - run: node tests/test_interfaz_gordo_eurodreams.js
