@@ -1524,11 +1524,11 @@ async function recognizeTicket(){
     }catch(err){/* Continuar con el siguiente recorte */}
    }
   }
-  if(!result){scanMessage('No hemos podido leer el código inferior. Puedes introducir los datos manualmente.');openManualReview(false);return}
+  if(!result){scanMessage('No hemos podido leer el código inferior. Selecciona Lotería Nacional en «Introducir datos manualmente» o vuelve a escanear.');return}
   for(const [id,value] of Object.entries({ocrNumber:result.number,ocrSeries:result.series,ocrFraction:result.fraction,ocrCode:result.code,ocrDate:result.date,ocrPrice:'20'}))document.getElementById(id).value=value;
   document.getElementById('reviewPanel').classList.add('visible');
   scanMessage('Datos reconocidos. Compruébalos antes de guardar.');
- }catch(e){scanMessage('No se ha podido completar la lectura. Introduce los datos manualmente o vuelve a intentarlo.');openManualReview(false)}
+ }catch(e){scanMessage('No se ha podido completar la lectura. Elige el sorteo en «Introducir datos manualmente» o vuelve a intentarlo.')}
  finally{button.disabled=false;if(worker){try{await worker.terminate()}catch(e){}}}
 }
 function toggleScanManualChooser(){
@@ -1542,7 +1542,6 @@ function toggleScanManualChooser(){
 function selectScanManualGame(game){
  if(!GAME_DEFS[game])return;
  document.getElementById('scanManualChooser').style.display='none';document.getElementById('scanManualButton').setAttribute('aria-expanded','false');
- if(game==='loteria_nacional'){openManualReview();return}
  openGameForm(game);
 }
 function openManualReview(clear=true){
