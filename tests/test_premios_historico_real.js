@@ -48,6 +48,10 @@ function first(game){const [date,draw]=Object.entries(data.games[game])[0];asser
 {
  const {date,draw}=first('QUPL');
  const result=check({game:'quintuple_plus',date,racePicks:[...draw.result.races,draw.result.second_fifth_race]});
- assert.equal(result.state,'pending');
+ const firstPrize=draw.prizes.find(r=>r.product==='QUPL'&&Number(r.category_code)===2);
+ if(firstPrize&&String(firstPrize.winners)==='0'&&Number(firstPrize.amount_eur)===0){
+  assert.equal(result.state,'matched_unpaid');
+  assert.equal(result.prize,0);
+ }else assert.equal(result.state,'pending');
 }
 console.log('OK: real archived SELAE draws and Gordo zero / EuroDreams periodic prize safeguards');
