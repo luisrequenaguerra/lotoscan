@@ -2,19 +2,26 @@
   "anyo": "2026",
   "apuestas": "0",
   "cdc": "13296",
-  "combinacion": null,
+  "combinacion": " 03 - 05 - 37 - 44 - 49 - 05 - 06",
   "dia_semana": "martes",
   "escrutinio": [],
   "escrutinio_lluvia": null,
-  "escrutinio_millon": [],
-  "fecha_sorteo": "2026-11-24 00:00:00",
+  "escrutinio_millon": [
+    {
+      "ganadores": 1,
+      "orden_escrutinio": "1",
+      "premio": "1000000",
+      "tipo": "El Millón"
+    }
+  ],
+  "fecha_sorteo": "2026-11-24 21:15:00",
   "fondo_bote": "0",
   "game_id": "EMIL",
   "id_sorteo": "1329602094",
   "lluvia": null,
   "millon": {
     "activo": "1",
-    "combinacion": "-",
+    "combinacion": "HRP50707",
     "contenidosRelacionados": {
       "documentos": [],
       "enlaces": [],

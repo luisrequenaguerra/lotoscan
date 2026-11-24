@@ -1,15 +1,52 @@
 {
   "anyo": "2026",
-  "apuestas": "0",
+  "apuestas": "5142973",
   "cdc": "13296",
-  "combinacion": null,
+  "combinacion": "09 - 13 - 34 - 36 - 37 - 44 C(27) R(4)",
   "dia_semana": "martes",
-  "escrutinio": [],
-  "fecha_sorteo": "2026-11-24 00:00:00",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "0",
+      "premio": "0",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "2",
+      "premio": "79940,5",
+      "tipo": "2ª  (5 Aciertos + C) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "99",
+      "premio": "807,48",
+      "tipo": "3ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "4716",
+      "premio": "25,43",
+      "tipo": "4ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "89441",
+      "premio": "4",
+      "tipo": "5ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "513834",
+      "premio": "0,5",
+      "tipo": "Reintegro"
+    }
+  ],
+  "fecha_sorteo": "2026-11-24 21:32:00",
   "fondo_bote": "1051045",
   "game_id": "BONO",
   "id_sorteo": "1329601328",
   "premio_bote": "1300000",
-  "premios": "0",
-  "recaudacion": null
+  "premios": "1414317",
+  "recaudacion": "2571486"
 }
