@@ -1,0 +1,21 @@
+name: Probar actualizacion LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/probar-actualizacion-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          python3 scripts/actualizar_lnac_ordinaria.py --self-test
+          python3 scripts/actualizar_lnac_ordinaria.py --date 2026-11-21
+          LNAC_ROOT=salida_prueba_lnac python3 scripts/actualizar_lnac_ordinaria.py --date 2026-11-21
+          test -f salida_prueba_lnac/1329309094/consolidado.json
+          git diff --exit-code
