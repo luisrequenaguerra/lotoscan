@@ -1,0 +1,44 @@
+name: Auditar LNAC con cliente operativo
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/auditar-lnac-cliente-operativo.yml']
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import datetime as dt, json, pathlib, time, urllib.parse
+          from actualizar_resultados_130 import BASE, fetch, candidates
+          out=pathlib.Path('auditoria-lnac');out.mkdir()
+          tests=[('fechav3','BONO','20261123')]+[(e,'LNAC',d) for e in ('fechav3','fecha2') for d in ('20261119','20261121','20260106','20251222')]
+          report=[]
+          for e,g,d in tests:
+              url=BASE+e+'?'+urllib.parse.urlencode({'game_id':g,'fecha_sorteo':d})
+              raw,net=fetch(url,retries=0)
+              row={'endpoint':e,'game':g,'date':d,**net}
+              if raw is not None:
+                  (out/f'{e}-{g}-{d}.json').write_bytes(raw)
+                  found,state=candidates(raw,g,dt.datetime.strptime(d,'%Y%m%d').date())
+                  row.update(state=state,matches=len(found))
+                  for item in found:
+                      print('DRAW',json.dumps(item,ensure_ascii=False)[:20000],flush=True)
+              report.append(row);print('RESULT',json.dumps(row),flush=True)
+              if net.get('http') in (403,406,429):break
+              time.sleep(5)
+          (out/'report.json').write_text(json.dumps(report,indent=2))
+          if not any(r.get('matches',0) for r in report if r['game']=='LNAC'):raise SystemExit('No LNAC verified')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auditoria-lnac-cliente-operativo
+          path: auditoria-lnac/
