@@ -1,0 +1,21 @@
+name: Revalidar historico LNAC agosto
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/revalidar-historico-lnac-agosto.yml']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 scripts/historico_lnac_agosto_v2.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historico-lnac-agosto-validado
+          path: salida_lnac_candidato/
