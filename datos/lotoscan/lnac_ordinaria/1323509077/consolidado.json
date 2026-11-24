@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1323509077",
+  "fecha_sorteo": "2026-09-24T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "21012",
+  "segundo_premio": "37776",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "1667",
+      "2521",
+      "3028",
+      "7001"
+    ],
+    "extraccionesDeTresCifras": [
+      "065",
+      "074",
+      "170",
+      "345",
+      "498",
+      "530",
+      "599"
+    ],
+    "extraccionesDeDosCifras": [
+      "07",
+      "19",
+      "33",
+      "41",
+      "51",
+      "54",
+      "79",
+      "84",
+      "98"
+    ],
+    "reintegros": [
+      "2",
+      "5",
+      "6"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1323509077",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "24ef113c42407d96ab88b759601bd93b5c8f0fe61fa63c66d7418534615f518b"
+}

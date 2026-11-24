@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1328609092",
+  "fecha_sorteo": "2026-11-14T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "75409",
+  "segundo_premio": "38422",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "2004",
+      "2888",
+      "4896",
+      "8274"
+    ],
+    "extraccionesDeTresCifras": [
+      "249",
+      "491",
+      "594",
+      "624",
+      "640",
+      "655",
+      "781",
+      "824",
+      "863",
+      "924"
+    ],
+    "extraccionesDeDosCifras": [
+      "06",
+      "07",
+      "14",
+      "21",
+      "38",
+      "48",
+      "50",
+      "76",
+      "98"
+    ],
+    "reintegros": [
+      "0",
+      "4",
+      "9"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1328609092",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "55cc6b85f57d3f1c6fa689e202463192eb0a7107d1f3719e4b084c6f9700821f"
+}

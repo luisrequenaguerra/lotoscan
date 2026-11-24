@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1320709069",
+  "fecha_sorteo": "2026-08-27T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "21613",
+  "segundo_premio": "70637",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0886",
+      "2758",
+      "4737",
+      "5472"
+    ],
+    "extraccionesDeTresCifras": [
+      "073",
+      "169",
+      "333",
+      "462",
+      "763",
+      "830",
+      "932"
+    ],
+    "extraccionesDeDosCifras": [
+      "03",
+      "15",
+      "19",
+      "29",
+      "41",
+      "49",
+      "56",
+      "74",
+      "78"
+    ],
+    "reintegros": [
+      "0",
+      "2",
+      "3"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1320709069",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "61ec087dd068dd92112c756b834978f509837ebafd1ef07ae01871d0cc99afa0"
+}

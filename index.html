@@ -554,7 +554,9 @@ function reviewTicket062(t){
  const info='Resultado de fuente no oficial y pendiente de contraste. Esta coincidencia NO confirma un premio ni su importe. Verifica el boleto en SELAE.';
  const base={state:'pending',source:'Resultados disponibles',message:info};
  if(game==='loteria_nacional'){
-  const number=String(t.number??'').trim().padStart(5,'0');
+  const raw=String(t.number??'').trim();
+ if(!/^[0-9]{1,5}$/.test(raw))return {state:'pending',message:'Número de décimo incorrecto'};
+ const number=raw.padStart(5,'0');
   if(!/^\d{5}$/.test(number)||!/^\d{5}$/.test(String(c.primer_premio||'')))return {...base,message:'Número del décimo o resultado incompleto. '+info};
   const matches=[];
   if(number===String(c.primer_premio))matches.push('coincide con primer premio');
@@ -1769,9 +1771,10 @@ function registerLNAC066(d){
   const x=d[key];if(!x||!/^[0-9]{5}$/.test(String(x.decimo))||!Number.isSafeInteger(Number(x.prize))||Number(x.prize)<0)throw Error(key+' inválido');
  }
  for(const [key,width] of Object.entries(groups)){
-  if(!Array.isArray(d[key])||!d[key].length)throw Error(key+' ausente');
+  if(!Array.isArray(d[key])||d[key].length!==({extraccionesDeCuatroCifras:4,extraccionesDeTresCifras:price===3?7:10,extraccionesDeDosCifras:9,reintegros:3})[key])throw Error(key+' ausente');
   for(const x of d[key])if(!x||!(new RegExp('^[0-9]{'+width+'}$')).test(String(x.decimo))||!Number.isSafeInteger(Number(x.prize))||Number(x.prize)<0)throw Error(key+' inválido');
  }
+ if(new Set(d.reintegros.map(x=>x.decimo)).size!==3)throw Error('Reintegros repetidos');
  for(const x of d.reintegros)if(Number(x.prize)!==price*100)throw Error('Reintegro incoherente');
  const date=String(d.fechaSorteo||'').slice(0,10);
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw Error('Fecha no válida');
@@ -1802,7 +1805,9 @@ function calcLNAC066(d,number){
 }
 for(const d of LNAC_FIXTURES_066)registerLNAC066(d);
 function checkLNAC067(t){
- const number=String(t.number??'').trim().padStart(5,'0');
+ const raw=String(t.number??'').trim();
+ if(!/^[0-9]{1,5}$/.test(raw))return {state:'pending',message:'Número de décimo incorrecto'};
+ const number=raw.padStart(5,'0');
  try{
   const {amount,components}=calcLNAC066(LNAC_DRAWS_066[t.date],number);
   const special='No incluye premio especial de serie y fracción. Contrasta siempre con SELAE antes del cobro.';
@@ -1865,7 +1870,7 @@ async function refreshLNAC068(manual=false){
   if(manual)console.info('LotoScan 0.68: '+e.message);
  }finally{
   lnacRefresh068=false;
-  renderTickets();renderOfficialResults();
+  renderTickets();renderOfficialResults();renderLatestDraws();
   if(currentTicketId&&tickets.some(t=>t.id===currentTicketId))openTicket(currentTicketId);
  }
 }
@@ -1920,9 +1925,16 @@ function drawsLatestCard(code,name){
  const detail=matches.length?'<details><summary>Ver '+matches.length+' partidos y marcadores</summary><div class="draws-matches">'+matches.map((m,i)=>'<div class="draws-match"><span>'+drawsEsc((i+1)+'. '+(m.local||'')+' – '+(m.visitante||''))+'</span><span><span class="draws-score">'+drawsEsc(m.marcador||'')+'</span> <span class="draws-pick">'+drawsEsc(m.signo||'')+'</span></span></div>').join('')+'</div></details>':'';
  return '<article class="draws-card" data-game="'+code+'">'+heading+(balls?'<div class="draws-balls">'+balls+'</div>':'<p class="notice">Combinación no disponible.</p>')+(extras.length?'<div class="draws-extra">'+extras.map(x=>{const pos=x.indexOf(': ');return pos>=0?'<span class="draws-extra-item">'+drawsEsc(x.slice(0,pos))+': <strong>'+drawsEsc(x.slice(pos+2))+'</strong></span>':'<span class="draws-extra-item">'+drawsEsc(x)+'</span>'}).join('')+'</div>':'')+detail+'</article>';
 }
+function drawsLNACLatest(){
+ const date=Object.keys(LNAC_DRAWS_066).sort().reverse()[0],d=LNAC_DRAWS_066[date];
+ if(!d)return '';
+ const money=x=>new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(x/100);
+ const groups=[['4 cifras','extraccionesDeCuatroCifras'],['3 cifras','extraccionesDeTresCifras'],['2 cifras','extraccionesDeDosCifras'],['Reintegros','reintegros']];
+ return '<article class="draws-card" data-game="LNAC"><div class="draws-head"><span class="draws-name">Lotería Nacional</span><span class="draws-date">'+drawsEsc(date.split('-').reverse().join('/'))+'</span></div><div class="draws-extra"><span>Primer premio: <strong>'+drawsEsc(d.primerPremio.decimo)+'</strong> · '+money(d.primerPremio.prize)+'</span><span>Segundo premio: <strong>'+drawsEsc(d.segundoPremio.decimo)+'</strong> · '+money(d.segundoPremio.prize)+'</span></div><details><summary>Extracciones y reintegros</summary>'+groups.map(([label,key])=>'<p><strong>'+label+'</strong></p><div class="draws-balls">'+d[key].map(x=>drawsBall(x.decimo,false,false)).join('')+'</div><p>'+money(d[key][0].prize)+' por coincidencia</p>').join('')+'</details></article>';
+}
 function renderLatestDraws(){
  const list=document.getElementById('drawsLatestList');if(!list)return;
- list.innerHTML=DRAWS_LATEST_GAMES.map(([code,name])=>drawsLatestCard(code,name)).join('');
+ list.innerHTML=DRAWS_LATEST_GAMES.map(([code,name])=>drawsLatestCard(code,name)).join('')+drawsLNACLatest();
  const status=document.getElementById('drawsStatus');if(status)status.textContent=officialUiState;
 }
 

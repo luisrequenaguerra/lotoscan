@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1324209079",
+  "fecha_sorteo": "2026-10-01T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "81544",
+  "segundo_premio": "11864",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "1484",
+      "6705",
+      "8565",
+      "9138"
+    ],
+    "extraccionesDeTresCifras": [
+      "106",
+      "369",
+      "516",
+      "533",
+      "537",
+      "790",
+      "991"
+    ],
+    "extraccionesDeDosCifras": [
+      "10",
+      "25",
+      "33",
+      "33",
+      "44",
+      "49",
+      "81",
+      "88",
+      "96"
+    ],
+    "reintegros": [
+      "3",
+      "4",
+      "9"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1324209079",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "27e180f2982250a0af4ab2e4cba9b11002ea33c4180cb13f9bb037aa39c88809"
+}

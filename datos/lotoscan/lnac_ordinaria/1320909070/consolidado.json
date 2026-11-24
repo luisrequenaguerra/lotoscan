@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1320909070",
+  "fecha_sorteo": "2026-08-29T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "91770",
+  "segundo_premio": "56470",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "3541",
+      "3903",
+      "7201",
+      "9986"
+    ],
+    "extraccionesDeTresCifras": [
+      "360",
+      "386",
+      "453",
+      "473",
+      "544",
+      "553",
+      "635",
+      "747",
+      "749",
+      "846"
+    ],
+    "extraccionesDeDosCifras": [
+      "20",
+      "36",
+      "38",
+      "66",
+      "79",
+      "80",
+      "86",
+      "96",
+      "99"
+    ],
+    "reintegros": [
+      "0",
+      "4",
+      "5"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1320909070",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "3ec4823d018d09037e1502baf38cfa6331ba58e2d5747665064625646d703fff"
+}

@@ -11,11 +11,20 @@ reviewNumbers062:(v,count,max)=>{
 vm.createContext(sandbox);vm.runInContext(html.slice(start,end),sandbox);
 const check=t=>sandbox.officialUiCheck(t);
 const categoryPairs=[[5,2],[5,1],[5,0],[4,2],[4,1],[3,2],[4,0],[2,2],[3,1],[3,0],[1,2],[2,1],[2,0]];
+let complete=0,pending=0;
 for(const [date,draw] of Object.entries(data.games.EMIL)){
  const win=draw.result.numbers,stars=draw.result.stars;
  const other=Array.from({length:50},(_,i)=>i+1).filter(n=>!win.includes(n));
  const otherStars=Array.from({length:12},(_,i)=>i+1).filter(n=>!stars.includes(n));
- assert.equal(draw.prizes.filter(x=>x.product==='EMIL').length,13);
+ const rows=draw.prizes.filter(x=>x.product==='EMIL');
+ if(rows.length!==13){
+  const result=check({game:'euromillones',date,entries:[win.join(' ')],extra:stars.join(' '),elMillon:'ZZZ99999'});
+  assert.equal(result.state,'pending','Incomplete scrutiny must remain pending on '+date);
+  assert(!result.prize,'Incomplete scrutiny must not assign prize on '+date);
+  pending++;
+  continue;
+ }
+ complete++;
  categoryPairs.forEach(([hits,starHits],i)=>{
   const nums=[...win.slice(0,hits),...other.slice(0,5-hits)];
   const picks=[...stars.slice(0,starHits),...otherStars.slice(0,2-starHits)];
@@ -30,4 +39,5 @@ for(const [date,draw] of Object.entries(data.games.EMIL)){
  const lose=check({game:'euromillones',date,entries:[other.slice(0,5).join(' ')],extra:otherStars.slice(0,2).join(' '),elMillon:'ZZZ99999'});
  assert(!lose.components?.some(x=>x.label.startsWith('Apuesta 1')),'False positive on '+date);
 }
-console.log('OK: all 13 Euromillones categories across '+Object.keys(data.games.EMIL).length+' official draws; negative controls');
+assert(complete>0,'No complete Euromillones draws tested');
+console.log('OK: all 13 Euromillones categories across '+complete+' complete draws; '+pending+' incomplete draws verified pending; negative controls');
