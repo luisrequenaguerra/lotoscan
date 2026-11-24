@@ -92,12 +92,14 @@ def main():
     if not raw:raise RuntimeError(str(net))
     d=json.loads(raw)
     if d['fechaSorteo'][:10]!=str(day):
-        if not a.date:
+        if d['fechaSorteo'][:10]<str(day) and not a.date:
             print('Awaiting publication',day);return
         time.sleep(5)
         raw,net=fetch(BASE+'fecha2?game_id=LNAC&fecha_sorteo='+day.strftime('%Y%m%d'),retries=0)
         if not raw:raise RuntimeError(str(net))
         matches=[x for x in json.loads(raw) if str(x.get('fecha_sorteo',''))[:10]==str(day)]
+        if not matches and not a.date:
+            print('Awaiting publication',day);return
         if len(matches)!=1:raise ValueError('Missing or ambiguous draw')
         ident=str(matches[0]['id_sorteo'])
         if not re.fullmatch(r'[0-9]{6,20}',ident):raise ValueError('Invalid ID')
@@ -108,7 +110,7 @@ def main():
         assert str(d['drawIdSorteo'])==ident and d['fechaSorteo'][:10]==str(day)
         source=BASE+'resultados2?idsorteo='+ident
     else:source=BASE+'resultados1'
-    if d.get('tipoSorteoGeneral') not in ('J','S'):
+    if d.get('tipoSorteoGeneral') not in ('J','S') or d.get('premioEspecial') is not None or Decimal(str(d.get('precioDecimo'))) != (3 if day.weekday()==3 else 6):
         print('Nonordinary draw deferred',day);return
     store(d,source)
     print(json.dumps(report,ensure_ascii=False))
