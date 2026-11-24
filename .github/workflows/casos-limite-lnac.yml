@@ -1,0 +1,70 @@
+name: Casos limite LNAC ordinaria
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/casos-limite-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import copy,json,pathlib
+          from comprobar_premios_lnac_145 import calc,validate
+          from actualizar_lnac_137 import extract
+          root=pathlib.Path('datos/lotoscan/loteria_nacional/historico_completo')
+          d=json.loads((root/'1329109093/original_resultados.json').read_text())
+          results=[]
+          def test(name,fn):
+              try:
+                  fn()
+                  results.append((name,'PASS'))
+              except Exception as e:
+                  results.append((name,'FAIL',str(e)))
+          def reject(obj):
+              try:validate(obj)
+              except (ValueError,KeyError,TypeError):return
+              raise AssertionError('accepted invalid input')
+          def boundary(first,other):
+              x=copy.deepcopy(d);x['primerPremio']['decimo']=first
+              assert any(p['concepto']=='aproximacion_primero' for p in calc(x,other)['desglose'])
+          test('wrap 00000 to 99999',lambda:boundary('00000','99999'))
+          test('wrap 99999 to 00000',lambda:boundary('99999','00000'))
+          def leading():
+              assert any(p['concepto']=='extraccionesDeTresCifras' and p['referencia']=='017' for p in calc(d,'00017')['desglose'])
+          test('leading zero',leading)
+          def multiple():
+              r=calc(d,'68580')
+              assert r['importe_centimos']==9300
+              assert len(r['desglose'])>1
+          test('multiple prizes',multiple)
+          for field in ('extraccionesDeCuatroCifras','extraccionesDeTresCifras','extraccionesDeDosCifras','reintegros'):
+              x=copy.deepcopy(d);x[field]=[]
+              test('empty '+field,lambda x=x:reject(x))
+          x=copy.deepcopy(d);x['tipoSorteoGeneral']='X'
+          test('extraordinary rejected',lambda:reject(x))
+          x=copy.deepcopy(d);x['premioEspecial']={'prize':100}
+          test('special rejected',lambda:reject(x))
+          def truncated():
+              x=copy.deepcopy(d);x['extraccionesDeDosCifras'].pop()
+              reject(x)
+          test('partial extraction list rejected',truncated)
+          def duplicate():
+              x=copy.deepcopy(d);x['extraccionesDeDosCifras'][-1]=x['extraccionesDeDosCifras'][0]
+              reject(x)
+          test('duplicate extraction rejected',duplicate)
+          for r in results:print(json.dumps(r,ensure_ascii=False))
+          pathlib.Path('casos-lnac.json').write_text(json.dumps(results,ensure_ascii=False,indent=2))
+          if any(r[1]=='FAIL' for r in results):raise SystemExit(1)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: casos-limite-lnac
+          path: casos-lnac.json
