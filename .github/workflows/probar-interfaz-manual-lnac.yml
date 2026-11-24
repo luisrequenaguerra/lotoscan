@@ -1,0 +1,66 @@
+name: Probar interfaz manual LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/probar-interfaz-manual-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8765 >/tmp/server.log 2>&1 &
+          python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          import pathlib
+          out=pathlib.Path('capturas-lnac');out.mkdir()
+          with sync_playwright() as p:
+              browser=p.chromium.launch()
+              page=browser.new_page(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
+              errors=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto('http://127.0.0.1:8765/',wait_until='domcontentloaded')
+              page.wait_for_function("typeof LNAC_DRAWS_066 !== 'undefined' && Object.keys(LNAC_DRAWS_066).length===29",timeout=60000)
+              page.evaluate("go('gameForms')")
+              assert page.locator('#gameChooser button').count()==10
+              page.get_by_role('button',name='Añadir boleto de Lotería Nacional',exact=True).click()
+              assert page.locator('#addTicket').is_visible()
+              for key,value in [('manualNumber','23641'),('manualSeries','1'),('manualFraction','1'),('manualDate','2026-11-21'),('manualPrice','6')]:
+                  page.locator('#'+key).fill(value)
+              page.get_by_role('button',name='Guardar décimo',exact=True).click()
+              assert page.locator('#ticketDetail').is_visible()
+              assert page.evaluate("checkTicket38(tickets.find(t=>t.id===currentTicketId)).state")=='won'
+              assert page.evaluate("checkTicket38(tickets.find(t=>t.id===currentTicketId)).prize")==60000
+              page.screenshot(path=str(out/'premiado.png'),full_page=True)
+              page.evaluate('editCurrentTicket()')
+              assert page.locator('#editTicket').is_visible()
+              page.locator('#editNumber').fill('00000')
+              page.evaluate("document.getElementById('editDate').value='2026-11-26'")
+              page.locator('#editTicket form').evaluate('(f)=>f.requestSubmit()')
+              assert page.locator('#ticketDetail').is_visible()
+              assert page.evaluate("checkTicket38(tickets.find(t=>t.id===currentTicketId)).state")=='pending'
+              page.screenshot(path=str(out/'pendiente.png'),full_page=True)
+              page.reload()
+              page.wait_for_function("typeof LNAC_DRAWS_066 !== 'undefined' && Object.keys(LNAC_DRAWS_066).length===29",timeout=60000)
+              assert page.evaluate("tickets.some(t=>t.game==='loteria_nacional'&&t.number==='00000'&&t.date==='2026-11-26')")
+              page.evaluate("go('draws')")
+              assert page.locator('#drawsLatestList [data-game="LNAC"]').count()==1
+              assert page.locator('#drawsLatestList .draws-card').count()==10
+              page.screenshot(path=str(out/'sorteos.png'),full_page=True)
+              assert not errors,errors
+              print('PASS manual save, edit, persistence, pending, ten result cards')
+              browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-lnac
+          path: capturas-lnac/
