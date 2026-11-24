@@ -1,0 +1,29 @@
+name: Preparar publicacion LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/preparar-publicacion-lnac.yml']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch origin main
+          SOURCE=$(git rev-parse HEAD)
+          BASE=$(git merge-base HEAD origin/main)
+          git switch -c publicacion/lnac-ordinaria origin/main
+          git diff "$BASE" "$SOURCE" -- index.html | git apply --3way
+          git checkout "$SOURCE" -- datos/lotoscan/lnac_ordinaria resultados/lnac scripts/actualizar_lnac_ordinaria.py scripts/exportar_lnac_ordinaria.py scripts/motor_ordinario_lnac_v2.py .github/workflows/actualizar-lnac-ordinaria.yml
+          python3 scripts/actualizar_lnac_ordinaria.py --self-test
+          python3 scripts/exportar_lnac_ordinaria.py
+          git add index.html resultados/lnac
+          git diff --cached --stat
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Integrar LNAC ordinaria validada sin workflows experimentales'
+          git push origin HEAD:publicacion/lnac-ordinaria
