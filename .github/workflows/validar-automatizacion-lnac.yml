@@ -1,0 +1,45 @@
+name: Validar automatizacion LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/validar-automatizacion-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          python3 scripts/actualizar_lnac_ordinaria.py --self-test
+          PYTHONPATH=scripts python3 - <<'PY'
+          from actualizar_lnac_ordinaria import target_date
+          from datetime import datetime,timedelta,timezone
+          from zoneinfo import ZoneInfo
+          from pathlib import Path
+          import re
+          slots=[tuple(map(int,m)) for m in re.findall(r"cron: '(\d+) (\d+) \* \* (\d+)'",Path('.github/workflows/actualizar-lnac-ordinaria.yml').read_text())]
+          start=datetime(2026,1,1,tzinfo=timezone.utc)
+          actual=set();expected=set()
+          for i in range(365*48):
+              t=start+timedelta(minutes=30*i)
+              d=target_date(t)
+              if d:expected.add(t)
+              if (t.minute,t.hour,(t.weekday()+1)%7) in slots and d:actual.add(t)
+          assert actual==expected,(expected-actual,actual-expected)
+          print('PASS annual schedule',len(actual),'Madrid slots, DST included')
+          PY
+          python3 scripts/actualizar_lnac_ordinaria.py --date 2026-11-21
+          python3 scripts/exportar_lnac_ordinaria.py
+          git diff --exit-code -- datos/lotoscan/lnac_ordinaria resultados/lnac
+          TMP=$(mktemp -d)
+          cp -a datos/lotoscan/lnac_ordinaria/. "$TMP/"
+          rm -rf "$TMP/1329309094"
+          LNAC_ROOT="$TMP" python3 scripts/actualizar_lnac_ordinaria.py --date 2026-11-21
+          test -f "$TMP/1329309094/consolidado.json"
+          LNAC_ROOT="$TMP" python3 scripts/actualizar_lnac_ordinaria.py --date 2026-11-21
+          echo 'PASS retrieval, validation and subsequent skip'
+          git diff --exit-code -- datos/lotoscan/lnac_ordinaria resultados/lnac
