@@ -1,0 +1,59 @@
+name: Regresion nueve juegos
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/probar-regresion-nueve-juegos.yml']
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - run: |
+          git worktree add --detach /tmp/baseline 5598506086ccfcf494364e8f3b0908f327285490
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8765 >/tmp/current.log 2>&1 &
+          python3 -m http.server 8766 --directory /tmp/baseline >/tmp/base.log 2>&1 &
+          python3 - <<'PY'
+          from playwright.sync_api import sync_playwright
+          import json
+          with sync_playwright() as p:
+              b=p.chromium.launch()
+              pages=[b.new_page(viewport={'width':390,'height':844}) for _ in range(2)]
+              errors=[[],[]]
+              for i,page in enumerate(pages):
+                  page.on('pageerror',lambda e,i=i:errors[i].append(str(e)))
+                  page.goto('http://127.0.0.1:'+str(8766-i)+'/',wait_until='domcontentloaded')
+                  page.wait_for_function("typeof OFFICIAL_DRAWS_UI !== 'undefined' && ['BONO','LAPR','EMIL','ELGR','EDMS','LAQU','QGOL','LOTU','QUPL'].every(k=>Object.keys(OFFICIAL_DRAWS_UI[k]||{}).length)",timeout=60000)
+              js="""()=>{
+                const map={BONO:'bonoloto',LAPR:'primitiva',EMIL:'euromillones',ELGR:'gordo',EDMS:'eurodreams',LAQU:'quiniela',QGOL:'quinigol',LOTU:'lototurf',QUPL:'quintuple_plus'};
+                const out={};
+                for(const [code,game] of Object.entries(map)){
+                  const catalog=OFFICIAL_DRAWS_UI[code],cases=[];
+                  for(const [date,d] of Object.entries(catalog)){
+                    if(!d.result)continue;
+                    const r=d.result,n=(r.numbers||[]).join(' '),signs=(r.quiniela_signs||[]).join(' '),scores=(r.quinigol_scores||[]).join(' '),races=(r.races||[]).join(' ');
+                    const number=n||signs||scores||races;
+                    const t={game,date,number,entries:[number],extra:String(r.key_number??r.dream??r.reintegro??''),horse:r.complementary,reintegro:r.reintegro,stars:(r.stars||[]).join(' '),joker:r.joker?.combinacion,pleno:r.pleno_15,secondFifth:r.second_fifth_race};
+                    if(code==='EMIL')t.extra=(r.stars||[]).join(' ');
+                    for(const ticket of [t,{...t,number:'',entries:[]},{...t,date:'2099-01-01'},{...t,number:'1 2 3 4 5 6',entries:['1 2 3 4 5 6']}])cases.push(checkTicket38(ticket));
+                  }
+                  out[code]={catalog,cases,card:drawsLatestCard(code,DRAWS_LATEST_GAMES.find(x=>x[0]===code)[1])};
+                }
+                return out;
+              }"""
+              a,c=[page.evaluate(js) for page in pages]
+              for code in a:
+                  assert a[code]==c[code], 'Regression '+code
+                  print('PASS',code,len(a[code]['cases']),'comparisons; catalog and card identical')
+              assert not errors[1],errors[1]
+              print('PASS nine games unchanged against baseline')
+              b.close()
+          PY
