@@ -1,0 +1,49 @@
+name: Investigar LNAC fechav2
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/investigar-lnac-fechav2.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  investigar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Consultar fuente oficial sin modificar datos
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.error, urllib.parse, json, pathlib, time
+          out=pathlib.Path('auditoria-fechav2')
+          out.mkdir(exist_ok=True)
+          report=[]
+          for day in ['20261119','20261121','20260106','20251222','20241222','20231222']:
+              url='https://www.loteriasyapuestas.es/servicios/fechav2?'+urllib.parse.urlencode({'game_id':'LNAC','fecha_sorteo':day})
+              row={'fecha':day,'url':url}
+              try:
+                  req=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'Mozilla/5.0 (compatible; LotoScan research)','Referer':'https://www.loteriasyapuestas.es/'})
+                  with urllib.request.urlopen(req,timeout=25) as r:
+                      row['http']=r.status
+                      raw=r.read(2000001)
+                      if len(raw)>2000000: raise ValueError('Respuesta demasiado grande')
+                      data=json.loads(raw.decode('utf-8-sig'))
+                      (out/(day+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2))
+                      row['tipo']=type(data).__name__
+                      row['campos']=list(data) if isinstance(data,dict) else [list(x) for x in data[:3] if isinstance(x,dict)] if isinstance(data,list) else []
+              except urllib.error.HTTPError as e:
+                  row['http']=e.code
+                  row['error']=str(e)
+              except Exception as e:
+                  row['error']=str(e)
+              report.append(row)
+              print(json.dumps(row,ensure_ascii=False),flush=True)
+              if row.get('http') in (403,406,429): break
+              time.sleep(3)
+          (out/'informe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auditoria-lnac-fechav2
+          path: auditoria-fechav2/
