@@ -1,0 +1,38 @@
+name: Comparar fuentes terceros LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/comparar-fuentes-terceros-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  consulta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.parse, urllib.error, json, pathlib, time
+          out=pathlib.Path('auditoria-fuentes');out.mkdir()
+          tests=[('fechav3','BONO','20261123')]+[(e,'LNAC',d) for e in ('fechav3','fecha2') for d in ('20261119','20261121','20260106','20251222')]
+          for endpoint,game,date in tests:
+              url='https://www.loteriasyapuestas.es/servicios/'+endpoint+'?'+urllib.parse.urlencode({'game_id':game,'fecha_sorteo':date})
+              print('CONSULTA',url,flush=True)
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
+                  with urllib.request.urlopen(req,timeout=25) as r:
+                      raw=r.read(4000001); print('HTTP',r.status,'bytes',len(raw),flush=True)
+                  obj=json.loads(raw)
+                  (out/f'{endpoint}-{game}-{date}.json').write_text(json.dumps(obj,ensure_ascii=False,indent=2))
+                  print('JSON',json.dumps(obj,ensure_ascii=False)[:14000],flush=True)
+              except urllib.error.HTTPError as e:
+                  print('HTTP',e.code,flush=True)
+                  if e.code in (403,406,429):break
+              except Exception as e:print('ERROR',str(e),flush=True)
+              time.sleep(4)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auditoria-fuentes-terceros-lnac
+          path: auditoria-fuentes/
