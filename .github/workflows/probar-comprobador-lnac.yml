@@ -1,0 +1,58 @@
+name: Probar comprobador LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/probar-comprobador-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,pathlib
+          from motor_ordinario_lnac_v2 import calc,ORACULOS
+          cases=[]
+          for p in pathlib.Path('resultados/lnac').glob('*.json'):
+              if p.name=='manifest.json':continue
+              d=json.loads(p.read_text())
+              numbers={f'{n:05d}' for n in range(0,100000,97)}
+              numbers.update(ORACULOS.get(str(d['drawIdSorteo']),{}))
+              numbers.update(['00000','00011','99999',d['primerPremio']['decimo'],d['segundoPremio']['decimo']])
+              for n in sorted(numbers):
+                  expected=calc(d,n)['importe_centimos']
+                  oracle=ORACULOS.get(str(d['drawIdSorteo']),{}).get(n)
+                  if oracle is not None:assert expected==oracle*100
+                  cases.append([d['fechaSorteo'][:10],n,expected])
+          pathlib.Path('/tmp/cases.json').write_text(json.dumps(cases))
+          s=pathlib.Path('index.html').read_text()
+          a=s.index('const LNAC_DRAWS_066={};')
+          b=s.index('for(const d of LNAC_FIXTURES_066)',a)
+          c=s.index('function checkLNAC067(t)')
+          e=s.index('async function importLNAC066',c)
+          pathlib.Path('/tmp/check.js').write_text(s[a:b]+s[c:e]+"""
+          const fs=require('fs'),assert=require('assert');
+          const manifest=JSON.parse(fs.readFileSync('resultados/lnac/manifest.json'));
+          for(const item of manifest.draws)registerLNAC066(JSON.parse(fs.readFileSync(item.file)));
+          const cases=JSON.parse(fs.readFileSync('/tmp/cases.json'));
+          let won=0,lost=0;
+          for(const [date,number,expected] of cases){
+            const result=checkLNAC067({date,number});
+            assert.equal(result.state,expected?'won':'lost',date+' '+number);
+            assert.equal(Math.round(result.prize*100),expected,date+' '+number);
+            assert.equal(Math.round(result.components.reduce((s,x)=>s+x.amount,0)*100),expected);
+            expected?won++:lost++;
+          }
+          for(const number of ['', 'abc','123456'])assert.equal(checkLNAC067({date:'2026-11-21',number}).state,'pending');
+          assert.equal(checkLNAC067({date:'2026-11-26',number:'12345'}).state,'pending');
+          assert.equal(checkLNAC067({date:'2026-11-07',number:'12345'}).state,'pending');
+          assert.equal(checkLNAC067({date:'2026-11-05',number:'11'}).prize,15);
+          console.log('PASS individual comparisons',cases.length,'won',won,'lost',lost,'pending 5; repeated extraction and leading zeros');
+          """)
+          PY
+          node /tmp/check.js
