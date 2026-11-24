@@ -1,0 +1,32 @@
+name: Auditar motor ordinario LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/auditar-motor-ordinario-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - run: python3 scripts/comprobar_premios_lnac_145.py
+      - run: python3 scripts/auditar_universo_lnac_147.py
+      - run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('salida_147/informe_147.json'))
+          for s in d['sorteos']:
+              print(json.dumps({k:v for k,v in s.items() if k not in ('distribucion_importes_eur','archivo')},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auditoria-motor-ordinario
+          path: |
+            salida_145/
+            salida_147/
