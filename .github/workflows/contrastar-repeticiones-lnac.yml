@@ -1,0 +1,42 @@
+name: Contrastar repeticiones LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/contrastar-repeticiones-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,time,pathlib,collections
+          from actualizar_resultados_130 import BASE,fetch
+          from comprobar_premios_lnac_145 import calc
+          out=pathlib.Path('contraste_lnac');out.mkdir()
+          raw,net=fetch(BASE+'resultados2?idsorteo=1327709089',retries=0)
+          if not raw:raise RuntimeError(str(net))
+          d=json.loads(raw)
+          assert str(d['drawIdSorteo'])=='1327709089'
+          (out/'resultados2.json').write_bytes(raw)
+          print('ORIGINAL',json.dumps(d,ensure_ascii=False))
+          day=d['fechaSorteo'][:10].replace('-','')
+          time.sleep(5)
+          raw,net=fetch(BASE+'fecha2?game_id=LNAC&fecha_sorteo='+day,retries=0)
+          if not raw:raise RuntimeError(str(net))
+          (out/'fecha2.json').write_bytes(raw)
+          print('CONTRASTE',raw.decode())
+          for k in ('extraccionesDeCuatroCifras','extraccionesDeTresCifras','extraccionesDeDosCifras','reintegros'):
+              print(k,collections.Counter(str(x['decimo']) for x in d[k]))
+          total=sum(calc(d,f'{n:05d}')['importe_centimos'] for n in range(100000))
+          print('TOTAL CENTIMOS',total,'ESPERADO',int(d['precioDecimo'])*100*70000)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: contraste-repeticiones-lnac
+          path: contraste_lnac/
