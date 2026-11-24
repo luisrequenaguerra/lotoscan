@@ -1,0 +1,51 @@
+name: Revalidar multiplicidad LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/revalidar-multiplicidad-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 scripts/motor_ordinario_lnac_v2.py
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,pathlib,copy,time,collections
+          from decimal import Decimal
+          from actualizar_resultados_130 import BASE,fetch
+          from motor_ordinario_lnac_v2 import calc,validate
+          raw,net=fetch(BASE+'resultados2?idsorteo=1327709089',retries=0)
+          if not raw:raise RuntimeError(str(net))
+          d=json.loads(raw)
+          assert str(d['drawIdSorteo'])=='1327709089'
+          time.sleep(5)
+          raw,net=fetch(BASE+'fecha2?game_id=LNAC&fecha_sorteo=20261105',retries=0)
+          if not raw:raise RuntimeError(str(net))
+          f=next(x for x in json.loads(raw) if str(x['id_sorteo'])=='1327709089')
+          assert f['combinacion']['primer_premio']==d['primerPremio']['decimo']
+          assert f['combinacion']['Segundo_premio']==d['segundoPremio']['decimo']
+          assert sorted(f['reintegros'])==sorted(x['decimo'] for x in d['reintegros'])
+          assert Decimal(str(f['tenthPrice']))==Decimal(str(d['precioDecimo']))
+          for k,n in [('extraccionesDeCuatroCifras',4),('extraccionesDeTresCifras',3),('extraccionesDeDosCifras',2)]:
+              assert sorted(Decimal(x['premio'])*100 for x in f['escrutinio'] if x['tipo']==f'Extracción de {n} cifras')==sorted(Decimal(str(x['prize'])) for x in d[k])
+          assert collections.Counter(x['decimo'] for x in d['extraccionesDeDosCifras'])['11']==2
+          assert calc(d,'00011')['importe_centimos']==1500
+          assert calc(d,'73802')['importe_centimos']==600300
+          for k in ('extraccionesDeCuatroCifras','extraccionesDeTresCifras','extraccionesDeDosCifras','reintegros'):
+              x=copy.deepcopy(d);x[k].pop()
+              try:validate(x)
+              except ValueError:pass
+              else:raise AssertionError('accepted truncated '+k)
+          for x in [d]+[json.loads(p.read_text()) for p in pathlib.Path('datos/lotoscan/loteria_nacional/historico_completo').glob('*/original_resultados.json')]:
+              total=sum(calc(x,f'{n:05d}')['importe_centimos'] for n in range(100000))
+              expected=int(x['precioDecimo'])*100*70000
+              print(x['drawIdSorteo'],total,expected)
+              assert total==expected
+          print('PASS 400000 numbers; multiplicity and cross-source checks')
+          PY
