@@ -1,0 +1,55 @@
+name: Diagnosticar seis LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/diagnosticar-seis-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,time,pathlib
+          from decimal import Decimal
+          from actualizar_resultados_130 import BASE,fetch
+          from motor_ordinario_lnac_v2 import calc,validate
+          out=pathlib.Path('diagnostico_seis');out.mkdir()
+          report=[]
+          def get(url):
+              raw,net=fetch(BASE+url,retries=0)
+              if not raw:raise RuntimeError(str(net))
+              time.sleep(5)
+              return json.loads(raw)
+          for ident,day in [('1318609063','20260806'),('1320009067','20260820'),('1323709078','20260926'),('1324909081','20261008'),('1326309085','20261022'),('1326509086','20261024')]:
+              d=get('resultados2?idsorteo='+ident)
+              f=next(x for x in get('fecha2?game_id=LNAC&fecha_sorteo='+day) if str(x['id_sorteo'])==ident)
+              (out/(ident+'.json')).write_text(json.dumps({'resultados2':d,'fecha2':f},ensure_ascii=False,indent=2))
+              validate(d)
+              checks=[]
+              def compare(name,a,b):
+                  checks.append({'campo':name,'resultados2':a,'fecha2_o_esperado':b,'igual':a==b})
+              compare('id',str(d['drawIdSorteo']),ident)
+              compare('primero',d['primerPremio']['decimo'],f['combinacion']['primer_premio'])
+              compare('segundo',d['segundoPremio']['decimo'],f['combinacion']['Segundo_premio'])
+              compare('reintegros',sorted(x['decimo'] for x in d['reintegros']),sorted(f['reintegros']))
+              compare('precio',str(Decimal(str(d['precioDecimo'])).normalize()),str(Decimal(str(f['tenthPrice'])).normalize()))
+              for k,n in [('extraccionesDeCuatroCifras',4),('extraccionesDeTresCifras',3),('extraccionesDeDosCifras',2)]:
+                  compare(k,sorted(int(x['prize']) for x in d[k]),sorted(int(Decimal(x['premio'])*100) for x in f['escrutinio'] if x['tipo']==f'Extracción de {n} cifras'))
+              total=sum(calc(d,f'{n:05d}')['importe_centimos'] for n in range(100000))
+              compare('total_centimos',total,int(d['precioDecimo'])*7000000)
+              row={'id':ident,'fecha':day,'checks':checks,'primero':d['primerPremio'],'segundo':d['segundoPremio'],'extracciones':{k:[x['decimo'] for x in d[k]] for k in ('extraccionesDeCuatroCifras','extraccionesDeTresCifras','extraccionesDeDosCifras','reintegros')}}
+              report.append(row)
+              print(json.dumps(row,ensure_ascii=False))
+              (out/'informe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: diagnostico-seis-lnac
+          path: diagnostico_seis/
