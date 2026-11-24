@@ -1,0 +1,67 @@
+name: Validar resultados1 y resultados2 LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/validar-resultados-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,pathlib,time,re,urllib.parse
+          from actualizar_resultados_130 import BASE,fetch
+          from actualizar_lnac_137 import extract
+          out=pathlib.Path('auditoria-lnac');out.mkdir()
+          report=[]; payloads={}; blocked=False
+          def query(endpoint,params,label,expected=None):
+              global blocked
+              if blocked:return None
+              if report:time.sleep(5)
+              url=BASE+endpoint+('?' + urllib.parse.urlencode(params) if params else '')
+              raw,net=fetch(url,retries=0)
+              row={'label':label,'url':url,**net}
+              report.append(row)
+              if net.get('http') in (403,406,429):blocked=True
+              obj=None
+              if raw is not None:
+                  (out/(label+'.json')).write_bytes(raw)
+                  try:
+                      obj=json.loads(raw.decode('utf-8-sig'))
+                      summary=extract(obj)
+                      row['summary']=summary
+                      row['id_ok']=expected is None or summary['id_sorteo']==expected
+                      if not row['id_ok']:obj=None
+                      else:payloads[label]=obj
+                  except Exception as e:row['error']=str(e);obj=None
+              print('RESULT',json.dumps(row,ensure_ascii=False),flush=True)
+              return obj
+          latest=query('resultados1',{},'ultimo')
+          if latest:
+              sid=str(latest['drawIdSorteo'])
+              same=query('resultados2',{'idsorteo':sid},'ultimo_por_id',sid)
+              if same:
+                  diff=sorted(k for k in latest.keys()|same.keys() if latest.get(k)!=same.get(k))
+                  print('COMPARE',json.dumps({'id':sid,'identical':not diff,'different_fields':diff}),flush=True)
+          for sid in ('1329109093','1329309094','1328609092'):
+              obj=query('resultados2',{'idsorteo':sid},'historico_'+sid,sid)
+              if obj:
+                  p=pathlib.Path('datos/lotoscan/loteria_nacional/historico_completo')/sid/'original_resultados.json'
+                  if p.exists():
+                      old=json.loads(p.read_text())
+                      print('ARCHIVE_COMPARE',sid,json.dumps({'same':old==obj,'different_fields':sorted(k for k in old.keys()|obj.keys() if old.get(k)!=obj.get(k))}),flush=True)
+          (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          if not payloads:raise SystemExit('No valid LNAC payload')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auditoria-resultados-lnac
+          path: auditoria-lnac/
