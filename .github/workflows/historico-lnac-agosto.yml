@@ -1,0 +1,21 @@
+name: Historico LNAC desde agosto
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/historico-lnac-agosto.yml']
+permissions:
+  contents: read
+jobs:
+  historico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 scripts/historico_lnac_desde_agosto.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historico-lnac-agosto
+          path: salida_lnac_candidato/
