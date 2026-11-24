@@ -1,0 +1,21 @@
+name: Historico candidato LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/historico-lnac-candidato.yml']
+permissions:
+  contents: read
+jobs:
+  historico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 scripts/construir_historico_lnac_candidato.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historico-lnac-candidato
+          path: salida_lnac_candidato/
