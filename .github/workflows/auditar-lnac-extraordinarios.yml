@@ -1,0 +1,30 @@
+name: Auditar LNAC extraordinarios
+on:
+  push:
+    branches: ['investigacion/lnac-extraordinarios']
+    paths: ['.github/workflows/auditar-lnac-extraordinarios.yml']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,time,pathlib
+          from actualizar_resultados_130 import BASE,fetch
+          out=pathlib.Path('/tmp/extraordinarios');out.mkdir()
+          for ident,day in [('1318109062','20260801'),('1321609072','20260905'),('1325309082','20261012'),('1327909090','20261107')]:
+              for name,url in [('resultados2',BASE+'resultados2?idsorteo='+ident),('fecha2',BASE+'fecha2?game_id=LNAC&fecha_sorteo='+day)]:
+                  raw,net=fetch(url,retries=0)
+                  if not raw:raise RuntimeError(str(net))
+                  d=json.loads(raw)
+                  (out/(ident+'_'+name+'.json')).write_bytes(raw)
+                  print(ident,name,json.dumps(d,ensure_ascii=False))
+                  time.sleep(5)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fuentes-extraordinarios
+          path: /tmp/extraordinarios
