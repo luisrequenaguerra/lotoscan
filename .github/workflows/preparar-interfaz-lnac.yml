@@ -1,0 +1,61 @@
+name: Preparar interfaz LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/preparar-interfaz-lnac.yml']
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/exportar_lnac_ordinaria.py
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          def replace(a,b):
+              global s
+              assert a in s,a
+              s=s.replace(a,b,1)
+          replace("if(!Array.isArray(d[key])||!d[key].length)", "if(!Array.isArray(d[key])||d[key].length!==({extraccionesDeCuatroCifras:4,extraccionesDeTresCifras:price===3?7:10,extraccionesDeDosCifras:9,reintegros:3})[key])")
+          replace("for(const x of d.reintegros)if", "if(new Set(d.reintegros.map(x=>x.decimo)).size!==3)throw Error('Reintegros repetidos');\n for(const x of d.reintegros)if")
+          replace("const number=String(t.number??'').trim().padStart(5,'0');", "const raw=String(t.number??'').trim();\n if(!/^[0-9]{1,5}$/.test(raw))return {state:'pending',message:'Número de décimo incorrecto'};\n const number=raw.padStart(5,'0');")
+          replace("list.innerHTML=DRAWS_LATEST_GAMES.map(([code,name])=>drawsLatestCard(code,name)).join('');","list.innerHTML=DRAWS_LATEST_GAMES.map(([code,name])=>drawsLatestCard(code,name)).join('')+drawsLNACLatest();")
+          replace("function renderLatestDraws(){", """function drawsLNACLatest(){
+           const date=Object.keys(LNAC_DRAWS_066).sort().reverse()[0],d=LNAC_DRAWS_066[date];
+           if(!d)return '';
+           const money=x=>new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR'}).format(x/100);
+           const groups=[['4 cifras','extraccionesDeCuatroCifras'],['3 cifras','extraccionesDeTresCifras'],['2 cifras','extraccionesDeDosCifras'],['Reintegros','reintegros']];
+           return '<article class="draws-card" data-game="LNAC"><div class="draws-head"><span class="draws-name">Lotería Nacional</span><span class="draws-date">'+drawsEsc(date.split('-').reverse().join('/'))+'</span></div><div class="draws-extra"><span>Primer premio: <strong>'+drawsEsc(d.primerPremio.decimo)+'</strong> · '+money(d.primerPremio.prize)+'</span><span>Segundo premio: <strong>'+drawsEsc(d.segundoPremio.decimo)+'</strong> · '+money(d.segundoPremio.prize)+'</span></div><details><summary>Extracciones y reintegros</summary>'+groups.map(([label,key])=>'<p><strong>'+label+'</strong></p><div class="draws-balls">'+d[key].map(x=>drawsBall(x.decimo,false,false)).join('')+'</div><p>'+money(d[key][0].prize)+' por coincidencia</p>').join('')+'</details></article>';
+          }
+          function renderLatestDraws(){""")
+          replace("lnacRefresh068=false;\n  renderTickets();renderOfficialResults();","lnacRefresh068=false;\n  renderTickets();renderOfficialResults();renderLatestDraws();")
+          p.write_text(s)
+          # Extract script for syntax check and isolated parity test.
+          js=s[s.rfind('<script>')+8:s.rfind('</script>')]
+          Path('/tmp/lotoscan.js').write_text(js)
+          a=s.index('const LNAC_DRAWS_066={};')
+          b=s.index('for(const d of LNAC_FIXTURES_066)',a)
+          Path('/tmp/lnac-test.js').write_text(s[a:b]+"""
+          const fs=require('fs');
+          const manifest=JSON.parse(fs.readFileSync('resultados/lnac/manifest.json'));
+          for(const item of manifest.draws){
+           const d=JSON.parse(fs.readFileSync(item.file));registerLNAC066(d);
+           let total=0;
+           for(let n=0;n<100000;n++)total+=Math.round(calcLNAC066(d,String(n).padStart(5,'0')).amount*100);
+           if(total!==Number(d.precioDecimo)*7000000)throw Error(item.date+' total '+total);
+          }
+          console.log('PASS JS totals',manifest.draws.length);
+          """)
+          PY
+          node --check /tmp/lotoscan.js
+          node /tmp/lnac-test.js
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html resultados/lnac/
+          git commit -m "Integrar histórico ordinario LNAC en interfaz de prueba"
+          git push origin HEAD:investigacion/lnac-fechav2
