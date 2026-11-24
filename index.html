@@ -1805,7 +1805,9 @@ function calcLNAC066(d,number){
 }
 for(const d of LNAC_FIXTURES_066)registerLNAC066(d);
 function checkLNAC067(t){
- const number=String(t.number??'').trim().padStart(5,'0');
+ const raw=String(t.number??'').trim();
+ if(!/^[0-9]{1,5}$/.test(raw))return {state:'pending',message:'Número de décimo incorrecto'};
+ const number=raw.padStart(5,'0');
  try{
   const {amount,components}=calcLNAC066(LNAC_DRAWS_066[t.date],number);
   const special='No incluye premio especial de serie y fracción. Contrasta siempre con SELAE antes del cobro.';
