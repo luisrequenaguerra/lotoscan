@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1324409080",
+  "fecha_sorteo": "2026-10-03T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "15024",
+  "segundo_premio": "55670",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "3351",
+      "4144",
+      "4206",
+      "5339"
+    ],
+    "extraccionesDeTresCifras": [
+      "038",
+      "344",
+      "410",
+      "421",
+      "468",
+      "515",
+      "609",
+      "738",
+      "745",
+      "814"
+    ],
+    "extraccionesDeDosCifras": [
+      "01",
+      "22",
+      "23",
+      "37",
+      "59",
+      "61",
+      "87",
+      "91",
+      "94"
+    ],
+    "reintegros": [
+      "0",
+      "4",
+      "8"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1324409080",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "4160f950a96db420b036daa82af5871a03cf92dd00de67be43041c24c9d784fa"
+}

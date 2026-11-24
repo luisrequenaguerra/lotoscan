@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1327209088",
+  "fecha_sorteo": "2026-10-31T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "32586",
+  "segundo_premio": "91313",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0732",
+      "1255",
+      "2608",
+      "4525"
+    ],
+    "extraccionesDeTresCifras": [
+      "026",
+      "185",
+      "222",
+      "243",
+      "468",
+      "518",
+      "793",
+      "915",
+      "928",
+      "999"
+    ],
+    "extraccionesDeDosCifras": [
+      "13",
+      "21",
+      "32",
+      "37",
+      "40",
+      "65",
+      "73",
+      "86",
+      "89"
+    ],
+    "reintegros": [
+      "0",
+      "1",
+      "6"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1327209088",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "7494f07235aee151178ce5c8d18135f27bdc36e04e0129952fa85efcac939604"
+}

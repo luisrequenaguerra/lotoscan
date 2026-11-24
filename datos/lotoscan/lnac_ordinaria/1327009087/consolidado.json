@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1327009087",
+  "fecha_sorteo": "2026-10-29T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "65942",
+  "segundo_premio": "63502",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0753",
+      "6712",
+      "9126",
+      "9196"
+    ],
+    "extraccionesDeTresCifras": [
+      "012",
+      "557",
+      "639",
+      "704",
+      "751",
+      "918",
+      "952"
+    ],
+    "extraccionesDeDosCifras": [
+      "06",
+      "19",
+      "50",
+      "50",
+      "51",
+      "64",
+      "71",
+      "77",
+      "92"
+    ],
+    "reintegros": [
+      "2",
+      "3",
+      "8"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1327009087",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "63287b5be1ad81f4ddfa4a28c166bc43304ef5861ab5f47b63010cc2b419c591"
+}

@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1323009076",
+  "fecha_sorteo": "2026-09-19T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "76112",
+  "segundo_premio": "76679",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0050",
+      "1108",
+      "2923",
+      "6421"
+    ],
+    "extraccionesDeTresCifras": [
+      "127",
+      "250",
+      "294",
+      "318",
+      "376",
+      "405",
+      "611",
+      "882",
+      "942",
+      "983"
+    ],
+    "extraccionesDeDosCifras": [
+      "03",
+      "11",
+      "20",
+      "21",
+      "24",
+      "46",
+      "67",
+      "79",
+      "99"
+    ],
+    "reintegros": [
+      "2",
+      "5",
+      "6"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1323009076",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "62a306505daf68687862a79e6fc1596e541781615715b76a60124895d2984d27"
+}

@@ -1,0 +1,64 @@
+name: Actualizar LNAC ordinaria
+on:
+  schedule:
+    - cron: '0 20 * * 4'
+    - cron: '30 20 * * 4'
+    - cron: '0 21 * * 4'
+    - cron: '30 21 * * 4'
+    - cron: '0 22 * * 4'
+    - cron: '30 22 * * 4'
+    - cron: '0 23 * * 4'
+    - cron: '0 0 * * 5'
+    - cron: '0 1 * * 5'
+    - cron: '0 12 * * 6'
+    - cron: '30 12 * * 6'
+    - cron: '0 13 * * 6'
+    - cron: '30 13 * * 6'
+    - cron: '0 14 * * 6'
+    - cron: '30 14 * * 6'
+    - cron: '0 15 * * 6'
+    - cron: '0 16 * * 6'
+    - cron: '0 17 * * 6'
+  workflow_dispatch:
+    inputs:
+      fecha:
+        description: 'Fecha ordinaria YYYY-MM-DD (obligatoria)'
+        required: true
+        type: string
+      solo_lectura:
+        description: 'Validar sin publicar'
+        type: boolean
+        default: true
+permissions:
+  contents: write
+concurrency:
+  group: lotoscan-historico-oficial
+  cancel-in-progress: false
+jobs:
+  update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar y exportar
+        env:
+          SLOT: ${{ github.event.schedule }}
+          FECHA: ${{ inputs.fecha }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+            python3 scripts/actualizar_lnac_ordinaria.py --slot "$SLOT"
+          else
+            python3 scripts/actualizar_lnac_ordinaria.py --date "$FECHA"
+          fi
+          python3 scripts/exportar_lnac_ordinaria.py
+      - name: Guardar histórico validado
+        if: github.event_name == 'schedule' || inputs.solo_lectura == false
+        run: |
+          git add datos/lotoscan/lnac_ordinaria resultados/lnac
+          git diff --cached --quiet && exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Actualizar histórico ordinario LNAC validado'
+          git pull --rebase origin main
+          git push origin HEAD:main

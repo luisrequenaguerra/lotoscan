@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1325809084",
+  "fecha_sorteo": "2026-10-17T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "23123",
+  "segundo_premio": "20183",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0110",
+      "2197",
+      "5967",
+      "7225"
+    ],
+    "extraccionesDeTresCifras": [
+      "064",
+      "118",
+      "178",
+      "203",
+      "204",
+      "580",
+      "584",
+      "602",
+      "886",
+      "890"
+    ],
+    "extraccionesDeDosCifras": [
+      "04",
+      "17",
+      "41",
+      "45",
+      "67",
+      "75",
+      "81",
+      "94",
+      "98"
+    ],
+    "reintegros": [
+      "0",
+      "3",
+      "5"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1325809084",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "ac31ce277116d202659ddf75ca2353c78f019fdb923bb6952ada1e9946fe3205"
+}
