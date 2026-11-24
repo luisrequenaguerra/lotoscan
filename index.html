@@ -125,13 +125,13 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .ticket-entry.is-winner .ticketmain{min-width:0}
 .ticket-entry.is-winner .ticket-number{font-size:31px;margin:7px 0}
 .ticket-entry.is-winner .ticket-state{display:flex}
-.win-badge{display:inline-flex;align-items:center;gap:5px;background:#eee4c7;color:#725a25;border-radius:30px;padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-top:9px}
-.win-banner{background:#f3eddd;border-radius:14px;padding:13px 14px;margin-top:12px;border:1px solid #e6d7b4}
-.win-banner-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#75613a;font-weight:750;margin-bottom:5px}
+.win-badge{display:inline-flex;align-items:center;gap:5px;background:#e4ede3;color:#42634b;border-radius:30px;padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-top:9px}
+.win-banner{background:#e4ede3;border-radius:14px;padding:13px 14px;margin-top:12px;border:1px solid #b8cbb7}
+.win-banner-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#42634b;font-weight:750;margin-bottom:5px}
 .win-banner-amount{font-size:clamp(25px,7vw,35px);font-weight:800;letter-spacing:-.035em;color:#596a48;line-height:1.12;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .win-banner-caption{font-size:10px;color:#7b786d;margin-top:6px}
 .ticket-detail-winner{border:2px solid #b69b59!important;background:#fffdf7!important}
-.detail-win-panel{border:1px solid #dfc993;border-radius:17px;background:#f3eddd;padding:18px;margin:20px 0 14px}
+.detail-win-panel{border:1px solid #b8cbb7;border-radius:17px;background:#e4ede3;padding:18px;margin:20px 0 14px}
 .detail-win-panel .win-banner-label{font-size:12px;line-height:1.35;overflow-wrap:anywhere}
 .detail-win-panel.state-lost{background:#f2e6e2;border-color:#d8bdb4}
 .detail-win-panel.state-lost .win-banner-label{color:#925c50}
@@ -139,6 +139,8 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .detail-win-panel.state-pending .win-banner-label,.detail-win-panel.state-candidate .win-banner-label{color:#75613a}
 .detail-win-panel.state-matched_unpaid{background:#e7ece2;border-color:#bcc8af}
 .detail-win-panel.state-matched_unpaid .win-banner-label{color:#596b4c}
+.ticket-entry.state-candidate .win-banner{background:#f3eddd;border-color:#dfc993}
+.ticket-entry.state-candidate .win-banner-label{color:#75613a}
 .detail-win-panel .win-banner-caption small{display:block;margin-top:10px}
 .detail-win-panel .win-banner-amount{font-size:clamp(32px,10vw,48px);margin:9px 0}
 .detail-win-panel .win-banner-caption{font-size:11px;line-height:1.5}
