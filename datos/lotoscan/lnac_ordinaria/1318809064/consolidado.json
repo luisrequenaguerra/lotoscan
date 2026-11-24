@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1318809064",
+  "fecha_sorteo": "2026-08-08T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "57521",
+  "segundo_premio": "23381",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "2353",
+      "4253",
+      "6293",
+      "7335"
+    ],
+    "extraccionesDeTresCifras": [
+      "091",
+      "176",
+      "199",
+      "222",
+      "683",
+      "690",
+      "776",
+      "936",
+      "943",
+      "947"
+    ],
+    "extraccionesDeDosCifras": [
+      "02",
+      "22",
+      "29",
+      "62",
+      "62",
+      "67",
+      "68",
+      "96",
+      "97"
+    ],
+    "reintegros": [
+      "1",
+      "2",
+      "8"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1318809064",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "fd662807726dde036732a1a65576480c3f48404b9bdeada6637b259cf6daf5e1"
+}

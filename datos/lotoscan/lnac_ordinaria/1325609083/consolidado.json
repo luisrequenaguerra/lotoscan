@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1325609083",
+  "fecha_sorteo": "2026-10-15T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "17873",
+  "segundo_premio": "73147",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "2573",
+      "5263",
+      "7861",
+      "9663"
+    ],
+    "extraccionesDeTresCifras": [
+      "230",
+      "289",
+      "455",
+      "632",
+      "646",
+      "796",
+      "917"
+    ],
+    "extraccionesDeDosCifras": [
+      "09",
+      "15",
+      "29",
+      "44",
+      "47",
+      "57",
+      "68",
+      "85",
+      "98"
+    ],
+    "reintegros": [
+      "3",
+      "5",
+      "6"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1325609083",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "71af8961721811f6d528a0a07dacd92f0bdc5821f5fb551e3aba9bcbadce74cc"
+}

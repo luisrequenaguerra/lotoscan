@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1322809075",
+  "fecha_sorteo": "2026-09-17T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "91770",
+  "segundo_premio": "33436",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "2596",
+      "3743",
+      "5802",
+      "9582"
+    ],
+    "extraccionesDeTresCifras": [
+      "072",
+      "164",
+      "299",
+      "420",
+      "544",
+      "581",
+      "738"
+    ],
+    "extraccionesDeDosCifras": [
+      "02",
+      "25",
+      "31",
+      "35",
+      "59",
+      "62",
+      "86",
+      "86",
+      "87"
+    ],
+    "reintegros": [
+      "0",
+      "8",
+      "9"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1322809075",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "859c91e77fd9e5efbda2c95e3a4362ee85997e8f3f0cb1bb323c8eb9548a0d26"
+}

@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1326309085",
+  "fecha_sorteo": "2026-10-22T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "07317",
+  "segundo_premio": "21167",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "1635",
+      "4926",
+      "7313",
+      "9447"
+    ],
+    "extraccionesDeTresCifras": [
+      "091",
+      "136",
+      "166",
+      "199",
+      "358",
+      "599",
+      "608"
+    ],
+    "extraccionesDeDosCifras": [
+      "03",
+      "04",
+      "07",
+      "50",
+      "69",
+      "79",
+      "80",
+      "83",
+      "83"
+    ],
+    "reintegros": [
+      "2",
+      "6",
+      "7"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1326309085",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "4844a6441a0a6fb27a0132e25ddd72255ff319190a3bcb578d4e9ef552d48bf6"
+}

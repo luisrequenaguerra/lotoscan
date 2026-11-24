@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1319309065",
+  "fecha_sorteo": "2026-08-13T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "38221",
+  "segundo_premio": "71161",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0755",
+      "1597",
+      "1630",
+      "4793"
+    ],
+    "extraccionesDeTresCifras": [
+      "003",
+      "138",
+      "575",
+      "680",
+      "900",
+      "936",
+      "939"
+    ],
+    "extraccionesDeDosCifras": [
+      "08",
+      "11",
+      "13",
+      "17",
+      "18",
+      "53",
+      "64",
+      "76",
+      "98"
+    ],
+    "reintegros": [
+      "1",
+      "7",
+      "8"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1319309065",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "96327b66bc7fa76bd750293c8c4d0023bc4e83285eb40ccc514121b39b9d903c"
+}

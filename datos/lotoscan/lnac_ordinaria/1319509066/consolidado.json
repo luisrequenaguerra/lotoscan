@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1319509066",
+  "fecha_sorteo": "2026-08-15T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "90742",
+  "segundo_premio": "45289",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0635",
+      "1664",
+      "2018",
+      "9455"
+    ],
+    "extraccionesDeTresCifras": [
+      "444",
+      "579",
+      "598",
+      "618",
+      "683",
+      "778",
+      "821",
+      "826",
+      "832",
+      "942"
+    ],
+    "extraccionesDeDosCifras": [
+      "13",
+      "15",
+      "21",
+      "22",
+      "24",
+      "50",
+      "59",
+      "70",
+      "78"
+    ],
+    "reintegros": [
+      "1",
+      "2",
+      "4"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1319509066",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "8a36d21b275a659e305bf34a47d3d7beb7e489468c369d6e6e4bc0175b9b74eb"
+}

@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1322309074",
+  "fecha_sorteo": "2026-09-12T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "37872",
+  "segundo_premio": "31827",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "2578",
+      "3859",
+      "6377",
+      "7650"
+    ],
+    "extraccionesDeTresCifras": [
+      "140",
+      "142",
+      "378",
+      "477",
+      "561",
+      "584",
+      "651",
+      "763",
+      "811",
+      "997"
+    ],
+    "extraccionesDeDosCifras": [
+      "09",
+      "19",
+      "32",
+      "39",
+      "54",
+      "72",
+      "74",
+      "98",
+      "99"
+    ],
+    "reintegros": [
+      "0",
+      "1",
+      "2"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados2?idsorteo=1322309074",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "2dfb9036db4ce7f58ae6c58828e316165d152dc5279080707c82c9330973f7e2"
+}
