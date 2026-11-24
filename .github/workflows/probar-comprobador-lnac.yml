@@ -56,3 +56,5 @@ jobs:
           """)
           PY
           node /tmp/check.js
+
+# Revalidar corrección de entrada vacía.
