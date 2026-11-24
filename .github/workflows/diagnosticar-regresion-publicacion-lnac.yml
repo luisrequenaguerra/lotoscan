@@ -1,0 +1,30 @@
+name: Diagnosticar regresion publicacion LNAC
+on:
+  push:
+    branches: ['publicacion/lnac-ordinaria']
+    paths: ['.github/workflows/diagnosticar-regresion-publicacion-lnac.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: |
+          git fetch origin main
+          git worktree add --detach /tmp/main origin/main
+          for dir in /tmp/main "$GITHUB_WORKSPACE"; do
+            cd "$dir"
+            echo "Checking $dir"
+            python3 - <<'PY'
+          import json
+          d=json.load(open('resultados/selae-interfaz.json'))
+          for date,draw in d['games']['EMIL'].items():
+              print(date,len([x for x in draw['prizes'] if x['product']=='EMIL']),[(x.get('product'),x.get('category_code')) for x in draw['prizes']])
+          PY
+            node tests/test_euromillones_13_categorias.js || echo "FAILED $dir"
+          done
+          cd "$GITHUB_WORKSPACE"
+          git diff origin/main -- resultados/selae-interfaz.json
