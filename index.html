@@ -249,6 +249,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">TU COLECCIÓN</div><div class="tickets-heading"><h1>Mis boletos.</h1><button type="button" class="add-top" onclick="go('gameForms')" aria-label="Añadir boleto">＋ Añadir</button></div><p class="lead">Todos tus números, organizados y listos para comprobar.</p>
 <div class="row" style="margin:18px 0 4px"><span class="eyebrow">TODOS TUS SORTEOS</span><span class="pill" id="ticketCount">4 boletos</span></div>
 <select id="gameFilter" class="game-filter" onchange="renderTickets()"><option value="all">Todos los juegos</option><option value="loteria_nacional">Lotería Nacional</option><option value="euromillones">Euromillones</option><option value="primitiva">La Primitiva</option><option value="bonoloto">Bonoloto</option><option value="gordo">El Gordo de la Primitiva</option><option value="quiniela">Quiniela</option><option value="quinigol">Quinigol</option><option value="lototurf">Lototurf</option><option value="quintuple_plus">Quíntuple Plus</option><option value="eurodreams">EuroDreams</option></select>
+<div class="portfolio-tools"><label for="ticketSort">Ordenar por</label><select id="ticketSort" class="game-filter" onchange="renderTickets()"><option value="prizes" selected>Premiados primero</option><option value="date_desc">Sorteo más reciente</option><option value="date_asc">Sorteo más antiguo</option><option value="added_desc">Añadidos recientemente</option><option value="number">Número</option></select></div><div class="portfolio-summary" id="portfolioSummary"></div><div id="allTickets"></div>
 <div class="panel" style="padding:16px;margin:18px 0;background:#faf9f5">
  <div class="eyebrow">COPIA DE SEGURIDAD</div>
  <p class="ticketmeta" style="margin:8px 0 14px">Guarda tus boletos en un archivo JSON en Archivos del iPhone. Puedes recuperarlos después sin borrar los actuales.</p>
@@ -259,7 +260,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
  <input id="backupFile084" type="file" accept=".json,application/json" style="display:none" onchange="importTicketsBackup084(this)">
  <p class="notice" style="margin:10px 0 0">La importación añade boletos que falten; nunca elimina los que ya tienes.</p>
 </div>
-<div class="portfolio-tools"><label for="ticketSort">Ordenar por</label><select id="ticketSort" class="game-filter" onchange="renderTickets()"><option value="prizes" selected>Premiados primero</option><option value="date_desc">Sorteo más reciente</option><option value="date_asc">Sorteo más antiguo</option><option value="added_desc">Añadidos recientemente</option><option value="number">Número</option></select></div><div class="portfolio-summary" id="portfolioSummary"></div><div id="allTickets"></div>
+
 
 <p class="notice">Los décimos iniciales son datos de muestra. Los históricos no oficiales solo permiten cotejos orientativos. Los boletos se guardan solo en este navegador, sin sincronización.</p>
 </section>
