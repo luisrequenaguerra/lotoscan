@@ -1,0 +1,59 @@
+name: Consolidar historico LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-fechav2']
+    paths: ['.github/workflows/consolidar-historico-lnac.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: historico-lnac-agosto-validado
+          run-id: '45478703827'
+          github-token: ${{ github.token }}
+          path: audited
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import pathlib,json,hashlib,shutil
+          from motor_ordinario_lnac_v2 import validate
+          src=pathlib.Path('audited')
+          dst=pathlib.Path('datos/lotoscan/lnac_ordinaria')
+          report=json.loads((src/'informe.json').read_text())
+          ids={x['id'] for x in report if x['estado']=='validado estructuralmente'}
+          assert len(ids)==29
+          assert {p.parent.name for p in src.glob('*/original_resultados.json')}==ids
+          for ident in sorted(ids):
+              p=src/ident
+              raw=(p/'original_resultados.json').read_bytes()
+              d=json.loads(raw)
+              s=json.loads((p/'consolidado.json').read_text())
+              validate(d)
+              assert str(d['drawIdSorteo'])==ident
+              assert s['sha256']==hashlib.sha256(raw).hexdigest()
+              assert s['contraste_fecha2'] is True
+              assert s['total_centimos']==int(d['precioDecimo'])*7000000
+              target=dst/ident
+              target.mkdir(parents=True,exist_ok=True)
+              for name in ('original_resultados.json','consolidado.json'):
+                  q=target/name
+                  if q.exists() and q.read_bytes()!=(p/name).read_bytes():
+                      old=q.read_bytes()
+                      (target/(name+'.revision.'+hashlib.sha256(old).hexdigest())).write_bytes(old)
+                  shutil.copyfile(p/name,q)
+          shutil.copyfile(src/'informe.json',dst/'informe_inicial.json')
+          print('PASS 29 audited draws preserved')
+          PY
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/lotoscan/lnac_ordinaria/
+          if ! git diff --cached --quiet; then
+            git commit -m "Consolidar 29 sorteos ordinarios auditados"
+            git push origin HEAD:investigacion/lnac-fechav2
+          fi
