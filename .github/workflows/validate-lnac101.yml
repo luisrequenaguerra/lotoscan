@@ -16,3 +16,5 @@ jobs:
           node-version: '22'
       - run: node --check scripts/lnac_modelo101.js
       - run: node scripts/test_lnac_modelo101.js
+
+      - run: node scripts/test_lnac_integration101.js
