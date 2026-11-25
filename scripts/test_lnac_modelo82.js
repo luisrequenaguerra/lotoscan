@@ -20,7 +20,8 @@ for(const [a,b,serie,fraccion,four,three,two,rein,table,second] of cases){
   const actual=Math.round(calcLNAC82(d,n,1,1).amount*100);
   assert.equal(actual,expected,n);sum+=actual;
  }
- assert.equal(sum,901300000);
+ // Total en céntimos por 100.000 décimos (sin premio especial), no por billetes de diez décimos.
+ assert.equal(sum,90130000);
  for(let s=1;s<=10;s++)for(let f=1;f<=10;f++)assert.equal(calcLNAC82(d,a,s,f).amount,s===serie&&f===fraccion?15000000:130000);
  assert.throws(()=>calcLNAC82(d,a));
  console.log(a,'100000 números y 100 series/fracciones OK');
