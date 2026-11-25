@@ -1,0 +1,13 @@
+name: Test LNAC modelo 82
+on:
+  push:
+    branches: ['investigacion/lnac-modelo82']
+    paths: ['scripts/lnac_modelo82.js','scripts/test_lnac_modelo82.js','.github/workflows/test-lnac-modelo82.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node scripts/test_lnac_modelo82.js
