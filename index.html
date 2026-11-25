@@ -1809,6 +1809,7 @@ function registerLNAC066(d){
  LNAC_DRAWS_066[date]=d;return date;
 }
 function calcLNAC066(d,number){
+ if(d?.modelDraw===112)return calcLNAC112(d,number);
  if(!/^[0-9]{5}$/.test(number))throw Error('Número de décimo incorrecto');
  const price=d.tipoSorteoGeneral==='J'?3:6;
  const first=d.primerPremio,second=d.segundoPremio;
