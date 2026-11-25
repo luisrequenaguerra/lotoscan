@@ -1,0 +1,49 @@
+name: Importar histórico LNAC 112
+on:
+  push:
+    branches: ['investigacion/lnac-extraordinarios']
+    paths: ['.github/workflows/importar-lnac-112.yml']
+permissions:
+  contents: write
+  actions: read
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: fuentes-extraordinarios-2025-2026
+          run-id: 45574533020
+          github-token: ${{ github.token }}
+          path: /tmp/extra
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,pathlib
+          from lnac_modelo112_experimental import motor
+          root=pathlib.Path('resultados/lnac')
+          manifest=root/'manifest.json'
+          m=json.loads(manifest.read_text())
+          items={x['date']:x for x in m['draws']}
+          count=0
+          for p in sorted(pathlib.Path('/tmp/extra').glob('*_resultados2.json')):
+              d=json.loads(p.read_text())
+              if not isinstance(d,dict) or d.get('modelDraw')!=112:continue
+              date=str(d['fechaSorteo'])[:10]
+              if date<'2026-08-01':continue
+              calc=motor(d)
+              assert sum(calc(str(n).zfill(5)) for n in range(100000))==105000000
+              name='extra112_'+date+'.json'
+              (root/name).write_text(json.dumps(d,ensure_ascii=False))
+              items[date]={'date':date,'file':'./resultados/lnac/'+name}
+              count+=1
+          assert count==3,count
+          m['draws']=sorted(items.values(),key=lambda x:x['date'])
+          manifest.write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add resultados/lnac
+          git commit -m 'Importar tres sorteos oficiales modelo 112 desde agosto de 2026'
+          git push origin HEAD:investigacion/lnac-extraordinarios
