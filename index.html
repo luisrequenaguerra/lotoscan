@@ -283,7 +283,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <button class="back" onclick="go('ticketDetail')">← Volver al boleto</button><div class="eyebrow">CORREGIR DATOS</div><h1>Editar décimo.</h1><p class="lead">Comprueba los datos impresos antes de guardar.</p>
 <form class="panel" novalidate onsubmit="saveEditedTicket(event)">
 <label class="formlabel" for="editNumber">Número (5 cifras)</label><input id="editNumber" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" required>
-<div class="formrow"><div><label class="formlabel" for="editSeries">Serie</label><input id="editSeries" type="number" min="1" required></div><div><label class="formlabel" for="editFraction">Fracción</label><input id="editFraction" type="number" min="1" required></div></div>
+<div class="formrow"><div><label class="formlabel" for="editSeries">Serie</label><input id="editSeries" type="number" min="1"></div><div><label class="formlabel" for="editFraction">Fracción</label><input id="editFraction" type="number" min="1"></div></div>
 <label class="formlabel" for="editDate">Fecha del sorteo</label><input id="editDate" type="date" required>
 <div class="formrow"><div><label class="formlabel" for="editCode">Código del sorteo</label><input id="editCode"></div><div><label class="formlabel" for="editPrice">Precio (€)</label><input id="editPrice" type="number" min="0" step="0.01" required></div></div>
 <button class="primary" type="submit">Guardar cambios</button></form>
@@ -293,7 +293,7 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 <button class="back" onclick="go('gameForms')">← Elegir otro juego</button><div class="eyebrow">ENTRADA MANUAL</div><h1>Añadir décimo.</h1><p class="lead">Introduce los datos impresos en tu décimo de Lotería Nacional.</p>
 <form class="panel" onsubmit="saveManualTicket(event)">
   <label class="formlabel" for="manualNumber">Número (5 cifras)</label><input id="manualNumber" inputmode="numeric" maxlength="5" pattern="[0-9]{5}" placeholder="Ej. 25389" required>
-  <div class="formrow"><div><label class="formlabel" for="manualSeries">Serie</label><input id="manualSeries" type="number" min="1" placeholder="28" required></div><div><label class="formlabel" for="manualFraction">Fracción</label><input id="manualFraction" type="number" min="1" placeholder="7" required></div></div>
+  <div class="formrow"><div><label class="formlabel" for="manualSeries">Serie</label><input id="manualSeries" type="number" min="1" placeholder="28"></div><div><label class="formlabel" for="manualFraction">Fracción</label><input id="manualFraction" type="number" min="1" placeholder="7"></div></div>
   <label class="formlabel" for="manualDate">Fecha del sorteo</label><input id="manualDate" type="date" required>
   <div class="formrow"><div><label class="formlabel" for="manualCode">Código sorteo</label><input id="manualCode" placeholder="102/26"></div><div><label class="formlabel" for="manualPrice">Precio (€)</label><input id="manualPrice" type="number" min="0" step="0.01" value="20" required></div></div>
   <button class="primary" type="submit" style="width:100%;background:#65715c;color:white;margin-top:8px">Guardar décimo</button>
@@ -1159,8 +1159,8 @@ function saveEditedGameTicket(event){event.preventDefault();const t=tickets.find
  else return;
  const replacement={...t,number:entries[0],entries,extra,date,price,code:val('editGameCode'),...update};const idx=tickets.indexOf(t);const original=tickets[idx];tickets[idx]=replacement;if(!persistTickets()){tickets[idx]=original;return}renderTickets();openTicket(replacement.id)
 }
-function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||!Number.isInteger(series)||series<1||!Number.isInteger(fraction)||fraction<1||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(!dateAllowed39('loteria_nacional',date)){alert('Selecciona una fecha válida de sorteo de Lotería Nacional.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}const replacement={...t,number,series,fraction,date,price,code:document.getElementById('editCode').value.trim()};const idx=tickets.indexOf(t);tickets[idx]=replacement;if(!persistTickets()){tickets[idx]=t;return}renderTickets();openTicket(replacement.id)}
-function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}if(!dateAllowed39('loteria_nacional',document.getElementById('manualDate').value)){alert('Selecciona una fecha válida de sorteo de Lotería Nacional.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value),fraction:Number(document.getElementById('manualFraction').value),date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);if(!persistTickets()){tickets.shift();return}document.getElementById('gameFilter').value='all';renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}openTicket(t.id)}
+function saveEditedTicket(e){e.preventDefault();const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;const number=document.getElementById('editNumber').value.trim(),series=Number(document.getElementById('editSeries').value),fraction=Number(document.getElementById('editFraction').value),date=document.getElementById('editDate').value,price=Number(document.getElementById('editPrice').value);if(!/^\d{5}$/.test(number)||(series!==0&&(!Number.isInteger(series)||series<1))||(fraction!==0&&(!Number.isInteger(fraction)||fraction<1))||!date||!Number.isFinite(price)||price<0){alert('Revisa los datos del décimo.');return}if(!dateAllowed39('loteria_nacional',date)){alert('Selecciona una fecha válida de sorteo de Lotería Nacional.');return}if(tickets.some(x=>x.id!==t.id&&x.game===t.game&&x.number===number&&x.series===series&&x.fraction===fraction&&x.date===date)){alert('Ya existe un décimo con estos datos.');return}const replacement={...t,number,series:series||null,fraction:fraction||null,date,price,code:document.getElementById('editCode').value.trim()};const idx=tickets.indexOf(t);tickets[idx]=replacement;if(!persistTickets()){tickets[idx]=t;return}renderTickets();openTicket(replacement.id)}
+function saveManualTicket(e){e.preventDefault();const number=document.getElementById('manualNumber').value.trim();if(!/^\d{5}$/.test(number)){alert('El número debe tener cinco cifras.');return}if(!dateAllowed39('loteria_nacional',document.getElementById('manualDate').value)){alert('Selecciona una fecha válida de sorteo de Lotería Nacional.');return}const t={id:Date.now(),game:'loteria_nacional',number,series:Number(document.getElementById('manualSeries').value)||null,fraction:Number(document.getElementById('manualFraction').value)||null,date:document.getElementById('manualDate').value,code:document.getElementById('manualCode').value.trim(),price:Number(document.getElementById('manualPrice').value),draw:'Lotería Nacional'};tickets.unshift(t);if(!persistTickets()){tickets.shift();return}document.getElementById('gameFilter').value='all';renderTickets();e.target.reset();if(VISUAL_GAMES.includes(selectedGame)){visualMain=[];visualExtra=[]}openTicket(t.id)}
 function go(id){if(id==='draws')renderLatestDraws();if(id==='manualTicket' && document.getElementById('manualDate')?.type==='date')configureDrawDate39('manualDate','loteria_nacional','');if(id==='tickets'){const f=document.getElementById('gameFilter');if(f){f.value='all';renderTickets()}}if(id==='results'){try{renderOfficialResults()}catch(error){console.error('LotoScan: resultados',error)}}if(id!=='scan')stopCamera();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));window.scrollTo(0,0)}
 let cameraStream=null, selectedImage=null;
 function scanMessage(msg,working=false){document.getElementById('scanStatus').innerHTML=working?'<span class="processing"><span class="spinner"></span>'+msg+'</span>':msg}
@@ -1764,7 +1764,37 @@ const LNAC_FIXTURES_066=[{"tipoSorteoGeneral":"S","fechaSorteo":"2026-11-14T13:0
 const LNAC_DRAWS_066={};
 function calcLNAC82(d,n,serie,fraccion){
  const require=(ok)=>{if(!ok)throw Error('Datos incompletos o incompatibles del modelo 82')};
- const num=(x,k)=>typeof x==='string'&&new RegExp('^[0-9]{'+k+'}
+ const num=(x,k)=>typeof x==='string'&&new RegExp('^[0-9]{'+k+'}$').test(x);
+ require(d?.modelDraw===82&&d.precioDecimo===15&&num(n,5));
+ const a=d.primerPremio.decimo,b=d.segundoPremio.decimo,e=d.premioEspecial;
+ require(num(a,5)&&num(b,5)&&a!==b);
+ require(['tercerosPremios','cuartosPremios','quintosPremios','extraccionesDeCincoCifras'].every(k=>Array.isArray(d[k])&&!d[k].length));
+ const valid=x=>Number.isInteger(x)&&x>=1&&x<=10;
+ require(e?.numero===a&&valid(e.serie)&&valid(e.fraccion));
+ const groups=[['Cuatro',4,5,37500],['Tres',3,15,7500],['Dos',2,2,3000]];
+ for(const [key,k,count,v] of groups){const rows=d['extraccionesDe'+key+'Cifras'];require(Array.isArray(rows)&&rows.length===count&&rows.every(x=>num(x.decimo,k)&&x.prize===v))}
+ require(Array.isArray(d.reintegros)&&d.reintegros.length===3&&d.reintegros.every(x=>num(x.decimo,1)&&x.prize===1500)&&d.reintegros.some(x=>x.decimo===a.slice(-1)));
+ function base(n){
+  const hits=[];const add=(label,cents)=>{if(cents>0)hits.push({label,cents})};
+  for(const [i,x] of [a,b].entries()){
+   const label=i?'segundo':'primero';
+   if(n===x)add(i?'Segundo premio':'Primer premio',i?2500000:13000000);
+   if(n!==x&&n.slice(0,3)===x.slice(0,3))add('Centena '+label,7500);
+   if([1,99999].includes((Number(n)-Number(x)+100000)%100000))add('Aproximación '+label,i?153250:240000);
+  }
+  for(const [key,k,count,v] of groups){const matches=d['extraccionesDe'+key+'Cifras'].filter(x=>x.decimo===n.slice(-k)).length;add('Extracción '+k+' cifras',matches*v)}
+  for(const k of [2,3])if(n!==a&&n.slice(-k)===a.slice(-k))add('Terminación '+k+' cifras del primero',7500);
+  add('Reintegro',1500*(d.reintegros.filter(x=>x.decimo===n.slice(-1)).length-(n===a?1:0)));
+  return hits;
+ }
+ const total=h=>h.reduce((s,x)=>s+x.cents,0);
+ require(total(base(a))===d.primerPremio.prize&&total(base(b))===d.segundoPremio.prize&&total(base(a))+1487000000===e.premio);
+ const hits=base(n);
+ if(n===a){if(!valid(serie)||!valid(fraccion))throw Error('Indica serie y fracción para comprobar el premio especial');if(serie===e.serie&&fraccion===e.fraccion)hits.push({label:'Premio especial',cents:1487000000})}
+ return {amount:total(hits)/100,components:hits.map(x=>({label:x.label,amount:x.cents/100}))};
+}
+
+function calcLNAC112(d,n){
  if(!/^[0-9]{5}$/.test(n)||d?.modelDraw!==112)throw Error('Datos no compatibles');
  const p=[d.primerPremio,d.segundoPremio,...d.tercerosPremios];
  if(p.length!==3||new Set(p.map(x=>x.decimo)).size!==3||p.some(x=>!/^\d{5}$/.test(x.decimo)))throw Error('Premios incompletos');
