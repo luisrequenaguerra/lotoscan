@@ -13,7 +13,7 @@ def validar(d):
     exigir(len({x['decimo'] for x in p})==3)
     for nombre,k,v,c in [('Cuatro',4,37500,4),('Tres',3,7500,11),('Dos',2,3000,5)]:
         filas=d['extraccionesDe'+nombre+'Cifras']
-        exigir(all(num(x['decimo'],k) for x in filas))
+        exigir(all(num(x['decimo'],k) if x['prize']==v else num(x['decimo'],5) for x in filas))
         exigir(sum(x['prize']==v for x in filas)==c)
     cinco=d['extraccionesDeCincoCifras']
     exigir(all(num(x['decimo'],5) for x in cinco))
