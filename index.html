@@ -1106,9 +1106,10 @@ function detailLine(label,value){return '<div class="detail-line"><span>'+esc(la
 function ticketEntries(t){return Array.isArray(t.entries)&&t.entries.length?t.entries:[t.number].filter(Boolean)}
 function detailContent(t){
  const g=t.game, entries=ticketEntries(t);let h='<div class="row"><span class="ticket-tag">'+esc(gameLabel(g).toUpperCase())+'</span>'+(t.code?'<span class="pill">'+esc(t.code)+'</span>':'')+'</div>';
+ if(g==='loteria_nacional'&&lnacDrawName(t.date))h+='<div class="ticketmeta" style="margin-top:8px;font-weight:600;overflow-wrap:anywhere">'+esc(lnacDrawName(t.date))+'</div>';
  h+='<div class="ticketmeta" style="margin:14px 0">'+esc(t.date?formatDate(t.date):'Fecha no indicada')+'</div>';
  if(g==='loteria_nacional'){
-  h+='<div class="detail-number">'+esc(t.number||'—')+'</div><div class="detail-grid">'+detailField('Serie',t.series)+detailField('Fracción',t.fraction)+detailField('Importe',t.price==null?'No indicado':t.price+' €')+(lnacDrawName(t.date)?detailField('Sorteo',lnacDrawName(t.date)):t.code?detailField('Sorteo',t.code):'')+'</div>';
+  h+='<div class="detail-number">'+esc(t.number||'—')+'</div><div class="detail-grid">'+detailField('Serie',t.series)+detailField('Fracción',t.fraction)+detailField('Importe',t.price==null?'No indicado':t.price+' €')+detailField('Sorteo',t.code||'No indicado')+'</div>';
  }else if(['euromillones','primitiva','bonoloto','gordo','eurodreams','lototurf'].includes(g)){
   entries.forEach((entry,i)=>{h+='<div class="detail-subtitle">'+(entries.length>1?'Apuesta '+(i+1):'Números')+'</div>'+detailBubbles(entry)});
   const label={euromillones:'Estrellas',primitiva:'Reintegro',bonoloto:'Reintegro',gordo:'Número clave',eurodreams:'Número sueño'}[g];
