@@ -1,0 +1,51 @@
+{
+  "anyo": "2026",
+  "apuestas": "0",
+  "cdc": "13297",
+  "combinacion": null,
+  "dia_semana": "miércoles",
+  "escrutinio": [],
+  "fecha_sorteo": "2026-11-25 00:00:00",
+  "fondo_bote": "286994",
+  "game_id": "QGOL",
+  "id_sorteo": "1329707079",
+  "jornada": "26",
+  "partidos": [
+    {
+      "local": "Real Madrid",
+      "marcador": "5 - 1",
+      "signo": "M-1",
+      "visitante": "Psv"
+    },
+    {
+      "local": "Slovan Bratislava",
+      "marcador": "0 - 2",
+      "signo": "0-2",
+      "visitante": "Betis"
+    },
+    {
+      "fecha": "2026\\/11\\/25 18:45:00",
+      "local": "Sabah",
+      "visitante": "Barcelona"
+    },
+    {
+      "fecha": "2026\\/11\\/25 18:45:00",
+      "local": "Slavia Praga",
+      "visitante": "Villarreal"
+    },
+    {
+      "fecha": "2026\\/11\\/26 18:45:00",
+      "local": "Celta",
+      "visitante": "Bournemouth"
+    },
+    {
+      "fecha": "2026\\/11\\/25 21:00:00",
+      "local": "At. Madrid",
+      "visitante": "Viking Fk"
+    }
+  ],
+  "premio_bote": "305000",
+  "premios": "0",
+  "recaudacion": null,
+  "temporada": "2026-2027"
+}
