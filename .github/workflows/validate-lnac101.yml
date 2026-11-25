@@ -1,0 +1,18 @@
+name: Validate LNAC model 101
+on:
+  push:
+    branches: ['investigacion/lnac-modelo101']
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check scripts/lnac_modelo101.js
+      - run: node scripts/test_lnac_modelo101.js
