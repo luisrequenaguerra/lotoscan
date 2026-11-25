@@ -2,6 +2,10 @@
   "version": 1,
   "draws": [
     {
+      "date": "2026-01-17",
+      "file": "./resultados/lnac/extra101_2026-01-17.json"
+    },
+    {
       "date": "2026-08-01",
       "file": "./resultados/lnac/extra112_2026-08-01.json"
     },
