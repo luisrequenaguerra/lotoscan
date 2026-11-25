@@ -1,7 +1,29 @@
 """Motor experimental, no habilitado en producción. Importes en céntimos."""
 from collections import Counter
 
+def validar(d):
+    def num(n,k):
+        return isinstance(n,str) and len(n)==k and n.isascii() and n.isdigit()
+    def exigir(ok):
+        if not ok:
+            raise ValueError('Datos incompletos o inconsistentes')
+    exigir(d['modelDraw']==112)
+    p=[d['primerPremio'],d['segundoPremio'],*d['tercerosPremios']]
+    exigir(len(p)==3 and all(num(x['decimo'],5) for x in p))
+    exigir(len({x['decimo'] for x in p})==3)
+    for nombre,k,v,c in [('Cuatro',4,37500,4),('Tres',3,7500,11),('Dos',2,3000,5)]:
+        filas=d['extraccionesDe'+nombre+'Cifras']
+        exigir(all(num(x['decimo'],k) for x in filas))
+        exigir(sum(x['prize']==v for x in filas)==c)
+    cinco=d['extraccionesDeCincoCifras']
+    exigir(all(num(x['decimo'],5) for x in cinco))
+    exigir(len({x['decimo'] for x in cinco})==12)
+    rein=d['reintegros']
+    exigir(len(rein)==3 and all(num(x['decimo'],1) for x in rein))
+    exigir(any(x['decimo']==p[0]['decimo'][-1] for x in rein))
+
 def motor(d):
+    validar(d)
     if d['modelDraw'] != 112:
         raise ValueError('Modelo no admitido')
     a = [x['decimo'] for x in [d['primerPremio'], d['segundoPremio'], *d['tercerosPremios']]]
