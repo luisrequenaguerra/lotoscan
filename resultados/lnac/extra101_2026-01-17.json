@@ -1,0 +1,147 @@
+{
+  "tipoSorteo": "S",
+  "tipoSorteoGeneral": "S",
+  "fechaSorteo": "2026-01-17T13:00:00.000Z",
+  "drawIdSorteo": "1298509006",
+  "nombreDelSorteo": "SORTEO ESPECIAL \"NIÑOS DE SAN ILDEFONSO\"",
+  "modelDraw": 101,
+  "precioDecimo": 12,
+  "premioEspecial": null,
+  "primerPremio": {
+    "decimo": "58451",
+    "prize": 10000000
+  },
+  "segundoPremio": {
+    "decimo": "64780",
+    "prize": 2500000
+  },
+  "tercerosPremios": [
+    {
+      "decimo": "09224",
+      "prize": 501200
+    }
+  ],
+  "cuartosPremios": [],
+  "quintosPremios": [],
+  "extraccionesDeCincoCifras": [],
+  "extraccionesDeCuatroCifras": [
+    {
+      "decimo": "1204",
+      "prize": 30000
+    },
+    {
+      "decimo": "5649",
+      "prize": 30000
+    },
+    {
+      "decimo": "7616",
+      "prize": 30000
+    },
+    {
+      "decimo": "8840",
+      "prize": 30000
+    },
+    {
+      "decimo": "9675",
+      "prize": 30000
+    }
+  ],
+  "extraccionesDeTresCifras": [
+    {
+      "decimo": "010",
+      "prize": 6000
+    },
+    {
+      "decimo": "086",
+      "prize": 6000
+    },
+    {
+      "decimo": "137",
+      "prize": 6000
+    },
+    {
+      "decimo": "198",
+      "prize": 6000
+    },
+    {
+      "decimo": "385",
+      "prize": 6000
+    },
+    {
+      "decimo": "411",
+      "prize": 6000
+    },
+    {
+      "decimo": "514",
+      "prize": 6000
+    },
+    {
+      "decimo": "585",
+      "prize": 6000
+    },
+    {
+      "decimo": "727",
+      "prize": 6000
+    },
+    {
+      "decimo": "753",
+      "prize": 6000
+    },
+    {
+      "decimo": "995",
+      "prize": 6000
+    }
+  ],
+  "extraccionesDeDosCifras": [
+    {
+      "decimo": "00",
+      "prize": 2400
+    },
+    {
+      "decimo": "07",
+      "prize": 2400
+    },
+    {
+      "decimo": "40",
+      "prize": 2400
+    },
+    {
+      "decimo": "65",
+      "prize": 2400
+    },
+    {
+      "decimo": "65",
+      "prize": 2400
+    },
+    {
+      "decimo": "67",
+      "prize": 2400
+    },
+    {
+      "decimo": "72",
+      "prize": 2400
+    },
+    {
+      "decimo": "74",
+      "prize": 2400
+    },
+    {
+      "decimo": "90",
+      "prize": 2400
+    }
+  ],
+  "reintegros": [
+    {
+      "decimo": "1",
+      "prize": 1200
+    },
+    {
+      "decimo": "3",
+      "prize": 1200
+    },
+    {
+      "decimo": "4",
+      "prize": 1200
+    }
+  ]
+}
