@@ -45,3 +45,11 @@ def motor(d):
                 +sum(7500 for x in a if n!=x and n[:3]==x[:3])
                 +sum(v for x,v in zip(a,[210000,120000,62250]) if (int(n)-int(x))%100000 in (1,99999)))
     return calc
+
+def comprobar(d, n):
+    """Adaptador experimental: nunca clasifica datos inválidos como no premiados."""
+    try:
+        importe = motor(d)(n)
+    except (KeyError, TypeError, ValueError, AttributeError, IndexError):
+        return {'estado': 'pendiente', 'importeCentimos': None}
+    return {'estado': 'premiado' if importe else 'no_premiado', 'importeCentimos': importe}
