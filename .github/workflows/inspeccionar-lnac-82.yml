@@ -1,0 +1,37 @@
+name: Inspeccionar LNAC 82
+on:
+  push:
+    branches: ['investigacion/lnac-modelo82']
+    paths: ['.github/workflows/inspeccionar-lnac-82.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: fuentes-extraordinarios-2025-2026
+          run-id: 45574533020
+          github-token: ${{ github.token }}
+          path: /tmp/extra
+      - run: |
+          python3 - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('/tmp/extra')
+          found=[]
+          for p in sorted(root.glob('*_resultados2.json')):
+              d=json.loads(p.read_text())
+              if not isinstance(d,dict):continue
+              print(p.name,d.get('fechaSorteo'),d.get('modelDraw'))
+              if str(d.get('modelDraw'))=='82':
+                  found.append(d)
+                  print(json.dumps(d,ensure_ascii=False))
+          assert found, 'No hay datos del modelo 82'
+          pathlib.Path('/tmp/modelo82.json').write_text(json.dumps(found,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: inspeccion-modelo82
+          path: /tmp/modelo82.json

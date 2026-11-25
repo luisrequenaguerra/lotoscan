@@ -1,0 +1,20 @@
+name: Test LNAC modelo 82
+on:
+  push:
+    branches: ['investigacion/lnac-modelo82']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          set -o pipefail
+          node scripts/test_lnac_modelo82.js 2>&1 | tee informe-motor82.txt
+          node scripts/test_lnac_integration82.js 2>&1 | tee informe-integracion82.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: informe-lnac-modelo82
+          path: informe-*.txt

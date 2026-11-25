@@ -1,0 +1,135 @@
+{
+  "tipoSorteo": "S",
+  "tipoSorteoGeneral": "S",
+  "fechaSorteo": "2026-10-12T21:00:00.000Z",
+  "drawIdSorteo": "1325309082",
+  "nombreDelSorteo": " SORTEO EXTRAORDINARIO   DÍA DE LA HISPANIDAD",
+  "modelDraw": 82,
+  "precioDecimo": 15,
+  "primerPremio": {
+    "decimo": "77265",
+    "prize": 13000000
+  },
+  "segundoPremio": {
+    "decimo": "43526",
+    "prize": 2500000
+  },
+  "premioEspecial": {
+    "numero": "77265",
+    "fraccion": 10,
+    "serie": 4,
+    "premio": 1500000000
+  },
+  "tercerosPremios": [],
+  "cuartosPremios": [],
+  "quintosPremios": [],
+  "extraccionesDeCincoCifras": [],
+  "extraccionesDeCuatroCifras": [
+    {
+      "decimo": "0504",
+      "prize": 37500
+    },
+    {
+      "decimo": "4880",
+      "prize": 37500
+    },
+    {
+      "decimo": "5304",
+      "prize": 37500
+    },
+    {
+      "decimo": "6938",
+      "prize": 37500
+    },
+    {
+      "decimo": "9736",
+      "prize": 37500
+    }
+  ],
+  "extraccionesDeTresCifras": [
+    {
+      "decimo": "084",
+      "prize": 7500
+    },
+    {
+      "decimo": "229",
+      "prize": 7500
+    },
+    {
+      "decimo": "432",
+      "prize": 7500
+    },
+    {
+      "decimo": "542",
+      "prize": 7500
+    },
+    {
+      "decimo": "564",
+      "prize": 7500
+    },
+    {
+      "decimo": "566",
+      "prize": 7500
+    },
+    {
+      "decimo": "677",
+      "prize": 7500
+    },
+    {
+      "decimo": "710",
+      "prize": 7500
+    },
+    {
+      "decimo": "811",
+      "prize": 7500
+    },
+    {
+      "decimo": "834",
+      "prize": 7500
+    },
+    {
+      "decimo": "857",
+      "prize": 7500
+    },
+    {
+      "decimo": "888",
+      "prize": 7500
+    },
+    {
+      "decimo": "979",
+      "prize": 7500
+    },
+    {
+      "decimo": "996",
+      "prize": 7500
+    },
+    {
+      "decimo": "996",
+      "prize": 7500
+    }
+  ],
+  "extraccionesDeDosCifras": [
+    {
+      "decimo": "19",
+      "prize": 3000
+    },
+    {
+      "decimo": "45",
+      "prize": 3000
+    }
+  ],
+  "reintegros": [
+    {
+      "decimo": "3",
+      "prize": 1500
+    },
+    {
+      "decimo": "5",
+      "prize": 1500
+    },
+    {
+      "decimo": "9",
+      "prize": 1500
+    }
+  ]
+}
