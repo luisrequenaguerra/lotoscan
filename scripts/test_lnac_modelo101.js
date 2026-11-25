@@ -20,3 +20,13 @@ let total25=0,hits25=0,winning25=0;
 for(let i=0;i<100000;i++){const r=c25(String(i).padStart(5,'0'));total25+=r.cents;hits25+=r.hits.length;winning25+=r.cents>0;}
 assert.equal(total25,84000000);assert.equal(hits25,41551);
 console.log({year:2025,total25,hits25,winning25});
+
+ // Independent official PDF reference: SHA256 of 100000 accumulated amounts
+ // in cents per decimo, ordered 00000..99999, newline separated, no final newline.
+ // SELAE SM_LISTAOFICIAL.A2025.S006.pdf and A2026.S006.pdf, page 1.
+ const crypto=require('node:crypto');
+ for(const [year,fn,expected] of [[2025,c25,'7fdad7389364e6ec9b8023e80519b3a9ac82acc57530c0ee455bb41f6a02d54a'],[2026,calc,'4c2eeb9cbd17b026de8ea93c7a122d12868d06ce4fa8fbdb0fc6e8749e303799']]){
+ const actual=crypto.createHash('sha256').update(Array.from({length:100000},(_,i)=>fn(String(i).padStart(5,'0')).cents).join('\n')).digest('hex');
+ assert.equal(actual,expected,'Official PDF reference '+year);
+ console.log('Official PDF reference matched: '+year);
+ }
