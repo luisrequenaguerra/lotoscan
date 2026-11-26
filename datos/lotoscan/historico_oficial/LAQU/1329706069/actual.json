@@ -60,28 +60,33 @@
       "visitante": "Villarreal (m)"
     },
     {
-      "fecha": "2026\\/11\\/25 21:00:00",
       "local": "Brujas (m)",
+      "marcador": "0 - 3",
+      "signo": "2",
       "visitante": "Liverpool (m)"
     },
     {
-      "fecha": "2026\\/11\\/25 21:00:00",
       "local": "Inter De Milán (m)",
+      "marcador": "2 - 0",
+      "signo": "1",
       "visitante": "Stuttgart (m)"
     },
     {
-      "fecha": "2026\\/11\\/25 21:00:00",
       "local": "Psg (m)",
+      "marcador": "2 - 2",
+      "signo": "X",
       "visitante": "Roma (m)"
     },
     {
-      "fecha": "2026\\/11\\/25 21:00:00",
       "local": "Shakhtar D. (m)",
+      "marcador": "0 - 1",
+      "signo": "2",
       "visitante": "Fenerbahçe (m)"
     },
     {
-      "fecha": "2026\\/11\\/25 21:00:00",
       "local": "Sporting De Portugal (m)",
+      "marcador": "2 - 2",
+      "signo": "X",
       "visitante": "Manchester United (m)"
     },
     {
@@ -95,8 +100,9 @@
       "visitante": "Real Sociedad (m)"
     },
     {
-      "fecha": "2026\\/11\\/25 21:00:00",
       "local": "At. Madrid (m)",
+      "marcador": "2 - 0",
+      "signo": "2-0",
       "visitante": "Viking Fk (m)"
     }
   ],

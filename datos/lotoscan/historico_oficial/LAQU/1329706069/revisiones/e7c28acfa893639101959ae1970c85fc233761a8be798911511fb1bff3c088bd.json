@@ -1,0 +1,113 @@
+{
+  "anyo": "2026",
+  "apuestas": "0",
+  "cdc": "13297",
+  "combinacion": null,
+  "dia_semana": "miércoles",
+  "elige8": {
+    "activo": "1",
+    "gameid": "ELG8",
+    "relsorteoid_asociado": "1329713069"
+  },
+  "escrutinio": [],
+  "escrutinioElige8": [],
+  "fecha_sorteo": "2026-11-25 00:00:00",
+  "fondo_bote": "0",
+  "game_id": "LAQU",
+  "id_sorteo": "1329706069",
+  "jornada": "24",
+  "partidos": [
+    {
+      "local": "Arsenal (m)",
+      "marcador": "1 - 1",
+      "signo": "X",
+      "visitante": "Borussia Dortmund (m)"
+    },
+    {
+      "local": "Feyenoord (m)",
+      "marcador": "0 - 1",
+      "signo": "2",
+      "visitante": "Oporto (m)"
+    },
+    {
+      "local": "Manchester City (m)",
+      "marcador": "2 - 2",
+      "signo": "X",
+      "visitante": "Nápoles (m)"
+    },
+    {
+      "local": "Real Madrid (m)",
+      "marcador": "5 - 1",
+      "signo": "1",
+      "visitante": "Psv (m)"
+    },
+    {
+      "local": "Slovan Bratislava (m)",
+      "marcador": "0 - 2",
+      "signo": "2",
+      "visitante": "Betis (m)"
+    },
+    {
+      "local": "Sabah (m)",
+      "marcador": "1 - 4",
+      "signo": "2",
+      "visitante": "Barcelona (m)"
+    },
+    {
+      "local": "Slavia Praga (m)",
+      "marcador": "0 - 1",
+      "signo": "2",
+      "visitante": "Villarreal (m)"
+    },
+    {
+      "local": "Brujas (m)",
+      "marcador": "0 - 3",
+      "signo": "2",
+      "visitante": "Liverpool (m)"
+    },
+    {
+      "local": "Inter De Milán (m)",
+      "marcador": "2 - 0",
+      "signo": "1",
+      "visitante": "Stuttgart (m)"
+    },
+    {
+      "local": "Psg (m)",
+      "marcador": "2 - 2",
+      "signo": "X",
+      "visitante": "Roma (m)"
+    },
+    {
+      "local": "Shakhtar D. (m)",
+      "marcador": "0 - 1",
+      "signo": "2",
+      "visitante": "Fenerbahçe (m)"
+    },
+    {
+      "local": "Sporting De Portugal (m)",
+      "marcador": "2 - 2",
+      "signo": "X",
+      "visitante": "Manchester United (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/26 18:45:00",
+      "local": "Celta (m)",
+      "visitante": "Bournemouth (m)"
+    },
+    {
+      "fecha": "2026\\/11\\/26 21:00:00",
+      "local": "Crystal Palace (m)",
+      "visitante": "Real Sociedad (m)"
+    },
+    {
+      "local": "At. Madrid (m)",
+      "marcador": "2 - 0",
+      "signo": "2-0",
+      "visitante": "Viking Fk (m)"
+    }
+  ],
+  "premio_bote": "0",
+  "premios": "0",
+  "recaudacion": null,
+  "temporada": "2026-2027"
+}
