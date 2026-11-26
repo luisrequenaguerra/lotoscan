@@ -1942,8 +1942,8 @@ function checkLNAC067(t){
  const number=raw.padStart(5,'0');
  try{
   const {amount,components}=calcLNAC066(LNAC_DRAWS_066[t.date],number,Number(t.series),Number(t.fraction));
-  const special=LNAC_DRAWS_066[t.date].modelDraw===82?'Contrasta siempre con SELAE antes del cobro.':'No incluye premio especial de serie y fracción. Contrasta siempre con SELAE antes del cobro.';
-  return {state:amount>0?'won':'lost',prize:amount,category:[82,101].includes(LNAC_DRAWS_066[t.date].modelDraw)?'Lotería Nacional · sorteo extraordinario':'Lotería Nacional · cálculo ordinario',components,message:'Cálculo informativo con datos SELAE. '+special,source:'Datos SELAE integrados; no es confirmación oficial de cobro.'};
+  const special=[82,105].includes(LNAC_DRAWS_066[t.date].modelDraw)?'Contrasta siempre con SELAE antes del cobro.':'No incluye premio especial de serie y fracción. Contrasta siempre con SELAE antes del cobro.';
+  return {state:amount>0?'won':'lost',prize:amount,category:[82,101,105].includes(LNAC_DRAWS_066[t.date].modelDraw)?'Lotería Nacional · sorteo extraordinario':'Lotería Nacional · cálculo ordinario',components,message:'Cálculo informativo con datos SELAE. '+special,source:'Datos SELAE integrados; no es confirmación oficial de cobro.'};
  }catch(e){return {state:'pending',message:'No se ha podido comprobar: '+e.message}}
 }
 async function importLNAC066(event){
