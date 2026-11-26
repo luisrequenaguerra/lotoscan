@@ -9,7 +9,10 @@ function prepare105(d){
  for(const [k,w,count,a] of groups)if(!Array.isArray(d[k])||d[k].length!==count||!d[k].every(x=>valid(x,w)&&x.prize===a))throw Error(k);
  const nums=p.map(x=>x.decimo),first=nums[0],refunds=d.reintegros.map(x=>x.decimo);
  const idx=refunds.indexOf(first.slice(-1));if(idx<0)throw Error('Reintegro primero');refunds.splice(idx,1);
- function calc(n){
+ // Normalized special prize: series and fraction are integers 1..10.
+ const special=d.premioEspecial;
+ if(!valid(special,5)||special.decimo!==first||!Number.isInteger(special.serie)||special.serie<1||special.serie>10||!Number.isInteger(special.fraccion)||special.fraccion<1||special.fraccion>10)throw Error('Premio especial incompleto');
+ function calc(n,serie=null,fraccion=null){
  if(typeof n!=='string'||!/^\d{5}$/.test(n))return null;
  const hits=[],add=(label,cents)=>hits.push({label,cents});
  nums.forEach((v,i)=>{
@@ -22,10 +25,14 @@ function prepare105(d){
  if(n!==first)for(const [w,a] of [[2,4000],[1,2000]])if(n.slice(-w)===first.slice(-w))add('Terminación primero '+w,a);
  for(const [k,w,,a] of groups.slice(0,2))for(const x of d[k])if(n.endsWith(x.decimo))add('Extracción '+w,a);
  for(const r of refunds)if(n.endsWith(r))add('Reintegro adicional',2000);
- return {cents:hits.reduce((s,h)=>s+h.cents,0),hits};
+ const validPart=x=>Number.isInteger(x)&&x>=1&&x<=10;
+ if((serie!==null&&!validPart(serie))||(fraccion!==null&&!validPart(fraccion)))return null;
+ const specialPending=n===first&&(serie===null||fraccion===null)&&(serie===null||serie===special.serie)&&(fraccion===null||fraccion===special.fraccion);
+ if(n===first&&serie===special.serie&&fraccion===special.fraccion)add('Premio especial',1980000000);
+ return {cents:hits.reduce((s,h)=>s+h.cents,0),hits,specialPending};
  }
  if(p.some(x=>calc(x.decimo).cents!==x.prize))throw Error('Importes principales incoherentes');
  return calc;
 }
-function calc105(d,n){try{return prepare105(d)(n)}catch{return null}}
+function calc105(d,n,serie=null,fraccion=null){try{return prepare105(d)(n,serie,fraccion)}catch{return null}}
 if(typeof module!=='undefined')module.exports={prepare105,calc105};
