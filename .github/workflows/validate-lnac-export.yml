@@ -1,0 +1,35 @@
+name: Validate LNAC manifest export
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/exportar_lnac_ordinaria.py'
+      - 'resultados/lnac/**'
+      - 'datos/lotoscan/lnac_ordinaria/**'
+      - '.github/workflows/validate-lnac-export.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate and verify manifest offline
+        run: |
+          cp resultados/lnac/manifest.json /tmp/lnac-before.json
+          python3 scripts/exportar_lnac_ordinaria.py
+          python3 - <<'PY'
+          import json, pathlib
+          before=json.load(open('/tmp/lnac-before.json'))
+          after=json.load(open('resultados/lnac/manifest.json'))
+          a={x['date']:x['file'] for x in after['draws']}
+          b={x['date']:x['file'] for x in before['draws']}
+          assert len(a)==len(after['draws'])
+          assert all(a.get(k)==v for k,v in b.items()), 'Published draw lost'
+          required={'2026-01-17','2026-07-04','2026-08-01','2026-09-05','2026-10-12','2026-11-07'}
+          assert required <= a.keys()
+          assert all(k >= '2026-01-01' for k in a)
+          assert all(pathlib.Path(v).is_file() for v in a.values())
+          print('PASS:',len(a),'draws;',sum('extra' in v for v in a.values()),'extraordinary; no published draws lost')
+          PY
