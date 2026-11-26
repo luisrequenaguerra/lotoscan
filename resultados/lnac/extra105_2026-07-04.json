@@ -1,0 +1,97 @@
+{
+  "modelDraw": 105,
+  "precioDecimo": 20,
+  "drawIdSorteo": "1315309054",
+  "fechaSorteo": "2026-07-04T13:00:00.000Z",
+  "nombreDelSorteo": "SORTEO EXTRAORDINARIO DE VACACIONES",
+  "primerPremio": {
+    "decimo": "70334",
+    "prize": 20000000
+  },
+  "segundoPremio": {
+    "decimo": "61957",
+    "prize": 6000000
+  },
+  "tercerosPremios": [
+    {
+      "decimo": "45794",
+      "prize": 2002000
+    }
+  ],
+  "premioEspecial": {
+    "numero": "70334",
+    "serie": 6,
+    "fraccion": 1,
+    "premio": 2000000000
+  },
+  "cuartosPremios": [],
+  "quintosPremios": [],
+  "extraccionesDeCincoCifras": [],
+  "extraccionesDeCuatroCifras": [],
+  "extraccionesDeTresCifras": [
+    {
+      "decimo": "088",
+      "prize": 10000
+    },
+    {
+      "decimo": "163",
+      "prize": 10000
+    },
+    {
+      "decimo": "193",
+      "prize": 10000
+    },
+    {
+      "decimo": "205",
+      "prize": 10000
+    },
+    {
+      "decimo": "217",
+      "prize": 10000
+    },
+    {
+      "decimo": "238",
+      "prize": 10000
+    },
+    {
+      "decimo": "330",
+      "prize": 10000
+    },
+    {
+      "decimo": "489",
+      "prize": 10000
+    }
+  ],
+  "extraccionesDeDosCifras": [
+    {
+      "decimo": "72",
+      "prize": 4000
+    },
+    {
+      "decimo": "80",
+      "prize": 4000
+    },
+    {
+      "decimo": "96",
+      "prize": 4000
+    },
+    {
+      "decimo": "99",
+      "prize": 4000
+    }
+  ],
+  "reintegros": [
+    {
+      "decimo": "0",
+      "prize": 2000
+    },
+    {
+      "decimo": "4",
+      "prize": 2000
+    },
+    {
+      "decimo": "8",
+      "prize": 2000
+    }
+  ]
+}

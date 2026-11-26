@@ -5,7 +5,7 @@ for(const s of scripts)new vm.Script(s);
 const source=scripts.join('\n');
 function extract(name){const start=source.indexOf('function '+name+'(');assert(start>=0,name);const end=source.indexOf('\nfunction ',start+1);return source.slice(start,end<0?undefined:end).split('\nconst LNAC_TESTS_066=')[0];}
 const ctx=vm.createContext({console});
-const names=['prepare101','calcLNAC82','calcLNAC112','calcLNAC066','registerLNAC066','checkLNAC067'];
+const names=['prepare105','prepare101','calcLNAC82','calcLNAC112','calcLNAC066','registerLNAC066','checkLNAC067'];
 // Extract function declarations by using a parser available in Node's bundled tooling only via syntax checks; delimit at next top-level declaration.
 for(const name of names){const start=source.indexOf('function '+name+'(');assert(start>=0,name);const tail=source.slice(start);const match=tail.match(/^function [\s\S]*?\n}/);assert(match,name);vm.runInContext(match[0],ctx);}
 vm.runInContext('const LNAC_DRAWS_066={};',ctx);
