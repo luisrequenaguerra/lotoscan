@@ -25,3 +25,4 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/lnac/modelo105/test.js
+      - run: node tests/lnac/modelo105/integration.js
