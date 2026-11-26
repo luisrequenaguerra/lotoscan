@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const html=fs.readFileSync('index.html','utf8');
 for(const m of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi))new vm.Script(m[1]);
-const start=html.indexOf('const LNAC_DRAWS_066='),end=html.indexOf('async function importLNAC066',start);
+const start=html.indexOf('const LNAC_FIXTURES_066='),end=html.indexOf('async function importLNAC066',start);
 assert(start>=0&&end>start);
 const ctx=vm.createContext({});vm.runInContext(html.slice(start,end),ctx);
 const manifest=JSON.parse(fs.readFileSync('resultados/lnac/manifest.json'));
