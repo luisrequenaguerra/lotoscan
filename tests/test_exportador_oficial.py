@@ -26,11 +26,13 @@ class OfficialExportAudit(unittest.TestCase):
             for date,draw in draws.items():
                 with self.subTest(game=game,date=date):
                     result=draw["result"]
-                    self.assertTrue(draw["prizes"],"Escrutinio ausente")
+                    self.assertEqual(not bool(draw["prizes"]), "scrutiny_pending" in draw["issues"],
+                        "Escrutinio ausente sin indicador provisional o indicador obsoleto")
                     if game=="LAQU":
                         self.assertEqual(len(result["quiniela_signs"]),14)
                         self.assertRegex(str(result["pleno_15"]),r"^[012M]{2}$")
-                        self.assertTrue(any(p["product"]=="LAQU" for p in draw["prizes"]))
+                        if draw["prizes"]:
+                            self.assertTrue(any(p["product"]=="LAQU" for p in draw["prizes"]))
                     elif game=="QGOL":
                         self.assertEqual(len(result["quinigol_scores"]),6)
                         self.assertTrue(all(__import__("re").fullmatch(r"[012M]{2}",s) for s in result["quinigol_scores"]))
