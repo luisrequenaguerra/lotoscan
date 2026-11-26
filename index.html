@@ -1910,6 +1910,7 @@ function registerLNAC066(d){
  LNAC_DRAWS_066[date]=d;return date;
 }
 function calcLNAC066(d,number,series,fraction){
+ if(d?.modelDraw===105){const part=x=>x==null||x===0||Number.isNaN(x)?null:x;const r=prepare105(d)(number,part(series),part(fraction));if(!r)throw Error('Número, serie o fracción incorrectos');if(r.specialPending)throw Error('Indica serie y fracción para comprobar el premio especial');return {amount:r.cents/100,components:r.hits.map(x=>({label:x.label,amount:x.cents/100}))};}
  if(d?.modelDraw===101){const r=prepare101(d)(number);if(!r)throw Error('Número incorrecto');return {amount:r.cents/100,components:r.hits.map(x=>({label:x.label,amount:x.cents/100}))};}
  if(d?.modelDraw===82)return calcLNAC82(d,number,series,fraction);
  if(d?.modelDraw===112)return calcLNAC112(d,number);
