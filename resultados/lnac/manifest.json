@@ -2,120 +2,124 @@
   "version": 1,
   "draws": [
     {
-      "date": "2026-11-21",
-      "file": "./resultados/lnac/1329309094.json"
+      "date": "2026-07-04",
+      "file": "./resultados/lnac/extra105_2026-07-04.json"
     },
     {
-      "date": "2026-11-19",
-      "file": "./resultados/lnac/1329109093.json"
-    },
-    {
-      "date": "2026-11-14",
-      "file": "./resultados/lnac/1328609092.json"
-    },
-    {
-      "date": "2026-11-12",
-      "file": "./resultados/lnac/1328409091.json"
-    },
-    {
-      "date": "2026-11-05",
-      "file": "./resultados/lnac/1327709089.json"
-    },
-    {
-      "date": "2026-10-31",
-      "file": "./resultados/lnac/1327209088.json"
-    },
-    {
-      "date": "2026-10-29",
-      "file": "./resultados/lnac/1327009087.json"
-    },
-    {
-      "date": "2026-10-24",
-      "file": "./resultados/lnac/1326509086.json"
-    },
-    {
-      "date": "2026-10-22",
-      "file": "./resultados/lnac/1326309085.json"
-    },
-    {
-      "date": "2026-10-17",
-      "file": "./resultados/lnac/1325809084.json"
-    },
-    {
-      "date": "2026-10-15",
-      "file": "./resultados/lnac/1325609083.json"
-    },
-    {
-      "date": "2026-10-08",
-      "file": "./resultados/lnac/1324909081.json"
-    },
-    {
-      "date": "2026-10-03",
-      "file": "./resultados/lnac/1324409080.json"
-    },
-    {
-      "date": "2026-10-01",
-      "file": "./resultados/lnac/1324209079.json"
-    },
-    {
-      "date": "2026-09-26",
-      "file": "./resultados/lnac/1323709078.json"
-    },
-    {
-      "date": "2026-09-24",
-      "file": "./resultados/lnac/1323509077.json"
-    },
-    {
-      "date": "2026-09-19",
-      "file": "./resultados/lnac/1323009076.json"
-    },
-    {
-      "date": "2026-09-17",
-      "file": "./resultados/lnac/1322809075.json"
-    },
-    {
-      "date": "2026-09-12",
-      "file": "./resultados/lnac/1322309074.json"
-    },
-    {
-      "date": "2026-09-10",
-      "file": "./resultados/lnac/1322109073.json"
-    },
-    {
-      "date": "2026-09-03",
-      "file": "./resultados/lnac/1321409071.json"
-    },
-    {
-      "date": "2026-08-29",
-      "file": "./resultados/lnac/1320909070.json"
-    },
-    {
-      "date": "2026-08-27",
-      "file": "./resultados/lnac/1320709069.json"
-    },
-    {
-      "date": "2026-08-22",
-      "file": "./resultados/lnac/1320209068.json"
-    },
-    {
-      "date": "2026-08-20",
-      "file": "./resultados/lnac/1320009067.json"
-    },
-    {
-      "date": "2026-08-15",
-      "file": "./resultados/lnac/1319509066.json"
-    },
-    {
-      "date": "2026-08-13",
-      "file": "./resultados/lnac/1319309065.json"
+      "date": "2026-08-06",
+      "file": "./resultados/lnac/1318609063.json"
     },
     {
       "date": "2026-08-08",
       "file": "./resultados/lnac/1318809064.json"
     },
     {
-      "date": "2026-08-06",
-      "file": "./resultados/lnac/1318609063.json"
+      "date": "2026-08-13",
+      "file": "./resultados/lnac/1319309065.json"
+    },
+    {
+      "date": "2026-08-15",
+      "file": "./resultados/lnac/1319509066.json"
+    },
+    {
+      "date": "2026-08-20",
+      "file": "./resultados/lnac/1320009067.json"
+    },
+    {
+      "date": "2026-08-22",
+      "file": "./resultados/lnac/1320209068.json"
+    },
+    {
+      "date": "2026-08-27",
+      "file": "./resultados/lnac/1320709069.json"
+    },
+    {
+      "date": "2026-08-29",
+      "file": "./resultados/lnac/1320909070.json"
+    },
+    {
+      "date": "2026-09-03",
+      "file": "./resultados/lnac/1321409071.json"
+    },
+    {
+      "date": "2026-09-10",
+      "file": "./resultados/lnac/1322109073.json"
+    },
+    {
+      "date": "2026-09-12",
+      "file": "./resultados/lnac/1322309074.json"
+    },
+    {
+      "date": "2026-09-17",
+      "file": "./resultados/lnac/1322809075.json"
+    },
+    {
+      "date": "2026-09-19",
+      "file": "./resultados/lnac/1323009076.json"
+    },
+    {
+      "date": "2026-09-24",
+      "file": "./resultados/lnac/1323509077.json"
+    },
+    {
+      "date": "2026-09-26",
+      "file": "./resultados/lnac/1323709078.json"
+    },
+    {
+      "date": "2026-10-01",
+      "file": "./resultados/lnac/1324209079.json"
+    },
+    {
+      "date": "2026-10-03",
+      "file": "./resultados/lnac/1324409080.json"
+    },
+    {
+      "date": "2026-10-08",
+      "file": "./resultados/lnac/1324909081.json"
+    },
+    {
+      "date": "2026-10-15",
+      "file": "./resultados/lnac/1325609083.json"
+    },
+    {
+      "date": "2026-10-17",
+      "file": "./resultados/lnac/1325809084.json"
+    },
+    {
+      "date": "2026-10-22",
+      "file": "./resultados/lnac/1326309085.json"
+    },
+    {
+      "date": "2026-10-24",
+      "file": "./resultados/lnac/1326509086.json"
+    },
+    {
+      "date": "2026-10-29",
+      "file": "./resultados/lnac/1327009087.json"
+    },
+    {
+      "date": "2026-10-31",
+      "file": "./resultados/lnac/1327209088.json"
+    },
+    {
+      "date": "2026-11-05",
+      "file": "./resultados/lnac/1327709089.json"
+    },
+    {
+      "date": "2026-11-12",
+      "file": "./resultados/lnac/1328409091.json"
+    },
+    {
+      "date": "2026-11-14",
+      "file": "./resultados/lnac/1328609092.json"
+    },
+    {
+      "date": "2026-11-19",
+      "file": "./resultados/lnac/1329109093.json"
+    },
+    {
+      "date": "2026-11-21",
+      "file": "./resultados/lnac/1329309094.json"
     }
   ]
 }
