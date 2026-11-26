@@ -1,0 +1,47 @@
+{
+  "id_sorteo": "1329809095",
+  "fecha_sorteo": "2026-11-26T21:00:00.000Z",
+  "tipo_sorteo": "J",
+  "primer_premio": "76325",
+  "segundo_premio": "81897",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "1527",
+      "2217",
+      "2413",
+      "5758"
+    ],
+    "extraccionesDeTresCifras": [
+      "022",
+      "173",
+      "305",
+      "346",
+      "703",
+      "954",
+      "956"
+    ],
+    "extraccionesDeDosCifras": [
+      "23",
+      "35",
+      "38",
+      "50",
+      "51",
+      "52",
+      "77",
+      "81",
+      "95"
+    ],
+    "reintegros": [
+      "1",
+      "3",
+      "5"
+    ]
+  },
+  "precio_decimo_original": 3.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados1",
+  "contraste_fecha2": true,
+  "total_centimos": 21000000,
+  "sha256": "79b75932e0a11063554136b6dac2b2b6785cd996cc233dbb6fd28549f7e1d9bc"
+}
