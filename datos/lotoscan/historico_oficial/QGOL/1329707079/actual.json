@@ -1,11 +1,42 @@
 {
   "anyo": "2026",
-  "apuestas": "0",
+  "apuestas": "214255",
   "cdc": "13297",
-  "combinacion": null,
+  "combinacion": " M1 - 02 - 1M - 01 - 12 - 20",
   "dia_semana": "miércoles",
-  "escrutinio": [],
-  "fecha_sorteo": "2026-11-25 00:00:00",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "3",
+      "premio": "102806,83",
+      "tipo": "1ª  (6 Aciertos) "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "157",
+      "premio": "122,82",
+      "tipo": "2ª  (5 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "2203",
+      "premio": "7,78",
+      "tipo": "3ª  (4 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "14953",
+      "premio": "1,15",
+      "tipo": "4ª  (3 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "49598",
+      "premio": "0",
+      "tipo": "5ª  (2 Aciertos) "
+    }
+  ],
+  "fecha_sorteo": "2026-11-25 20:38:00",
   "fondo_bote": "286994",
   "game_id": "QGOL",
   "id_sorteo": "1329707079",
@@ -49,7 +80,7 @@
     }
   ],
   "premio_bote": "305000",
-  "premios": "0",
-  "recaudacion": null,
+  "premios": "117840",
+  "recaudacion": "214255",
   "temporada": "2026-2027"
 }
