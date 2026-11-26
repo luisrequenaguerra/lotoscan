@@ -6,11 +6,18 @@ on:
       - 'scripts/lnac_modelo105.js'
       - 'tests/lnac/modelo105/**'
       - '.github/workflows/validate-lnac105.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/lnac_modelo105.js'
+      - 'tests/lnac/modelo105/**'
+      - '.github/workflows/validate-lnac105.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   validate:
+    if: github.event_name != 'pull_request' || github.head_ref == 'investigacion/lnac-modelo105'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
