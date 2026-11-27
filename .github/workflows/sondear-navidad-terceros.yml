@@ -1,0 +1,20 @@
+name: Sondear Navidad terceros
+on:
+  push:
+    branches: ['investigacion/lnac-navidad']
+    paths: ['.github/workflows/sondear-navidad-terceros.yml','scripts/sondear_navidad_terceros.py']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/sondear_navidad_terceros.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencias-terceros
+          path: evidencias-terceros/
+          retention-days: 90

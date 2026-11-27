@@ -1,0 +1,37 @@
+name: Incorporar Navidad 2025
+on:
+  push:
+    branches: ['investigacion/lnac-navidad']
+    paths: ['.github/workflows/incorporar-navidad-2025.yml']
+permissions:
+  contents: write
+jobs:
+  historico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          from actualizar_lnac_navidad import poll
+          from pathlib import Path
+          import json
+          r=poll(2025)
+          assert r["status"]=="complete",r
+          d=r["data"]
+          assert len(d["extraccionesDeCincoCifras"])==1794
+          folder=Path("resultados/lnac")
+          name="extra108_2025-12-22.json"
+          m=json.loads((folder/"manifest.json").read_text())
+          entry={"date":"2025-12-22","file":"./resultados/lnac/"+name}
+          assert not any(x["date"]==entry["date"] and x!=entry for x in m["draws"])
+          if entry not in m["draws"]:m["draws"].append(entry)
+          m["draws"].sort(key=lambda x:x["date"],reverse=True)
+          (folder/name).write_text(json.dumps(d,ensure_ascii=False,indent=2)+"\n")
+          (folder/"manifest.json").write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\n")
+          print("NAVIDAD_2025 HISTORICO OK")
+          PY
+      - run: |
+          git add resultados/lnac
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --cached --quiet; then git commit -m "Incorporar Navidad 2025 oficial validada"; git push; fi

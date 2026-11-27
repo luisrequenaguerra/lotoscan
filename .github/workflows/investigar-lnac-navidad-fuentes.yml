@@ -1,0 +1,21 @@
+name: Investigar fuentes LNAC Navidad
+on:
+  push:
+    branches: ['investigacion/lnac-navidad']
+    paths: ['scripts/investigar_lnac_navidad_fuentes.py','.github/workflows/investigar-lnac-navidad-fuentes.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/investigar_lnac_navidad_fuentes.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencias-navidad
+          path: evidencias-navidad/
+          retention-days: 90

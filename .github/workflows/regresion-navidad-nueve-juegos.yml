@@ -1,0 +1,21 @@
+name: Regresión nueve juegos tras Navidad
+on:
+  push:
+    branches: ['investigacion/lnac-navidad']
+    paths: ['index.html','tests/**','.github/workflows/regresion-navidad-nueve-juegos.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ejecutar pruebas existentes JavaScript
+        run: |
+          failed=0
+          for test in tests/test_*.js; do
+            echo "=== $test ==="
+            if node "$test"; then echo "REGRESION_OK $test"; else echo "REGRESION_FAIL $test"; failed=1; fi
+          done
+          exit "$failed"
