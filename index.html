@@ -181,6 +181,30 @@ input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;ba
 .draws-card[data-game="QUPL"] .draws-ball:not(.extra){background:#c6a23f}
 .draws-card[data-game="EMIL"] .draws-ball:not(.extra){background:#172c65}.draws-card[data-game="LAPR"] .draws-ball:not(.extra){background:#368058}.draws-card[data-game="BONO"] .draws-ball:not(.extra){background:#7a853f}.draws-card[data-game="ELGR"] .draws-ball:not(.extra){background:#bd5652}.draws-card[data-game="EDMS"] .draws-ball:not(.extra){background:#71509a}.draws-card[data-game="LOTU"] .draws-ball:not(.extra){background:#bb7c4b}.draws-card[data-game="QUPL"] .draws-ball:not(.extra){background:#c6a23f}
 </style>
+<style id="accessibilityTypography">
+/* Escala de lectura relativa: conservar títulos, cifras y marca. */
+:root{--muted:#62675c;--olive:#626f55}
+body{font-size:1rem}
+.lead,.hero p,.empty,.result p,.status-note,.scan-status,.notice,.chooser-heading p,.portfolio-summary{font-size:.875rem;line-height:1.55}
+.eyebrow,.ticket-tag,.detail-cell small,.formlabel,.review-grid label,.detail-subtitle{font-size:.75rem;letter-spacing:.075em;line-height:1.4}
+.ticketname,.game strong,.result strong,.detail-line{font-size:.875rem}
+.ticketmeta,.game small,.pill,.ticket-state,.sports-detail small,.draws-date,.win-banner-caption,.detail-win-panel .win-banner-caption{font-size:.8125rem;line-height:1.45}
+.win-badge,.win-banner-label,.detail-win-panel .win-banner-label{font-size:.75rem;line-height:1.4}
+.win-banner-caption,.detail-subtitle,.sports-detail small{color:#62675c}
+.primary,.secondary,.add-top,.back,.textbtn,.draws-card summary,.draws-toolbar,.draws-match,.portfolio-tools label,.lotocal-choice{font-size:.875rem;line-height:1.4}
+input,select,textarea,.game-filter{font-size:1rem}
+.primary,.secondary,.add-top,.back,.textbtn{min-height:44px}
+nav button{font-size:.75rem;color:#62675c;min-width:0;flex:1;min-height:44px}
+:is(#scanManualGames,#gameChooser) .scan-manual-tile strong{font-size:.8125rem;line-height:1.3}
+#homeGameGrid .game small{min-height:2.9em;line-height:1.45}
+.sectionhead{gap:8px;flex-wrap:wrap}
+.sectionhead .textbtn{padding-inline:0}
+.draws-date{white-space:normal}
+.detail-line>strong{font-size:.875rem;white-space:normal;overflow-wrap:anywhere;text-align:right;max-width:55%}
+.lotocal-week{font-size:.8125rem;color:#62675c}
+.lotocal-day{font-size:1rem}
+@media(max-width:350px){nav button{font-size:.6875rem}:is(#scanManualGames,#gameChooser) .scan-manual-tile strong{font-size:.75rem}}
+</style>
 </head>
 <body>
 <div class="app">
