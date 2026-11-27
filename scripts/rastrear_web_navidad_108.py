@@ -160,3 +160,17 @@ for year,draw_id in ((2024,"1259409102"),(2025,"1295909102")):
         else:raise AssertionError("Datos inválidos aceptados")
     (out/f"{year}.lnac108.normalizado.json").write_text(json.dumps(normalized,ensure_ascii=False,indent=2))
     print("NORMALIZACION_108 "+json.dumps({"year":year,"drawId":draw_id,"pedreas":1794,"pass":True}),flush=True)
+
+from actualizar_lnac_navidad import discover,extract,assess
+for year,draw,fragment in ((2024,"1259409102","02.tablas.html"),(2025,"1295909102","03.tablas.html")):
+    raw=leer_json(year,None)
+    html=(out/fragment).read_text()+"endSimpleTablas"
+    entries=extract(html)
+    assert discover((out/("04.raw" if year==2024 else "05.raw")).read_bytes(),year)==draw
+    scenarios=[({},[]), (raw,[]),(raw,entries[:200]),(raw,entries[:-1]),(raw,entries[:-1]+[entries[0]]),({**raw,"drawIdSorteo":"0"},entries),({**raw,"primerPremio":None},entries)]
+    for partial,balls in scenarios:assert assess(partial,balls,year,draw)["status"]=="pending"
+    assert assess(raw,entries,year,draw)["status"]=="complete"
+    print("SIMULACION_108 "+json.dumps({"year":year,"pending_cases":len(scenarios),"complete_cases":1,"pass":True}),flush=True)
+assert discover((out/"06.raw").read_bytes(),2026)=="1332409102"
+assert discover(json.dumps([{"game_id":"LNAC","fecha_sorteo":"2028-12-22 08:30:00","nombre":"SORTEO EXTRAORDINARIO DE NAVIDAD","id_sorteo":"999999"}]),2028)=="999999"
+print("DESCUBRIMIENTO_ANUAL OK",flush=True)
