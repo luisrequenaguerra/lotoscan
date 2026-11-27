@@ -2,7 +2,7 @@ name: Rastrear web Navidad 108
 on:
   push:
     branches: ['investigacion/lnac-navidad']
-    paths: ['.github/workflows/rastrear-web-navidad-108.yml','scripts/rastrear_web_navidad_108.py']
+    paths: ['.github/workflows/rastrear-web-navidad-108.yml','scripts/rastrear_web_navidad_108.py', 'scripts/probar_integracion_108.js', 'index.html']
 permissions:
   contents: read
 jobs:
