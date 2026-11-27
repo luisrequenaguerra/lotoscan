@@ -4,9 +4,7 @@ scripts.forEach((s,i)=>new vm.Script(s,{filename:'inline-'+i+'.js'}));
 const source=scripts.join('\n');
 function extract(name){
  const pos=source.indexOf('function '+name+'(');assert(pos>=0,name);
- const next=source.indexOf('\nfunction ',pos+1);assert(next>pos,name);
- const chunk=source.slice(pos,next),close=chunk.lastIndexOf('\n}');
- return close>=0?chunk.slice(0,close+2):chunk.split('\n')[0];
+ const tail=source.slice(pos); const first=tail.split('\n')[0]; if(first.endsWith('}'))return first; const close=tail.indexOf('\n}'); assert(close>=0,name); return tail.slice(0,close+2);
 }
 const start=source.indexOf('const rules108='),end=source.indexOf('function registerLNAC066(',start);
 assert(start>=0&&end>start);
