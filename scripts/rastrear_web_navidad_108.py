@@ -11,9 +11,9 @@ class Links(HTMLParser):
         a=dict(attrs)
         for k in ("src","href"):
             if k in a and a[k] and (tag in ("script","iframe") or re.search(r"navidad|terceros|widget|\.js(?:\?|$)",a[k],re.I)):self.urls.append(a[k])
-queue=[("https://navidad.loteriasyapuestas.es/",0),("https://www.loteriasyapuestas.es/es/loteria-de-navidad",0),("https://www.loteriasyapuestas.es/es/webs-de-terceros",0)]
+queue=[("https://www.loteriasyapuestas.es/es/resultados-medios/resultados-ultimos-sorteos",0),("https://www.loteriasyapuestas.es/f/loterias/resultados/lnac.html?game_id=LNAC&fecha_sorteo=20241222",0),("https://www.loteriasyapuestas.es/f/loterias/resultados/lnac.html?game_id=LNAC&fecha_sorteo=20251222",0),("https://www.loteriasyapuestas.es/f/loterias/resultados/comprobar.html",0),("https://www.loteriasyapuestas.es/es/loteria-nacional?drawId=1295909102",0)]
 seen=set();report=[]
-while queue and len(seen)<24:
+while queue and len(seen)<45:
     url,depth=queue.pop(0)
     if url in seen or urllib.parse.urlparse(url).hostname not in hosts:continue
     seen.add(url);row={"url":url}
@@ -26,13 +26,13 @@ while queue and len(seen)<24:
         (out/f"{len(seen):02}.raw").write_bytes(raw)
         if row["http"]==200:
             s=raw.decode("utf-8",errors="replace")
-            row["matches"]=list(dict.fromkeys(s[max(0,m.start()-90):m.end()+130] for m in pattern.finditer(s)))[:70]
+            row["matches"]=list(dict.fromkeys(s[max(0,m.start()-90):m.end()+130] for m in pattern.finditer(s)))[:180]
             p=Links();p.feed(s)
             row["links"]=p.urls[:100]
             if depth<2:
-                for link in p.urls:
+                for link in sorted(p.urls,key=lambda v: (not bool(re.search(r'lnac|navidad|comprobar|resultado|premio|tercero',v,re.I)),not bool(re.search(r'\.js(?:\?|$)',v,re.I)))):
                     u=urllib.parse.urljoin(row["final_url"],link).split("#")[0]
-                    if urllib.parse.urlparse(u).hostname in hosts and u not in seen:queue.append((u,depth+1))
+                    if urllib.parse.urlparse(u).hostname in hosts and u not in seen and re.search(r'\.js(?:\?|$)|lnac|navidad|comprobar|resultado|tercero|widget',u,re.I):queue.append((u,depth+1))
     except Exception as e:row["error"]=str(e)
     report.append(row);print(json.dumps(row,ensure_ascii=False),flush=True)
     (out/"informe.json").write_text(json.dumps(report,ensure_ascii=False,indent=2))
