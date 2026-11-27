@@ -1,7 +1,13 @@
 name: Validate LNAC model 101
 on:
   push:
-    branches: ['investigacion/lnac-modelo101']
+    branches: ['investigacion/lnac-modelo101', main]
+    paths:
+      - 'index.html'
+      - 'scripts/*101.js'
+      - 'resultados/lnac/**'
+      - '.github/workflows/validate-lnac101.yml'
+  workflow_dispatch:
   pull_request:
     branches: [main]
 permissions:
