@@ -1,0 +1,18 @@
+name: Preparar preview Navidad
+on:
+  push:
+    branches: ['investigacion/lnac-navidad']
+    paths: ['scripts/preparar_preview_navidad.py','.github/workflows/preparar-preview-navidad.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/preparar_preview_navidad.py /tmp/preview-navidad
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-navidad
+          path: /tmp/preview-navidad
