@@ -4,11 +4,12 @@ const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(x=
 for(const s of scripts)new vm.Script(s);
 const source=scripts.join('\n');
 function extract(name){const start=source.indexOf('function '+name+'(');assert(start>=0,name);const end=source.indexOf('\nfunction ',start+1);return source.slice(start,end<0?undefined:end).split('\nconst LNAC_TESTS_066=')[0];}
-const ctx=vm.createContext({console});
-const names=['prepare105','prepare101','calcLNAC82','calcLNAC112','calcLNAC066','registerLNAC066','checkLNAC067'];
+const ctx=vm.createContext({console,LNAC_FIXTURES_066:[]});
+const names=['prepare113','calc113','lnacDrawName','prepare105','prepare101','calcLNAC82','calcLNAC112','calcLNAC066','registerLNAC066','checkLNAC067'];
 // Extract function declarations by using a parser available in Node's bundled tooling only via syntax checks; delimit at next top-level declaration.
-for(const name of names){const start=source.indexOf('function '+name+'(');assert(start>=0,name);const tail=source.slice(start);const match=tail.match(/^function [\s\S]*?\n}/);assert(match,name);vm.runInContext(match[0],ctx);}
+for(const name of names){const start=source.indexOf('function '+name+'(');assert(start>=0,name);const tail=source.slice(start);const first=tail.split('\n')[0];const match=first.endsWith('}')?[first]:tail.match(/^function [\s\S]*?\n}/);assert(match,name);vm.runInContext(match[0],ctx);}
 vm.runInContext('const LNAC_DRAWS_066={};',ctx);
+const start108=source.indexOf('const rules108='),end108=source.indexOf('function registerLNAC066(',start108);assert(start108>=0&&end108>start108);vm.runInContext(source.slice(start108,end108),ctx);
 const manifest=JSON.parse(fs.readFileSync('resultados/lnac/manifest.json'));
 let count=0;
 for(const item of manifest.draws){const d=JSON.parse(fs.readFileSync(item.file));ctx.d=d;ctx.date=item.date;assert.equal(vm.runInContext('registerLNAC066(d)',ctx),item.date);const first=vm.runInContext('checkLNAC067({date,number:d.primerPremio.decimo,series:1,fraction:1})',ctx);assert.equal(first.state,'won',item.date+JSON.stringify(first));count++;}
