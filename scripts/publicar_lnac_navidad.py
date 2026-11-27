@@ -30,5 +30,7 @@ def update(root,year,query=poll):
     return "published"
 if __name__=="__main__":
     now=datetime.now(ZoneInfo("Europe/Madrid"))
-    if (now.month,now.day)!=(12,22) or not (8*60+30<=now.hour*60+now.minute<=23*60):print("outside_window")
+    import argparse
+    p=argparse.ArgumentParser();p.add_argument("--manual",action="store_true");args=p.parse_args()
+    if not args.manual and ((now.month,now.day)!=(12,22) or not (8*60+30<=now.hour*60+now.minute<=23*60)):print("outside_window")
     else:print(update(Path("."),now.year))
