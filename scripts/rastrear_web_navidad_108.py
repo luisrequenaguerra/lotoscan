@@ -11,7 +11,7 @@ class Links(HTMLParser):
         a=dict(attrs)
         for k in ("src","href"):
             if k in a and a[k] and (tag in ("script","iframe") or re.search(r"navidad|terceros|widget|\.js(?:\?|$)",a[k],re.I)):self.urls.append(a[k])
-queue=[("https://www.loteriasyapuestas.es/es/resultados-medios/resultados-ultimos-sorteos",0),("https://www.loteriasyapuestas.es/f/loterias/resultados/lnac.html?game_id=LNAC&fecha_sorteo=20241222",0),("https://www.loteriasyapuestas.es/f/loterias/resultados/lnac.html?game_id=LNAC&fecha_sorteo=20251222",0),("https://www.loteriasyapuestas.es/f/loterias/resultados/comprobar.html",0),("https://www.loteriasyapuestas.es/es/loteria-nacional?drawId=1295909102",0)]
+queue=[("https://www.loteriasyapuestas.es/servicios/premioDecimoWeb?idsorteo="+i,2) for i in ("1259409102","1295909102")]+[("https://www.loteriasyapuestas.es/es/loteria-nacional/tablas-y-alambres?drawId="+i,2) for i in ("1259409102","1295909102")]
 seen=set();report=[]
 while queue and len(seen)<45:
     url,depth=queue.pop(0)
@@ -29,6 +29,18 @@ while queue and len(seen)<45:
             row["matches"]=list(dict.fromkeys(s[max(0,m.start()-90):m.end()+130] for m in pattern.finditer(s)))[:180]
             p=Links();p.feed(s)
             row["links"]=p.urls[:100]
+            try:
+                obj=json.loads(s)
+                row["json_keys"]=list(obj) if isinstance(obj,dict) else []
+                if isinstance(obj,dict):
+                    entries=obj.get("compruebe",[])
+                    row["drawIdSorteo"]=obj.get("drawIdSorteo")
+                    row["entries"]=len(entries)
+                    row["sample"]=entries[:5]
+                    row["unique_decimos"]=len(set(str(e.get("decimo")) for e in entries if isinstance(e,dict)))
+            except (ValueError,TypeError):pass
+            row["table_markers"]={k:s.find(k) for k in ("startSimpleTablas","endSimpleTablas")}
+            row["five_digit_tokens"]=len(re.findall(r"(?<!\d)\d{5}(?!\d)",s))
             if depth<2:
                 for link in sorted(p.urls,key=lambda v: (not bool(re.search(r'lnac|navidad|comprobar|resultado|premio|tercero',v,re.I)),not bool(re.search(r'\.js(?:\?|$)',v,re.I)))):
                     u=urllib.parse.urljoin(row["final_url"],link).split("#")[0]
