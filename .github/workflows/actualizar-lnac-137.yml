@@ -1,5 +1,12 @@
-name: LotoScan - Historico completo Loteria Nacional 1.37
+name: LotoScan - LNAC resultados1 y publicacion 0.70
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/actualizar-lnac-137.yml'
+      - 'scripts/actualizar_lnac_resultados1_070.py'
+      - 'scripts/publicar_lnac_070.py'
+      - 'tests/test_publicacion_lnac_070.py'
+      - 'scripts/diagnosticar_fuentes_selae_071.py'
   workflow_dispatch:
 permissions:
   contents: write
@@ -7,29 +14,46 @@ concurrency:
   group: lotoscan-lnac-historico
   cancel-in-progress: false
 jobs:
-  actualizar:
+  validar:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Recuperar ultimos sorteos y guardar extracciones
-        run: python scripts/actualizar_lnac_137.py --informe salida_137
-      - name: Guardar historico en repositorio
-        if: success()
+      - name: Regresion LNAC offline
+        run: python tests/test_publicacion_lnac_070.py
+      - name: Diagnosticar nueve juegos y tres PDF oficiales (solo lectura)
+        run: python scripts/diagnosticar_fuentes_selae_071.py
+      - name: Consulta real SELAE resultados1 (sin publicar)
+        run: |
+          python scripts/actualizar_lnac_resultados1_070.py
+          python scripts/publicar_lnac_070.py
+          python -c "import json; p=json.load(open('resultados/lnac/manifest.json')); assert p['draws']; print('Sorteos:',len(p['draws']))"
+  actualizar:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Probar publicacion con historicos archivados
+        run: python tests/test_publicacion_lnac_070.py
+      - name: Obtener ultimo sorteo ordinario desde resultados1
+        run: python scripts/actualizar_lnac_resultados1_070.py
+      - name: Publicar manifest y sorteos existentes
+        run: python scripts/publicar_lnac_070.py
+      - name: Guardar archivos
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add datos/lotoscan/loteria_nacional/historico_completo/
+          git add datos/lotoscan/loteria_nacional/historico_resultados1/ resultados/lnac/
           if ! git diff --cached --quiet; then
-            git commit -m 'LotoScan: actualizar extracciones LNAC 1.37'
+            git commit -m 'LotoScan: LNAC resultados1 y manifest 0.70'
+            git pull --rebase
             git push
           fi
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: lotoscan-selae-137
-          path: salida_137/
