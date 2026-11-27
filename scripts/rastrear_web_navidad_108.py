@@ -218,3 +218,13 @@ for live_year in (2024,2025,2026):
     if live_year==2026:
         assert len(live.get("evidence",[]))>=2,report
     time.sleep(5)
+
+from publicar_lnac_navidad import scheduled_window
+from datetime import datetime
+from zoneinfo import ZoneInfo
+for yr in (2026,2027,2028):
+    for hour in (8,10,12,16,20,23):
+        assert scheduled_window(datetime(yr,12,23,hour,0,tzinfo=ZoneInfo("Europe/Madrid")))
+    assert not scheduled_window(datetime(yr,12,24,10,0,tzinfo=ZoneInfo("Europe/Madrid")))
+    assert not scheduled_window(datetime(yr,12,23,7,59,tzinfo=ZoneInfo("Europe/Madrid")))
+print("VENTANA_NAVIDAD_23 OK",flush=True)
