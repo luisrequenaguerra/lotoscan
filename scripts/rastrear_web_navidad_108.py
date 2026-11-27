@@ -100,3 +100,42 @@ for year in (2024,2025):
     (out/f"{year}.contraste-pedreas.json").write_text(json.dumps(result,ensure_ascii=False,indent=2))
     print("PEDREAS_CONTRASTE "+json.dumps(result,ensure_ascii=False),flush=True)
     if not result["pass"]:raise SystemExit("Contraste documental no superado")
+
+# Compare every number against the independently parsed official PDF components.
+from motor_navidad_108 import calculate
+from consultar_navidad_119 import premios_mayores,leer_json
+from collections import defaultdict
+all_pass=True
+for year in (2024,2025):
+    web=json.loads((out/f"{year}.extracciones.json").read_text())
+    majors=premios_mayores(leer_json(year,None))
+    motor=calculate(majors,web["pedreas"])
+    pdf=load(SimpleNamespace(historico=year,pdf=None,url=None))
+    rows,pages=scan(pdf)
+    components=defaultdict(list)
+    for r in rows:
+        assert r["estado"]=="asociacion_univoca" and r["importe_euros_billete"] is not None
+        components[r["numero"]].append((r["marca"],r["importe_euros_billete"]*10))
+    first=next(n for n,v in majors.items() if v[0]["categoria"]=="primer_premio")
+    differences=[]; component_differences=[]; major_differences=[]; total=0; reference_total=0
+    with (out/f"{year}.motor-108.jsonl").open("w") as stream:
+        for i in range(100000):
+            n=f"{i:05d}"; parts=motor.get(n,[]); value=sum(v for c,v in parts)
+            # PDF ordinary rows are independent of the web extraction; major JSON may include reintegro.
+            ordinary=sum(v for c,v in components[n])
+            reference=ordinary+(2000 if n[-1]==first[-1] and n!=first else 0)
+            if n in majors:
+                reference=sum(int(v["prize_raw"]) for v in majors[n])
+                if value!=reference:major_differences.append({"n":n,"motor":value,"json":reference,"pdf":components[n],"parts":parts})
+            expected=Counter(components[n])
+            actual=Counter((None if c=="pedrea" else "a" if c.startswith("aproximacion_") else "c" if c.startswith("centena_") else "t",v) for c,v in parts if c=="pedrea" or c.startswith(("aproximacion_","centena_","terminacion_")))
+            if expected!=actual:component_differences.append({"n":n,"pdf":components[n],"motor":list(actual.elements())})
+            if value!=reference:differences.append({"n":n,"motor":value,"reference":reference,"parts":parts})
+            total+=value;reference_total+=reference
+            stream.write(json.dumps({"n":n,"cents":value,"reference_cents":reference,"parts":parts})+"\n")
+    report={"year":year,"numbers":100000,"total_cents":total,"reference_total_cents":reference_total,"amount_mismatches":len(differences),"component_mismatches":len(component_differences),"major_mismatches":len(major_differences),"examples":differences[:25],"component_examples":component_differences[:25],"major_examples":major_differences,"pdf_sha256":hashlib.sha256(pdf).hexdigest(),"reference_limit":"PDF ordinary rows plus major JSON and derived reintegro; not an independent full official payout table"}
+    report["pass"]=not differences and not component_differences and total==140000000
+    all_pass=all_pass and report["pass"]
+    (out/f"{year}.motor-contraste.json").write_text(json.dumps({**report,"differences":differences,"component_differences":component_differences},indent=2))
+    print("MOTOR_CONTRASTE "+json.dumps(report),flush=True)
+if not all_pass:raise SystemExit("Motor experimental no conciliado")
