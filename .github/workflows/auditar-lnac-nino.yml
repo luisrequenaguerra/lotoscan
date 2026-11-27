@@ -5,7 +5,7 @@ on:
     paths: ['.github/workflows/auditar-lnac-nino.yml']
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
   audit:
     runs-on: ubuntu-latest
@@ -72,37 +72,6 @@ jobs:
             console.log(year,100000,sum,count);
           }
           JS
-      - name: Incorporar histórico 2026 en rama de investigación
-        if: github.ref == 'refs/heads/investigacion/lnac-nino'
-        run: |
-          python3 - <<'PY'
-          import hashlib,json,pathlib
-          src=pathlib.Path('/tmp/extraordinarios/1297409002_resultados2.json').read_bytes()
-          assert hashlib.sha256(src).hexdigest()=='86ff8820b27e5a70de272eea90a3adb11eeed2dfea38a2835432c20b82d28324'
-          d=json.loads(src)
-          assert d['modelDraw']==113 and d['fechaSorteo'][:10]=='2026-01-06'
-          root=pathlib.Path('resultados/lnac')
-          dest=root/'extra113_2026-01-06.json'
-          manifest=root/'manifest.json'
-          m=json.loads(manifest.read_text())
-          old=list(m['draws'])
-          entry={'date':'2026-01-06','file':'./resultados/lnac/'+dest.name}
-          assert all(x['date']!='2026-01-06' or x==entry for x in old)
-          if entry not in old:m['draws'].append(entry)
-          m['draws'].sort(key=lambda x:x['date'],reverse=True)
-          assert len({x['date'] for x in m['draws']})==len(m['draws'])
-          assert all(x in m['draws'] for x in old)
-          dest.write_bytes(src)
-          manifest.write_text(json.dumps(m,ensure_ascii=False,indent=2)+'\n')
-          print('Sorteos:',len(old),'->',len(m['draws']))
-          PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add resultados/lnac/extra113_2026-01-06.json resultados/lnac/manifest.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Incorporar resultado oficial El Niño 2026 al histórico"
-            git push origin HEAD:investigacion/lnac-nino
-          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
