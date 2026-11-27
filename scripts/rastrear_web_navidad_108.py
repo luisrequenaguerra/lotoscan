@@ -45,6 +45,31 @@ while queue and len(seen)<45:
                 fragment=s[a:b]
                 (out/f"{len(seen):02}.tablas.html").write_text(fragment)
                 row["fragment_bytes"]=len(fragment.encode())
+                from collections import Counter
+                from consultar_navidad_119 import leer_json
+                entries=[(n.zfill(5),int(t),int(w)) for n,t,w in re.findall(r"\[(\d{1,5})\]\s*=\s*(\d+):(\d+)\s*;",fragment)]
+                counts=Counter(n for n,t,w in entries)
+                row["extraction_count"]=len(entries)
+                row["unique_count"]=len(counts)
+                row["duplicates"]=[n for n,c in counts.items() if c>1]
+                row["tables"]=dict(Counter(t for n,t,w in entries))
+                year={"1259409102":"2024","1295909102":"2025"}.get(urllib.parse.parse_qs(urllib.parse.urlparse(url).query).get("drawId",[""])[0])
+                if year:
+                    try:
+                        data=leer_json(year,Path("scripts"))
+                        majors=[]
+                        for k in ("primerPremio","segundoPremio","tercerosPremios","cuartosPremios","quintosPremios"):
+                            v=data[k]
+                            majors.extend(v if isinstance(v,list) else [v])
+                        major_numbers={str(v["decimo"]).zfill(5) for v in majors}
+                        pedreas=sorted(set(counts)-major_numbers)
+                        row["major_count"]=len(major_numbers)
+                        row["missing_majors"]=sorted(major_numbers-set(counts))
+                        row["pedrea_count"]=len(pedreas)
+                        row["structural_pass"]=len(entries)==len(counts)==1807 and len(major_numbers)==13 and not row["missing_majors"] and len(pedreas)==1794
+                        (out/f"{year}.extracciones.json").write_text(json.dumps({"year":year,"entries":entries,"pedreas":pedreas,"structural_pass":row["structural_pass"]},indent=2))
+                    except Exception as e:row["major_comparison_error"]=str(e)
+
                 row["fragment_sample"]=fragment[:2500]
                 row["fragment_five_digit_tokens"]=len(re.findall(r"(?<!\d)\d{5}(?!\d)",fragment))
             if "fechav3" in url:row["date_response"]=s[:5000]
