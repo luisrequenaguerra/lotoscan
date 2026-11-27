@@ -455,7 +455,7 @@ const DRAW_WEEKDAYS39={euromillones:[2,5],primitiva:[1,4,6],bonoloto:[0,1,2,3,4,
 function dateAllowed39(game,date){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
  const d=new Date(date+'T12:00:00');if(Number.isNaN(d.getTime())||d.toISOString().slice(0,10)!==date)return false;
- const days=DRAW_WEEKDAYS39[game];return !days||days.includes(d.getDay())||(game==='loteria_nacional'&&(['2026-10-12','2026-12-06','2026-01-06'].includes(date)||Object.prototype.hasOwnProperty.call(LNAC_DRAWS_066,date)));
+ const days=DRAW_WEEKDAYS39[game];return !days||days.includes(d.getDay())||(game==='loteria_nacional'&&((/-12-22$/.test(date)||['2026-10-12','2026-12-06','2026-01-06'].includes(date))||Object.prototype.hasOwnProperty.call(LNAC_DRAWS_066,date)));
 }
 function configureDrawDate39(id,game,current){
  const old=document.getElementById(id);if(!old)return;
@@ -1077,7 +1077,7 @@ function sortedTickets(items){const mode=document.getElementById('ticketSort')?.
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ticketListDate083(value){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));return m?m[3]+'/'+m[2]+'/'+m[1].slice(-2):(value?String(value):'Fecha no indicada')}
 function lnacDrawName(date){
- const d=LNAC_DRAWS_066[date];if(!d)return '';
+ const d=LNAC_DRAWS_066[date];if(/^\d{4}-12-22$/.test(date))return 'Sorteo Extraordinario de Navidad';if(!d)return '';
  if(d.modelDraw===113)return 'Sorteo Extraordinario de El Niño';
  if([82,112,101,105].includes(d.modelDraw)){
   const name=String(d.nombreDelSorteo||'').trim().replace(/\s+/g,' ').replace(/EXTRAORDINARIODE/gi,'EXTRAORDINARIO DE');
@@ -1915,7 +1915,54 @@ function prepare113(d) {
 function calc113(d,n){try{return prepare113(d)(n);}catch{return null;}}
 
 
+
+"use strict";
+const rules108={primer_premio:[1,40000000,200000],segundo_premio:[1,12500000,125000],tercer_premio:[1,5000000,96000],cuarto_premio:[2,2000000,0],quinto_premio:[8,600000,0]};
+function prepare108Core(majors,pedreas){
+ const keys=Object.keys(majors), valid=n=>typeof n==="string"&&/^[0-9]{5}$/.test(n);
+ if(keys.length!==13||!Array.isArray(pedreas)||pedreas.length!==1794||new Set(pedreas).size!==1794||!keys.concat(pedreas).every(valid)||pedreas.some(n=>Object.hasOwn(majors,n)))throw Error("Extracciones inválidas");
+ const counts={}, draws=keys.map(n=>{const a=majors[n];if(!Array.isArray(a)||a.length!==1||!Object.hasOwn(rules108,a[0].categoria))throw Error("Categoría inválida");const c=a[0].categoria;counts[c]=(counts[c]||0)+1;return {n,i:Number(n),c};});
+ for(const c of Object.keys(rules108))if(counts[c]!==rules108[c][0])throw Error("Recuento inválido");
+ return {draws,pedreas:new Set(pedreas)};
+}
+function calc108Core(prepared,n){
+ if(typeof n!=="string"||!/^[0-9]{5}$/.test(n))throw Error("Número inválido");
+ const i=Number(n),parts=[];
+ if(prepared.pedreas.has(n))parts.push(["pedrea",10000]);
+ for(const d of prepared.draws){
+  const [count,base,approx]=rules108[d.c];
+  if(i===d.i){parts.push([d.c,base]);continue;}
+  if(approx){
+   if((i+1)%100000===d.i||(i+99999)%100000===d.i)parts.push(["aproximacion_"+d.c,approx]);
+   if(i%100===d.i%100)parts.push(["terminacion_"+d.c,10000]);
+  }
+  if(d.c!=="quinto_premio"&&Math.floor(i/100)===Math.floor(d.i/100))parts.push(["centena_"+d.c,10000]);
+  if(d.c==="primer_premio"&&i%10===d.i%10)parts.push(["reintegro",2000]);
+ }
+ return {cents:parts.reduce((s,p)=>s+p[1],0),parts};
+}
+
+
+const cache108=new WeakMap();
+function prepare108(d){
+ if(cache108.has(d))return cache108.get(d);
+ if(d.modelDraw!==108||d.precioDecimo!==20||d.lotoscan?.complete!==true)throw Error('Navidad pendiente');
+ const majors={};
+ for(const [key,c] of Object.entries({primerPremio:'primer_premio',segundoPremio:'segundo_premio',tercerosPremios:'tercer_premio',cuartosPremios:'cuarto_premio',quintosPremios:'quinto_premio'})){
+  for(const x of (Array.isArray(d[key])?d[key]:[d[key]])){if(!x||Object.hasOwn(majors,x.decimo))throw Error('Premio inválido');majors[x.decimo]=[{categoria:c}];}
+ }
+ const pedreas=d.extraccionesDeCincoCifras.map(x=>{if(x.prize!==10000)throw Error('Pedrea inválida');return x.decimo;});
+ const p=prepare108Core(majors,pedreas);cache108.set(d,p);return p;
+}
+function label108(c){
+ if(c==='pedrea')return 'Pedrea';if(c==='reintegro')return 'Reintegro';
+ const names={primer_premio:'primer premio',segundo_premio:'segundo premio',tercer_premio:'tercer premio',cuarto_premio:'cuarto premio',quinto_premio:'quinto premio'};
+ for(const [prefix,label] of [['aproximacion_','Aproximación al '],['centena_','Centena del '],['terminacion_','Dos últimas cifras del ']])if(c.startsWith(prefix))return label+names[c.slice(prefix.length)];
+ const n=names[c];return n.charAt(0).toUpperCase()+n.slice(1);
+}
+
 function registerLNAC066(d){
+ if(d?.modelDraw===108){prepare108(d);const date=String(d.fechaSorteo||'').slice(0,10);if(!/^\d{4}-12-22$/.test(date))throw Error('Fecha inválida');LNAC_DRAWS_066[date]=d;return date;}
  if(d?.modelDraw===113){prepare113(d);const date=String(d.fechaSorteo||'').slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw Error('Fecha no válida');LNAC_DRAWS_066[date]=d;return date;}
  if(d?.modelDraw===105){prepare105(d);const date=String(d.fechaSorteo||'').slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw Error('Fecha no válida');LNAC_DRAWS_066[date]=d;return date;}
  if(d?.modelDraw===101){prepare101(d);const date=String(d.fechaSorteo||'').slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(date))throw Error('Fecha no válida');LNAC_DRAWS_066[date]=d;return date;}
@@ -1939,6 +1986,7 @@ function registerLNAC066(d){
  LNAC_DRAWS_066[date]=d;return date;
 }
 function calcLNAC066(d,number,series,fraction){
+ if(d?.modelDraw===108){const r=calc108Core(prepare108(d),number);return {amount:r.cents/100,components:r.parts.map(([c,v])=>({label:label108(c),amount:v/100}))};}
  if(d?.modelDraw===113){const r=prepare113(d)(number);if(!r)throw Error('Número incorrecto');return {amount:r.cents/100,components:r.hits.map(x=>({label:x.label,amount:x.cents/100}))};}
  if(d?.modelDraw===105){const part=x=>x==null||x===0||Number.isNaN(x)?null:x;const r=prepare105(d)(number,part(series),part(fraction));if(!r)throw Error('Número, serie o fracción incorrectos');if(r.specialPending)throw Error('Indica serie y fracción para comprobar el premio especial');return {amount:r.cents/100,components:r.hits.map(x=>({label:x.label,amount:x.cents/100}))};}
  if(d?.modelDraw===101){const r=prepare101(d)(number);if(!r)throw Error('Número incorrecto');return {amount:r.cents/100,components:r.hits.map(x=>({label:x.label,amount:x.cents/100}))};}
@@ -1973,8 +2021,8 @@ function checkLNAC067(t){
  const number=raw.padStart(5,'0');
  try{
   const {amount,components}=calcLNAC066(LNAC_DRAWS_066[t.date],number,Number(t.series),Number(t.fraction));
-  const special=[82,105].includes(LNAC_DRAWS_066[t.date].modelDraw)?'Contrasta siempre con SELAE antes del cobro.':'No incluye premio especial de serie y fracción. Contrasta siempre con SELAE antes del cobro.';
-  return {state:amount>0?'won':'lost',prize:amount,category:[82,101,105,113].includes(LNAC_DRAWS_066[t.date].modelDraw)?'Lotería Nacional · sorteo extraordinario':'Lotería Nacional · cálculo ordinario',components,message:'Cálculo informativo con datos SELAE. '+special,source:'Datos SELAE integrados; no es confirmación oficial de cobro.'};
+  const special=[82,105,108].includes(LNAC_DRAWS_066[t.date].modelDraw)?'Contrasta siempre con SELAE antes del cobro.':'No incluye premio especial de serie y fracción. Contrasta siempre con SELAE antes del cobro.';
+  return {state:amount>0?'won':'lost',prize:amount,category:[82,101,105,108,113].includes(LNAC_DRAWS_066[t.date].modelDraw)?'Lotería Nacional · sorteo extraordinario':'Lotería Nacional · cálculo ordinario',components,message:'Cálculo informativo con datos SELAE. '+special,source:'Datos SELAE integrados; no es confirmación oficial de cobro.'};
  }catch(e){return {state:'pending',message:'No se ha podido comprobar: '+e.message}}
 }
 async function importLNAC066(event){
