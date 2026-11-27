@@ -56,7 +56,7 @@ while queue and len(seen)<45:
                 year={"1259409102":"2024","1295909102":"2025"}.get(urllib.parse.parse_qs(urllib.parse.urlparse(url).query).get("drawId",[""])[0])
                 if year:
                     try:
-                        data=leer_json(year,Path("scripts"))
+                        data=leer_json(int(year),None)
                         majors=[]
                         for k in ("primerPremio","segundoPremio","tercerosPremios","cuartosPremios","quintosPremios"):
                             v=data[k]
