@@ -174,3 +174,27 @@ for year,draw,fragment in ((2024,"1259409102","02.tablas.html"),(2025,"129590910
 assert discover((out/"06.raw").read_bytes(),2026)=="1332409102"
 assert discover(json.dumps([{"game_id":"LNAC","fecha_sorteo":"2028-12-22 08:30:00","nombre":"SORTEO EXTRAORDINARIO DE NAVIDAD","id_sorteo":"999999"}]),2028)=="999999"
 print("DESCUBRIMIENTO_ANUAL OK",flush=True)
+
+from publicar_lnac_navidad import update
+from tempfile import TemporaryDirectory
+from copy import deepcopy
+with TemporaryDirectory() as tmp:
+    root=Path(tmp); folder=root/"resultados/lnac";folder.mkdir(parents=True)
+    manifest=folder/"manifest.json"
+    original=json.loads(Path("resultados/lnac/manifest.json").read_text())
+    manifest.write_text(json.dumps(original))
+    before=manifest.read_bytes()
+    assert update(root,2026,lambda y:{"status":"pending"})=="pending"
+    assert manifest.read_bytes()==before and len(list(folder.iterdir()))==1
+    # Synthetic future-year fixture only in temporary directory, never in repository.
+    fixture=deepcopy(normalized);fixture["fechaSorteo"]="2026-12-22T08:30:00.000Z";fixture["drawIdSorteo"]="1332409102"
+    assert update(root,2026,lambda y:{"status":"complete","data":fixture})=="published"
+    after=json.loads(manifest.read_text())
+    assert len(after["draws"])==len(original["draws"])+1
+    assert all(x in after["draws"] for x in original["draws"])
+    saved=manifest.read_bytes()
+    def forbidden(y):raise AssertionError("Consulta redundante")
+    assert update(root,2026,forbidden)=="already_complete"
+    assert manifest.read_bytes()==saved
+    assert update(root,2026,lambda y:{"status":"pending"})=="already_complete"
+    print("HISTORICO_108 OK: pending, publication, preservation, idempotence, no redundant requests",flush=True)
