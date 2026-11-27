@@ -28,11 +28,14 @@ jobs:
             assert(pos>=0,name);
             const next=source.indexOf('\nfunction ',pos+1);
             assert(next>pos,name);
-            return source.slice(pos,next);
+            const chunk=source.slice(pos,next);
+            const close=chunk.lastIndexOf('\n}');
+            if(close>=0)return chunk.slice(0,close+2);
+            return chunk.split('\n')[0];
           }
           const names=['prepare113','calc113','registerLNAC066','calcLNAC066','lnacDrawName','prepare105','prepare101','calcLNAC82','calcLNAC112'];
           // Load declarations only, without browser startup.
-          const context=vm.createContext({console});
+          const context=vm.createContext({console,LNAC_FIXTURES_066:[]});
           vm.runInContext('const LNAC_DRAWS_066={};\n'+names.map(extract).join('\n'),context);
           const manifest=JSON.parse(fs.readFileSync('resultados/lnac/manifest.json'));
           assert.equal(new Set(manifest.draws.map(x=>x.date)).size,manifest.draws.length);
