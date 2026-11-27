@@ -1758,7 +1758,7 @@ function gameIcon(game){
  if(game==='quinigol')return '<svg class="quinigol-line" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><path d="m24 14 9 7-3 11H18l-3-11 9-7ZM15 21l-8-3M33 21l8-3M18 32l-4 8M30 32l4 8"/></svg>';
  return GAME_GLYPHS[game]||'◉';
 }
-function renderHomeGames(){const el=document.getElementById('homeGameGrid');if(!el)return;const items=[['euromillones','Martes y viernes'],['primitiva','Lunes, jueves y sábado'],['bonoloto','Todos los días'],['loteria_nacional','Jueves y sábado']];el.innerHTML=items.map(([k,days])=>`<button class="game" type="button" onclick="openGameForm('${k}')"><span class="gameicon consistent-gameicon">${gameIcon(k)}</span><strong>${gameLabel(k)}</strong><small>${days}</small></button>`).join('')}
+function renderHomeGames(){const el=document.getElementById('homeGameGrid');if(!el)return;const items=[['euromillones','Martes y viernes'],['primitiva','Lunes, jueves y sábado'],['bonoloto','Todos los días'],['loteria_nacional','Jueves, sábados y extraordinarios']];el.innerHTML=items.map(([k,days])=>`<button class="game" type="button" onclick="openGameForm('${k}')"><span class="gameicon consistent-gameicon">${gameIcon(k)}</span><strong>${gameLabel(k)}</strong><small>${days}</small></button>`).join('')}
 
 function renderGameChooser(){
  const el=document.getElementById('gameChooser');if(!el)return;
