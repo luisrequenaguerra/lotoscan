@@ -49,6 +49,29 @@ jobs:
           if any(not x.get('json') for x in report) or any(x.get('endpoint')=='fecha2' and not x.get('ids') for x in report):
               raise SystemExit('Auditoria parcial: revisar artefacto')
           PY
+      - name: Validar motor 113 en Node
+        run: |
+          node - <<'JS'
+          const assert=require('node:assert/strict');
+          const fs=require('node:fs');
+          const {prepare113,calc113}=require('./scripts/lnac_modelo113.js');
+          for(const [year,id] of [[2025,'1260909002'],[2026,'1297409002']]){
+            const d=JSON.parse(fs.readFileSync('/tmp/extraordinarios/'+id+'_resultados2.json'));
+            const calc=prepare113(d);
+            let sum=0,count=0;
+            for(let i=0;i<100000;i++){
+              const n=String(i).padStart(5,'0'),v=calc(n);
+              assert(Number.isSafeInteger(v.cents)&&v.cents>=0);
+              assert.equal(v.cents,v.hits.reduce((s,h)=>s+h.cents,0));
+              assert.equal(v.specialPending,false);
+              sum+=v.cents;count+=v.hits.length;
+            }
+            assert.equal(sum,140000000);assert.equal(count,37920);
+            for(const n of [null,12345,'1234','123456','abcde','-1234'])assert.equal(calc113(d,n),null);
+            assert.equal(calc113({...d,modelDraw:105},'00000'),null);
+            console.log(year,100000,sum,count);
+          }
+          JS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
