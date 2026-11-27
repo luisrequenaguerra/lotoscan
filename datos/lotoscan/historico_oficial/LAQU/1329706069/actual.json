@@ -1,17 +1,61 @@
 {
   "anyo": "2026",
-  "apuestas": "0",
+  "apuestas": "1403208",
   "cdc": "13297",
-  "combinacion": null,
+  "combinacion": "X - 2 - X - 1 - 2 - 2 - 2 - 2 - 1 - X - 2 - X - 2 - 1 - 20",
   "dia_semana": "miércoles",
   "elige8": {
     "activo": "1",
     "gameid": "ELG8",
     "relsorteoid_asociado": "1329713069"
   },
-  "escrutinio": [],
-  "escrutinioElige8": [],
-  "fecha_sorteo": "2026-11-25 00:00:00",
+  "escrutinio": [
+    {
+      "categoria": 1,
+      "ganadores": "1",
+      "premio": "78930,45",
+      "tipo": "Pleno al 15 "
+    },
+    {
+      "categoria": 2,
+      "ganadores": "11",
+      "premio": "15307,72",
+      "tipo": "1ª (14 Aciertos) "
+    },
+    {
+      "categoria": 3,
+      "ganadores": "147",
+      "premio": "536,94",
+      "tipo": "2ª (13 Aciertos) "
+    },
+    {
+      "categoria": 4,
+      "ganadores": "1438",
+      "premio": "54,89",
+      "tipo": "3ª (12 Aciertos) "
+    },
+    {
+      "categoria": 5,
+      "ganadores": "10111",
+      "premio": "7,81",
+      "tipo": "4ª (11 Aciertos) "
+    },
+    {
+      "categoria": 6,
+      "ganadores": "51851",
+      "premio": "1,83",
+      "tipo": "5ª (10 Aciertos) "
+    }
+  ],
+  "escrutinioElige8": [
+    {
+      "categoria": 1,
+      "ganadores": "95",
+      "premio": "258,51",
+      "tipo": "8 Acertados 8 "
+    }
+  ],
+  "fecha_sorteo": "2026-11-25 22:54:00",
   "fondo_bote": "0",
   "game_id": "LAQU",
   "id_sorteo": "1329706069",
@@ -20,84 +64,85 @@
     {
       "local": "Arsenal (m)",
       "marcador": "1 - 1",
-      "signo": "X",
+      "signo": "X ",
       "visitante": "Borussia Dortmund (m)"
     },
     {
       "local": "Feyenoord (m)",
       "marcador": "0 - 1",
-      "signo": "2",
+      "signo": "2 ",
       "visitante": "Oporto (m)"
     },
     {
       "local": "Manchester City (m)",
       "marcador": "2 - 2",
-      "signo": "X",
+      "signo": "X ",
       "visitante": "Nápoles (m)"
     },
     {
       "local": "Real Madrid (m)",
       "marcador": "5 - 1",
-      "signo": "1",
+      "signo": "1 ",
       "visitante": "Psv (m)"
     },
     {
       "local": "Slovan Bratislava (m)",
       "marcador": "0 - 2",
-      "signo": "2",
+      "signo": "2 ",
       "visitante": "Betis (m)"
     },
     {
       "local": "Sabah (m)",
       "marcador": "1 - 4",
-      "signo": "2",
+      "signo": "2 ",
       "visitante": "Barcelona (m)"
     },
     {
       "local": "Slavia Praga (m)",
       "marcador": "0 - 1",
-      "signo": "2",
+      "signo": "2 ",
       "visitante": "Villarreal (m)"
     },
     {
       "local": "Brujas (m)",
       "marcador": "0 - 3",
-      "signo": "2",
+      "signo": "2 ",
       "visitante": "Liverpool (m)"
     },
     {
       "local": "Inter De Milán (m)",
       "marcador": "2 - 0",
-      "signo": "1",
+      "signo": "1 ",
       "visitante": "Stuttgart (m)"
     },
     {
       "local": "Psg (m)",
       "marcador": "2 - 2",
-      "signo": "X",
+      "signo": "X ",
       "visitante": "Roma (m)"
     },
     {
       "local": "Shakhtar D. (m)",
       "marcador": "0 - 1",
-      "signo": "2",
+      "signo": "2 ",
       "visitante": "Fenerbahçe (m)"
     },
     {
       "local": "Sporting De Portugal (m)",
       "marcador": "2 - 2",
-      "signo": "X",
+      "signo": "X ",
       "visitante": "Manchester United (m)"
     },
     {
       "local": "Celta (m)",
       "marcador": "1 - 2",
-      "signo": "2",
+      "signo": "2 ",
       "visitante": "Bournemouth (m)"
     },
     {
-      "fecha": "2026\\/11\\/26 21:00:00",
       "local": "Crystal Palace (m)",
+      "marcador": "2 - 1",
+      "signo": "1 ",
       "visitante": "Real Sociedad (m)"
     },
     {
@@ -108,7 +153,7 @@
     }
   ],
   "premio_bote": "0",
-  "premios": "0",
-  "recaudacion": null,
+  "premios": "578823",
+  "recaudacion": "1052406",
   "temporada": "2026-2027"
 }
