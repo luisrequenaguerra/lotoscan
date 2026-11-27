@@ -16,16 +16,20 @@ for p in sorted(root.glob('*/original_resultados.json')):
     (out/name).write_bytes(raw)
     draws.append({'date':d['fechaSorteo'][:10],'file':'./resultados/lnac/'+name})
 assert len(draws)>=29
-# Preserve published extraordinary draws; pre-2026 files are validation only.
+# Preserve published extraordinary draws; Navidad 2025 is the sole pre-2026 exception.
 import re
 for p in sorted(out.glob('extra*.json')):
     match=re.fullmatch(r'extra(\d+)_(2026|20[3-9]\d|202[7-9])-\d{2}-\d{2}\.json',p.name)
+    if p.name=='extra108_2025-12-22.json':
+        match=re.fullmatch(r'extra(108)_2025-12-22\.json',p.name)
     if not match:
         continue
     d=json.loads(p.read_text())
     day=p.stem.split('_',1)[1]
     assert str(d['modelDraw'])==match.group(1), p.name
     assert d['fechaSorteo'][:10]==day, p.name
+    if day=='2025-12-22':
+        assert d['lotoscan']['complete'] is True and len(d['extraccionesDeCincoCifras'])==1794
     draws.append({'date':day,'file':'./resultados/lnac/'+p.name})
 
 assert len({x['date'] for x in draws})==len(draws)
