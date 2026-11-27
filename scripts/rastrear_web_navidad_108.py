@@ -82,3 +82,21 @@ while queue and len(seen)<45:
     report.append(row);print(json.dumps(row,ensure_ascii=False),flush=True)
     (out/"informe.json").write_text(json.dumps(report,ensure_ascii=False,indent=2))
     time.sleep(5)
+
+# Independent documentary comparison; fail closed on any mismatch.
+from auditar_integracion_navidad_117 import load,scan
+from types import SimpleNamespace
+from collections import Counter
+for year in (2024,2025):
+    web=json.loads((out/f"{year}.extracciones.json").read_text())
+    assert web["structural_pass"]
+    pdf=load(SimpleNamespace(historico=year,pdf=None,url=None))
+    rows,pages=scan(pdf)
+    candidates=[r["numero"] for r in rows if r["marca"] is None and r["estado"]=="asociacion_univoca" and r["importe_euros_billete"]==1000]
+    counts=Counter(candidates)
+    expected=set(web["pedreas"]); actual=set(counts)
+    result={"year":year,"pdf_sha256":hashlib.sha256(pdf).hexdigest(),"pdf_rows":len(rows),"pdf_candidates":len(candidates),"pdf_unique":len(actual),"duplicates":[n for n,c in counts.items() if c>1],"matching":len(expected&actual),"only_web":sorted(expected-actual),"only_pdf":sorted(actual-expected),"page_warnings":[p for p in pages if p.get("advertencias")]}
+    result["pass"]=len(candidates)==len(actual)==1794 and expected==actual and not result["page_warnings"]
+    (out/f"{year}.contraste-pedreas.json").write_text(json.dumps(result,ensure_ascii=False,indent=2))
+    print("PEDREAS_CONTRASTE "+json.dumps(result,ensure_ascii=False),flush=True)
+    if not result["pass"]:raise SystemExit("Contraste documental no superado")
