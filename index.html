@@ -455,7 +455,7 @@ const DRAW_WEEKDAYS39={euromillones:[2,5],primitiva:[1,4,6],bonoloto:[0,1,2,3,4,
 function dateAllowed39(game,date){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
  const d=new Date(date+'T12:00:00');if(Number.isNaN(d.getTime())||d.toISOString().slice(0,10)!==date)return false;
- const days=DRAW_WEEKDAYS39[game];return !days||days.includes(d.getDay())||(game==='loteria_nacional'&&['2026-10-12','2026-12-06'].includes(date));
+ const days=DRAW_WEEKDAYS39[game];return !days||days.includes(d.getDay())||(game==='loteria_nacional'&&(['2026-10-12','2026-12-06','2026-01-06'].includes(date)||Object.prototype.hasOwnProperty.call(LNAC_DRAWS_066,date)));
 }
 function configureDrawDate39(id,game,current){
  const old=document.getElementById(id);if(!old)return;
