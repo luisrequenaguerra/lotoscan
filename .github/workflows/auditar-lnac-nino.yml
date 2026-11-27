@@ -1,0 +1,56 @@
+name: Auditar fuentes El Niño 2025 y 2026
+on:
+  push:
+    branches: ['investigacion/lnac-nino']
+    paths: ['.github/workflows/auditar-lnac-nino.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,time,pathlib,datetime
+          from actualizar_resultados_130 import BASE,fetch,candidates
+          out=pathlib.Path('/tmp/extraordinarios');out.mkdir(exist_ok=True)
+          dates='20250106 20260106'.split()
+          report=[]
+          def query(name,key,url):
+              raw,net=fetch(url,retries=0)
+              row={'endpoint':name,'key':key,**net}
+              report.append(row)
+              try:
+                  if raw is None:return None
+                  (out/(key+'_'+name+'.json')).write_bytes(raw)
+                  data=json.loads(raw)
+                  row['json']=True
+                  return raw
+              except (ValueError,UnicodeError):
+                  row['json']=False
+                  return None
+              finally:
+                  print(json.dumps(row,ensure_ascii=False),flush=True)
+                  (out/'informe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+                  time.sleep(8)
+          for day in dates:
+              raw=query('fecha2',day,BASE+'fecha2?game_id=LNAC&fecha_sorteo='+day)
+              if raw is None:continue
+              found,state=candidates(raw,'LNAC',datetime.datetime.strptime(day,'%Y%m%d').date())
+              report[-1]['estado']=state
+              report[-1]['ids']=[str(x['id_sorteo']) for x in found]
+              for item in found:
+                  ident=str(item['id_sorteo'])
+                  query('resultados2',ident,BASE+'resultados2?idsorteo='+ident)
+          (out/'informe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          if any(not x.get('json') for x in report) or any(x.get('endpoint')=='fecha2' and not x.get('ids') for x in report):
+              raise SystemExit('Auditoria parcial: revisar artefacto')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fuentes-nino-2025-2026
+          path: /tmp/extraordinarios
