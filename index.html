@@ -1074,7 +1074,7 @@ function openOfficialForCurrentTicket(){
  const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;
  const r=checkTicket38(t);alert(r.state==='pending'?'Pendiente de comprobar: '+r.message:ticketStatus(t)+'\n'+r.message);
 }
-function sortedTickets(items){const mode=document.getElementById('ticketSort')?.value||'prizes';return [...items].sort((a,b)=>{if(mode==='prizes'){const ar=checkTicket38(a),br=checkTicket38(b);const rank=r=>r.state==='won'?0:r.state==='matched_unpaid'?1:r.state==='candidate'?2:r.state==='pending'?3:4;return rank(ar)-rank(br)||(ar.state==='won'?(Number(br.prize)||0)-(Number(ar.prize)||0):0)||(b.date||'').localeCompare(a.date||'')||b.id-a.id}if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
+function sortedTickets(items,mode=document.getElementById('ticketSort')?.value||'prizes'){return [...items].sort((a,b)=>{if(mode==='prizes'){const ar=checkTicket38(a),br=checkTicket38(b);const rank=r=>r.state==='won'?0:r.state==='matched_unpaid'?1:r.state==='candidate'?2:r.state==='pending'?3:4;return rank(ar)-rank(br)||(ar.state==='won'?(Number(br.prize)||0)-(Number(ar.prize)||0):0)||(b.date||'').localeCompare(a.date||'')||b.id-a.id}if(mode==='date_asc')return (a.date||'').localeCompare(b.date||'')||a.id-b.id;if(mode==='added_desc')return b.id-a.id;if(mode==='number')return (a.number||'').localeCompare(b.number||'');return (b.date||'').localeCompare(a.date||'')||b.id-a.id})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function ticketListDate083(value){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value||''));return m?m[3]+'/'+m[2]+'/'+m[1].slice(-2):(value?String(value):'Fecha no indicada')}
 function lnacDrawName(date){
@@ -1097,7 +1097,7 @@ function renderTickets(){
  const all=document.getElementById('allTickets');
  if(all)all.innerHTML=shown.length?shown.map(safeTicketCard071).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';
  const home=document.getElementById('homeTickets');
- if(home){let featured=tickets.slice();try{featured=sortedTickets(featured)}catch(error){console.error(error)}home.innerHTML=featured.slice(0,2).map(safeTicketCard071).join('')}
+ if(home){let featured=tickets.slice();try{featured=sortedTickets(featured,'prizes')}catch(error){console.error(error)}home.innerHTML=featured.slice(0,2).map(safeTicketCard071).join('')}
  const count=document.getElementById('ticketCount');if(count)count.textContent=tickets.length+' boletos';
  const summary=document.getElementById('portfolioSummary');if(summary)summary.textContent=shown.length+' boletos · '+shown.filter(t=>['won','lost','candidate'].includes(safeTicketStatus071(t))).length+' con resultado';
 }
