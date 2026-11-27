@@ -145,3 +145,18 @@ import subprocess
 for year in (2024,2025):
     (out/f"{year}.mayores.json").write_text(json.dumps(premios_mayores(leer_json(year,None))))
 subprocess.run(["node","scripts/probar_lnac_108.js",str(out)],check=True)
+
+from normalizar_lnac_108 import normalize
+for year,draw_id in ((2024,"1259409102"),(2025,"1295909102")):
+    web=json.loads((out/f"{year}.extracciones.json").read_text())
+    raw=leer_json(year,None)
+    normalized=normalize(raw,web["entries"],year,draw_id)
+    assert len(normalized["extraccionesDeCincoCifras"])==1794
+    assert {e["decimo"] for e in normalized["extraccionesDeCincoCifras"]}==set(web["pedreas"])
+    assert premios_mayores(normalized)==premios_mayores(raw)
+    for invalid in (web["entries"][:-1],web["entries"][:-1]+[web["entries"][0]]):
+        try:normalize(raw,invalid,year,draw_id)
+        except ValueError:pass
+        else:raise AssertionError("Datos inválidos aceptados")
+    (out/f"{year}.lnac108.normalizado.json").write_text(json.dumps(normalized,ensure_ascii=False,indent=2))
+    print("NORMALIZACION_108 "+json.dumps({"year":year,"drawId":draw_id,"pedreas":1794,"pass":True}),flush=True)
