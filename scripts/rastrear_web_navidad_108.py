@@ -200,3 +200,21 @@ with TemporaryDirectory() as tmp:
     print("HISTORICO_108 OK: pending, publication, preservation, idempotence, no redundant requests",flush=True)
 
 subprocess.run(["node","scripts/probar_integracion_108.js",str(out)],check=True)
+
+# End-to-end live production polling, without writing the public history.
+from actualizar_lnac_navidad import poll
+for live_year in (2024,2025,2026):
+    live=poll(live_year)
+    expected="pending" if live_year==2026 else "complete"
+    report={"year":live_year,"status":live["status"],"expected":expected,"reason":live.get("reason"),"evidence":live.get("evidence")}
+    if live["status"]=="complete":
+        data=live["data"]
+        report["drawId"]=data["drawIdSorteo"]
+        report["pedreas"]=len(data["extraccionesDeCincoCifras"])
+        assert report["pedreas"]==1794
+    (out/f"{live_year}.poll-live.json").write_text(json.dumps(report,ensure_ascii=False,indent=2))
+    print("POLL_LIVE_108",json.dumps(report,ensure_ascii=False),flush=True)
+    assert live["status"]==expected,report
+    if live_year==2026:
+        assert len(live.get("evidence",[]))>=2,report
+    time.sleep(5)
