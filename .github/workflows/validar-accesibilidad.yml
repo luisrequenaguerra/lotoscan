@@ -1,0 +1,50 @@
+name: Validar accesibilidad
+on:
+  push:
+    branches: [mejora/accesibilidad-tipografica]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regresión funcional
+        run: |
+          set -e
+          for test in tests/test_*.js; do node "$test"; done
+      - name: Instalar navegador de prueba
+        run: |
+          npm install --no-save playwright@1.58.2
+          npx playwright install --with-deps webkit
+      - name: Comprobar pantallas móviles
+        run: |
+          python3 -m http.server 8765 > /tmp/server.log 2>&1 &
+          node <<'JS'
+          const {webkit}=require('playwright');
+          (async()=>{
+            const browser=await webkit.launch();
+            for(const width of [320,375,390,430]){
+              const page=await browser.newPage({viewport:{width,height:812},isMobile:true,hasTouch:true});
+              await page.goto('http://127.0.0.1:8765/');
+              await page.waitForFunction(()=>typeof go==='function' && typeof openGameForm==='function');
+              for(const id of ['home','scan','tickets','draws','results','gameForms']){
+                await page.evaluate(id=>go(id),id);
+                const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
+                if(overflow)throw Error('Desbordamiento '+width+' '+id);
+                console.log('PANTALLA OK',width,id);
+              }
+              for(const game of ['loteria_nacional','bonoloto','primitiva','euromillones','gordo','eurodreams','quiniela','quinigol','lototurf','quintuple_plus']){
+                await page.evaluate(g=>openGameForm(g),game);
+                if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1))throw Error('Desbordamiento formulario '+width+' '+game);
+                console.log('FORMULARIO OK',width,game);
+              }
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
