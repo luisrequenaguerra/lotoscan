@@ -198,3 +198,5 @@ with TemporaryDirectory() as tmp:
     assert manifest.read_bytes()==saved
     assert update(root,2026,lambda y:{"status":"pending"})=="already_complete"
     print("HISTORICO_108 OK: pending, publication, preservation, idempotence, no redundant requests",flush=True)
+
+subprocess.run(["node","scripts/probar_integracion_108.js",str(out)],check=True)
