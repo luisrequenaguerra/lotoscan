@@ -1,0 +1,71 @@
+name: Integración LNAC 113
+on:
+  push:
+    branches: ['investigacion/lnac-nino']
+    paths: ['index.html','scripts/lnac_modelo113.js','resultados/lnac/**','.github/workflows/probar-lnac-113.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sintaxis e integración de los motores
+        run: |
+          node - <<'JS'
+          const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+          const html=fs.readFileSync('index.html','utf8');
+          const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(m=>m[1]);
+          assert(scripts.length);
+          scripts.forEach((s,i)=>new vm.Script(s,{filename:'inline-'+i+'.js'}));
+          const source=scripts.join('\n');
+          const start=source.indexOf('const LNAC_DRAWS_066={}');
+          const end=source.indexOf('function calcLNAC066(',start);
+          assert(start>=0&&end>start);
+          function extract(name){
+            const pos=source.indexOf('function '+name+'(');
+            assert(pos>=0,name);
+            const next=source.indexOf('\nfunction ',pos+1);
+            assert(next>pos,name);
+            const chunk=source.slice(pos,next);
+            const close=chunk.lastIndexOf('\n}');
+            if(close>=0)return chunk.slice(0,close+2);
+            return chunk.split('\n')[0];
+          }
+          const names=['prepare113','calc113','registerLNAC066','calcLNAC066','lnacDrawName','prepare105','prepare101','calcLNAC82','calcLNAC112'];
+          // Load declarations only, without browser startup.
+          const context=vm.createContext({console,LNAC_FIXTURES_066:[]});
+          vm.runInContext('const LNAC_DRAWS_066={};\n'+names.map(extract).join('\n'),context);
+          const manifest=JSON.parse(fs.readFileSync('resultados/lnac/manifest.json'));
+          assert.equal(new Set(manifest.draws.map(x=>x.date)).size,manifest.draws.length);
+          assert(manifest.draws.every(x=>x.date>='2026-01-01'));
+          const independent=require('./scripts/lnac_modelo113.js');
+          for(const row of manifest.draws){
+            const d=JSON.parse(fs.readFileSync(row.file));
+            context.d=d;
+            assert.equal(vm.runInContext('registerLNAC066(d)',context),row.date);
+            if(d.modelDraw===113){
+              assert.equal(row.date,'2026-01-06');
+              assert.equal(vm.runInContext("lnacDrawName('2026-01-06')",context),'Sorteo Extraordinario de El Niño');
+              const calc=independent.prepare113(d);
+              const browser=vm.runInContext('(n)=>calcLNAC066(d,n,null,null)',context);
+              let sum=0;
+              for(let i=0;i<100000;i++){
+                const n=String(i).padStart(5,'0'),a=calc(n),v=browser(n);
+                assert.equal(Math.round(v.amount*100),a.cents,n);
+                assert.deepEqual(JSON.parse(JSON.stringify(v.components)),a.hits.map(h=>({label:h.label,amount:h.cents/100})));
+                sum+=a.cents;
+              }
+              assert.equal(sum,140000000);
+              console.log('113: 100000 coincidencias interfaz/motor');
+            }else{
+              context.n=d.primerPremio.decimo;
+              const v=vm.runInContext('calcLNAC066(d,n,1,1)',context);
+              assert(v.amount>0,row.date);
+            }
+            console.log('OK',row.date,d.modelDraw);
+          }
+          assert(manifest.draws.some(x=>x.date==='2026-01-06'));
+          console.log('Histórico validado:',manifest.draws.length);
+          JS

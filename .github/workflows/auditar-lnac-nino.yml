@@ -1,0 +1,79 @@
+name: Auditar fuentes El Niño 2025 y 2026
+on:
+  push:
+    branches: ['investigacion/lnac-nino']
+    paths: ['.github/workflows/auditar-lnac-nino.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,time,pathlib,datetime
+          from actualizar_resultados_130 import BASE,fetch,candidates
+          out=pathlib.Path('/tmp/extraordinarios');out.mkdir(exist_ok=True)
+          dates='20250106 20260106'.split()
+          report=[]
+          def query(name,key,url):
+              raw,net=fetch(url,retries=0)
+              row={'endpoint':name,'key':key,**net}
+              report.append(row)
+              try:
+                  if raw is None:return None
+                  (out/(key+'_'+name+'.json')).write_bytes(raw)
+                  data=json.loads(raw)
+                  row['json']=True
+                  return raw
+              except (ValueError,UnicodeError):
+                  row['json']=False
+                  return None
+              finally:
+                  print(json.dumps(row,ensure_ascii=False),flush=True)
+                  (out/'informe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+                  time.sleep(8)
+          for day in dates:
+              raw=query('fecha2',day,BASE+'fecha2?game_id=LNAC&fecha_sorteo='+day)
+              if raw is None:continue
+              found,state=candidates(raw,'LNAC',datetime.datetime.strptime(day,'%Y%m%d').date())
+              report[-1]['estado']=state
+              report[-1]['ids']=[str(x['id_sorteo']) for x in found]
+              for item in found:
+                  ident=str(item['id_sorteo'])
+                  query('resultados2',ident,BASE+'resultados2?idsorteo='+ident)
+          (out/'informe.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          if any(not x.get('json') for x in report) or any(x.get('endpoint')=='fecha2' and not x.get('ids') for x in report):
+              raise SystemExit('Auditoria parcial: revisar artefacto')
+          PY
+      - name: Validar motor 113 en Node
+        run: |
+          node - <<'JS'
+          const assert=require('node:assert/strict');
+          const fs=require('node:fs');
+          const {prepare113,calc113}=require('./scripts/lnac_modelo113.js');
+          for(const [year,id] of [[2025,'1260909002'],[2026,'1297409002']]){
+            const d=JSON.parse(fs.readFileSync('/tmp/extraordinarios/'+id+'_resultados2.json'));
+            const calc=prepare113(d);
+            let sum=0,count=0;
+            for(let i=0;i<100000;i++){
+              const n=String(i).padStart(5,'0'),v=calc(n);
+              assert(Number.isSafeInteger(v.cents)&&v.cents>=0);
+              assert.equal(v.cents,v.hits.reduce((s,h)=>s+h.cents,0));
+              assert.equal(v.specialPending,false);
+              sum+=v.cents;count+=v.hits.length;
+            }
+            assert.equal(sum,140000000);assert.equal(count,37920);
+            for(const n of [null,12345,'1234','123456','abcde','-1234'])assert.equal(calc113(d,n),null);
+            assert.equal(calc113({...d,modelDraw:105},'00000'),null);
+            console.log(year,100000,sum,count);
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fuentes-nino-2025-2026
+          path: /tmp/extraordinarios
