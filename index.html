@@ -27,7 +27,12 @@ h1{font-family:Georgia,serif;font-size:34px;line-height:1.12;font-weight:400;mar
 .ticket{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;display:flex;align-items:center;gap:13px}
 .ticketicon{width:44px;height:44px;border-radius:14px;background:var(--olive2);display:grid;place-items:center;color:var(--olive);font-size:17px;flex:0 0 auto}.gameicon{width:38px;height:38px;border-radius:12px;background:#edf0e9;display:grid;place-items:center;color:#59694f}.gameicon svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .ticketmain{flex:1}.ticketname{font-size:13px;font-weight:650}.ticketmeta{font-size:11px;color:var(--muted);margin-top:5px}.chev{color:#a4a69b;font-size:20px}
-.gamegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.game{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:15px;min-height:95px;cursor:pointer;text-align:left;color:var(--ink)}.game strong{display:block;font-size:12px;margin:9px 0 4px}.game small{color:var(--muted);font-size:10px}.game .symbol{color:var(--olive);font-size:17px}
+.gamegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.game{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:15px;min-height:95px;cursor:pointer;text-align:left;color:var(--ink)}.game strong{display:block;font-size:12px;margin:9px 0 4px}.game small{color:var(--muted);font-size:10px}
+/* Inicio: tarjetas uniformes y contenido alineado desde arriba. */
+#homeGameGrid{grid-auto-rows:1fr;grid-template-columns:repeat(2,minmax(0,1fr))}
+#homeGameGrid .game{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-width:0}
+#homeGameGrid .gameicon{flex-shrink:0}
+#homeGameGrid .game small{display:block;line-height:1.4;min-height:2.8em;white-space:normal}.game .symbol{color:var(--olive);font-size:17px}
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(460px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fbfaf6ed;backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;justify-content:space-around;z-index:4}
 nav button{border:0;background:none;color:#92958b;font-size:10px;display:flex;flex-direction:column;gap:5px;align-items:center;min-width:58px;cursor:pointer}nav button b{font-size:19px;font-weight:400}nav button.active{color:var(--olive)}
 .screen{display:none}.screen.active{display:block}
