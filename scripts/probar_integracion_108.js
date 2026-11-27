@@ -44,3 +44,19 @@ for(const year of [2024,2025]){
 ctx.t={date:'2026-12-22',number:'12345'};
 assert.equal(vm.runInContext('checkLNAC067(t)',ctx).state,'pending');
 console.log('CALENDARIO_ESTADOS_108 OK');
+
+assert(vm.runInContext("dateAllowed39('loteria_nacional','2025-12-22')",ctx));
+for(const [game,date] of [['loteria_nacional','2025-12-25'],['loteria_nacional','2024-12-22'],['bonoloto','2025-12-22'],['primitiva','2025-12-22']]){
+ ctx.game=game;ctx.date=date;assert(!vm.runInContext('dateAllowed39(game,date)',ctx));
+}
+const official=JSON.parse(fs.readFileSync('resultados/lnac/extra108_2025-12-22.json'));
+const normalized=JSON.parse(fs.readFileSync(path.join(dir,'2025.lnac108.normalizado.json')));
+assert.deepEqual(official.extraccionesDeCincoCifras.map(x=>x.decimo).sort(),normalized.extraccionesDeCincoCifras.map(x=>x.decimo).sort());
+ctx.d=official;
+const cases=fs.readFileSync(path.join(dir,'2025.motor-108.jsonl'),'utf8').trim().split('\n').map(JSON.parse);
+for(const r of cases){ctx.n=r.n;assert.equal(Math.round(vm.runInContext('calcLNAC066(d,n,1,1)',ctx).amount*100),r.cents,r.n);}
+console.log('HISTORICO_REAL_2025 100000 OK; EXCEPCION_CALENDARIO OK');
+const selected=new Map();
+for(const category of [...new Set(cases.flatMap(r=>r.parts.map(p=>p[0])))]){const r=cases.find(x=>x.parts.length===1&&x.parts[0][0]===category)||cases.find(x=>x.parts.some(p=>p[0]===category));selected.set(r.n,r);}
+for(const r of [cases.find(x=>x.cents===0),cases.find(x=>x.parts.length>=3),cases.find(x=>x.n.startsWith('0')&&x.cents>0)])if(r)selected.set(r.n,r);
+console.log('BOLETOS_SAFARI_2025 '+JSON.stringify([...selected.values()]));
