@@ -139,3 +139,9 @@ for year in (2024,2025):
     (out/f"{year}.motor-contraste.json").write_text(json.dumps({**report,"differences":differences,"component_differences":component_differences},indent=2))
     print("MOTOR_CONTRASTE "+json.dumps(report),flush=True)
 if not all_pass:raise SystemExit("Motor experimental no conciliado")
+
+# Cross-language verification using the Python output as the comparison oracle.
+import subprocess
+for year in (2024,2025):
+    (out/f"{year}.mayores.json").write_text(json.dumps(premios_mayores(leer_json(year,None))))
+subprocess.run(["node","scripts/probar_lnac_108.js",str(out)],check=True)
