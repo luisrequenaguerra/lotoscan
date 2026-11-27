@@ -455,6 +455,7 @@ const DRAW_WEEKDAYS39={euromillones:[2,5],primitiva:[1,4,6],bonoloto:[0,1,2,3,4,
 function dateAllowed39(game,date){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
  const d=new Date(date+'T12:00:00');if(Number.isNaN(d.getTime())||d.toISOString().slice(0,10)!==date)return false;
+ if(date<'2026-01-01')return game==='loteria_nacional'&&date==='2025-12-22';
  const days=DRAW_WEEKDAYS39[game];return !days||days.includes(d.getDay())||(game==='loteria_nacional'&&((/-12-22$/.test(date)||['2026-10-12','2026-12-06','2026-01-06'].includes(date))||Object.prototype.hasOwnProperty.call(LNAC_DRAWS_066,date)));
 }
 function configureDrawDate39(id,game,current){
@@ -471,7 +472,7 @@ function configureDrawDate39(id,game,current){
  const calendar=document.createElement('div');calendar.className='lotocal';calendar.setAttribute('aria-label','Calendario de sorteos');
  old.replaceWith(input);input.after(calendar);
  const today=new Date(),limit=new Date(today.getFullYear(),today.getMonth(),today.getDate()+90);
- const min=new Date(2026,0,1);
+ const min=game==='loteria_nacional'?new Date(2025,11,22):new Date(2026,0,1);
  const initial=current&&/^\d{4}-\d{2}-\d{2}$/.test(current)?new Date(current+'T12:00:00'):today;
  let year=initial.getFullYear(),month=initial.getMonth();
  const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
@@ -507,7 +508,7 @@ function configureDrawDate39(id,game,current){
  render();
 }
 function validateDrawDate39(game,date){
- if(date<'2026-01-01'){alert('LotoScan solo admite comprobación automática de sorteos desde 2026.');return false}
+ if(date<'2026-01-01' && !(game==='loteria_nacional' && date==='2025-12-22')){alert('LotoScan solo admite comprobación automática de sorteos desde 2026.');return false}
  if(!dateAllowed39(game,date)){alert('La fecha no corresponde a un día habitual de sorteo de '+gameLabel(game)+'. Comprueba la fecha del resguardo.');return false}
  return true;
 }
