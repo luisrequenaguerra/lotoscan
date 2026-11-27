@@ -1,0 +1,28 @@
+name: Actualizar LNAC Navidad
+on:
+  schedule:
+    - cron: '30,45 7 22 12 *'
+    - cron: '*/15 8-11,14-21 22 12 *'
+    - cron: '*/5 12-13 22 12 *'
+    - cron: '0 22 22 12 *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: lnac-navidad-publicacion
+  cancel-in-progress: false
+jobs:
+  actualizar:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/publicar_lnac_navidad.py
+      - run: |
+          git add resultados/lnac
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Actualizar histórico Navidad validado"
+          git push
