@@ -213,7 +213,9 @@ nav button{font-size:.75rem;color:#62675c;min-width:0;flex:1;min-height:44px}
 .lnac-prize-amount{text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 @media(max-width:350px){.lnac-prize-row{gap:5px}.lnac-prize-number{padding:7px 8px}}
 </style>
-</head>
+<style id="balanceStyle">
+.balance-filters{display:flex;gap:6px;margin:16px 0}.balance-filters button{flex:1;min-width:0;min-height:44px;border:1px solid #b7baaf;border-radius:12px;background:transparent;color:inherit;font:inherit;font-size:.875rem}.balance-filters button[aria-pressed=true]{background:#626f55;color:white}.balance-main{background:#2b3029;color:white;padding:22px;border-radius:18px;margin-bottom:16px}.balance-main small{color:#d3d9cd;font-size:.8125rem}.balance-value{font-size:2rem;font-weight:700;overflow-wrap:anywhere;margin:10px 0 18px}.balance-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border-top:1px solid #535b4e;padding-top:14px}.balance-pair strong{display:block;font-size:1.125rem;overflow-wrap:anywhere}.balance-stat{display:flex;justify-content:space-between;gap:8px;margin:10px 0}.balance-track{display:flex;height:9px;border-radius:8px;overflow:hidden;background:#e4e3de}.balance-game{padding:12px 0;border-bottom:1px solid #deded7}.balance-game:last-child{border:0}.balance-bar-row{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:.875rem}.balance-bar{flex:1;min-width:0}.balance-bar span{display:block;height:7px;border-radius:5px}.balance-bar-row>span{max-width:55%;overflow-wrap:anywhere;text-align:right}.balance-game small{font-size:.8125rem}
+</style></head>
 <body>
 <div class="app">
 <header>
@@ -367,9 +369,9 @@ nav button{font-size:.75rem;color:#62675c;min-width:0;flex:1;min-height:44px}
 </section>
 
 <section id="results" class="screen">
-<button class="back" onclick="go('home')">← Volver</button><div class="eyebrow">COMPROBACIÓN</div><h1>Resultados.</h1><p class="lead">Consulta cotejos orientativos y resultados disponibles. Verifica siempre los premios en SELAE.</p>
-<div class="panel"><div class="eyebrow">FUENTE OFICIAL · SELAE</div><h3 style="margin:12px 0">Comprobar mis boletos</h3><p class="ticketmeta">La comprobación se realiza aquí, sin salir de LotoScan. Euromillones: sorteo de prueba verificado y catálogo histórico, cuando esté publicado y validado.</p><div id="officialResultsList"></div></div>
-<p class="notice">Los datos del sorteo de prueba proceden de los resultados publicados por SELAE. La actualización del histórico depende de publicar datos verificados en el repositorio; no se inventan premios.</p>
+<button class="back" onclick="go('home')">← Volver</button><h1>Balance.</h1><p class="lead">Consulta los gastos y premios de tus boletos registrados.</p>
+<div class="balance-filters" role="group" aria-label="Periodo"><button type="button" data-period="month" onclick="setBalancePeriod('month')">Este mes</button><button type="button" data-period="year" onclick="setBalancePeriod('year')">Este año</button><button type="button" data-period="all" onclick="setBalancePeriod('all')">Todo</button></div>
+<div id="balanceContent" aria-live="polite"></div>
 </section>
 <p class="notice" style="text-align:center">LotoScan · Escáner y entrada manual</p>
 </div>
@@ -378,7 +380,7 @@ nav button{font-size:.75rem;color:#62675c;min-width:0;flex:1;min-height:44px}
 <button data-tab="scan" onclick="go('scan')"><b>⌗</b>Escanear</button>
 <button data-tab="tickets" onclick="go('tickets')"><b>▤</b>Boletos</button>
 <button data-tab="draws" onclick="go('draws')"><b>◷</b>Sorteos</button>
-<button data-tab="results" onclick="go('results')"><b>✳</b>Resultados</button>
+<button data-tab="results" onclick="go('results')"><b>▥</b>Balance</button>
 </nav>
 <script>
 const sampleTickets = [
@@ -388,11 +390,24 @@ const sampleTickets = [
  {id:4,game:'loteria_nacional',number:'55483',series:176,fraction:1,date:'2026-12-22',code:'102/26',price:20,draw:'Sorteo extraordinario de Navidad'}
 ];
 const STORAGE_KEY='lotoscan_tickets_v010';
-let tickets;
-try { const stored=localStorage.getItem(STORAGE_KEY); tickets=stored===null?sampleTickets.map(t=>({...t})):JSON.parse(stored); if(!Array.isArray(tickets))throw Error('Invalid data'); }
-catch(e){tickets=sampleTickets.map(t=>({...t}));}
-function persistTickets(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(tickets));return true}catch(e){console.error('LotoScan: error al guardar',e);alert('No se han podido guardar los cambios: '+(e?.message||'error de almacenamiento')+'. No borres los datos de Safari.');return false}}
-try{if(localStorage.getItem(STORAGE_KEY)===null)persistTickets()}catch(e){console.warn('Almacenamiento no disponible',e)}
+const DEMO_MIGRATION_KEY='lotoscan_demo_removed_v1';
+function removeOriginalDemoTickets(items){
+ return items.filter(t=>!sampleTickets.some(d=>t&&Object.keys(t).length===Object.keys(d).length&&Object.keys(d).every(k=>Object.prototype.hasOwnProperty.call(t,k)&&t[k]===d[k])));
+}
+let tickets=[],ticketStorageReadable=false;
+try {
+ const stored=localStorage.getItem(STORAGE_KEY);
+ const parsed=stored===null?[]:JSON.parse(stored);
+ if(!Array.isArray(parsed))throw Error('Invalid data');
+ tickets=parsed;ticketStorageReadable=true;
+ if(localStorage.getItem(DEMO_MIGRATION_KEY)!=='1'){
+  const cleaned=removeOriginalDemoTickets(parsed);
+  if(stored===null||cleaned.length!==parsed.length)localStorage.setItem(STORAGE_KEY,JSON.stringify(cleaned));
+  tickets=cleaned;
+  localStorage.setItem(DEMO_MIGRATION_KEY,'1');
+ }
+}catch(e){console.warn('LotoScan: almacenamiento o migración no disponible',e)}
+function persistTickets(){try{if(!ticketStorageReadable)throw Error('No se pudo leer el almacenamiento original');localStorage.setItem(STORAGE_KEY,JSON.stringify(tickets));return true}catch(e){console.error('LotoScan: error al guardar',e);alert('No se han podido guardar los cambios: '+(e?.message||'error de almacenamiento')+'. No borres los datos de Safari.');return false}}
 // LotoScan 0.84: exportación e importación conservadora de boletos.
 function downloadBackup084(data,filename){
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
@@ -1098,15 +1113,61 @@ function checkTicket38(t){
  return lost();
 }
 function ticketStatus(t){const r=checkTicket38(t);return r.state==='won'?(r.grossEstimate?'¡Premiado! · '+money38(r.prize)+' (estimación bruta)':r.partialTotal?(Number(r.prize)>0?'Premiado · '+money38(r.prize)+' (total parcial)':'Premiado · Importe no publicado'):'Premiado · '+money38(r.prize)):r.state==='lost'?'No premiado':r.state==='matched_unpaid'?'Combinación ganadora sin premio asignado':r.state==='candidate'?'Coincidencias premiadas · verificar resguardo':'Pendiente de comprobar'}
-function renderOfficialResults(){
- const el=document.getElementById('officialResultsList');if(!el)return;
- const rows=tickets.map(t=>({t,r:checkTicket38(t)}));
- const done=rows.filter(x=>['won','lost','candidate','matched_unpaid'].includes(x.r.state)).length;
- el.innerHTML='<p class="ticketmeta">Comprobación dentro de LotoScan: '+done+' de '+rows.length+' boletos comprobados. '+esc(resultsCatalogState41)+' · '+esc(reviewState062)+' · Las fechas sin resultados completos quedan pendientes.</p>'+
- '<button class="primary" style="width:100%;margin:12px 0" onclick="renderTickets();renderOfficialResults()">Comprobar mis boletos</button>'+
- rows.map(({t,r})=>'<div class="detail-line"><span>'+esc(gameLabel(t.game))+' · '+esc(t.date||'Sin fecha')+'</span><strong>'+esc(ticketStatus(t))+'</strong></div>').join('')+
- '<p class="notice">Los premios se calculan con los resultados disponibles y no constituyen confirmación oficial. Si faltan datos esenciales, el boleto queda pendiente.</p>';
+
+function balanceCents(value){
+ if(typeof value!=='number'&&typeof value!=='string')return null;
+ if(typeof value==='string'&&!/^\d+(?:\.\d{1,2})?$/.test(value.trim()))return null;
+ const raw=Number(value)*100,n=Math.round(raw);return Number.isSafeInteger(n)&&n>=0&&Math.abs(raw-n)<0.00001?n:null;
 }
+function balanceStats(items,period,now,check){
+ const totals={count:0,spent:0,prizes:0,won:0,lost:0,pending:0,unpaid:0,missing:0,undated:0,groups:Object.create(null)};
+ for(const t of items){
+  const date=String(t.date||'');
+  const valid=/^\d{4}-\d{2}-\d{2}$/.test(date)&&!Number.isNaN(Date.parse(date))&&new Date(date).toISOString().slice(0,10)===date;
+  if(!valid){totals.undated++;if(period!=='all')continue}
+  if(period==='month'&&!date.startsWith(now.slice(0,7)))continue;
+  if(period==='year'&&!date.startsWith(now.slice(0,4)))continue;
+  const game=t.game==='quintuple'?'quintuple_plus':t.game;
+  const g=totals.groups[game]||(totals.groups[game]={count:0,spent:0,prizes:0,missing:0,pending:0});
+  totals.count++;g.count++;
+  const cost=balanceCents(t.price);
+  if(cost===null||cost===0){totals.missing++;g.missing++}else{totals.spent+=cost;g.spent+=cost}
+  let r;try{r=check(t)||{}}catch(e){r={}}
+  const prize=balanceCents(r.prize);
+  if(r.state==='won'&&prize!==null){totals.prizes+=prize;g.prizes+=prize}
+  const incomplete=r.partialTotal||r.jokerPending||r.mainPending;
+  if(incomplete||!['won','lost','matched_unpaid'].includes(r.state)||(r.state==='won'&&prize===null)){totals.pending++;g.pending++}
+  else if(r.state==='won')totals.won++;
+  else if(r.state==='matched_unpaid')totals.unpaid++;
+  else totals.lost++;
+ }
+ totals.net=totals.prizes-totals.spent;
+ totals.provisional=!!(totals.pending||totals.missing||totals.undated);
+ return totals;
+}
+
+
+let balancePeriod='year';
+function setBalancePeriod(period){if(['month','year','all'].includes(period)){balancePeriod=period;renderOfficialResults()}}
+function renderOfficialResults(){
+ const el=document.getElementById('balanceContent');if(!el)return;
+ const now=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const x=balanceStats(tickets,balancePeriod,now,checkTicket38),m=n=>money38(n/100);
+ document.querySelectorAll('.balance-filters button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.period===balancePeriod)));
+ const warnings=[];
+ if(x.missing)warnings.push(x.missing+' boletos sin coste confirmado.');
+ if(x.pending)warnings.push(x.pending+' boletos pendientes o con premio parcial.');
+ if(x.undated)warnings.push(x.undated+' boletos sin fecha válida'+(balancePeriod==='all'?'.':', excluidos del periodo.'));
+ const groups=Object.entries(x.groups).sort((a,b)=>b[1].spent-a[1].spent);
+ const max=Math.max(1,...groups.flatMap(([,g])=>[g.spent,g.prizes]));
+ el.innerHTML='<div class="balance-main"><small>'+ (x.provisional?'BALANCE PROVISIONAL':'BALANCE BRUTO')+'</small><div class="balance-value">'+(x.missing?'—':esc(m(x.net)))+'</div><div class="balance-pair"><div><small>Gasto registrado</small><strong>'+esc(m(x.spent))+'</strong></div><div><small>Premios calculados</small><strong>'+esc(m(x.prizes))+'</strong></div></div></div>'+
+ (warnings.length?'<p class="notice">'+esc(warnings.join(' '))+'</p>':'')+
+ '<h3>Mis boletos.</h3><div class="panel"><div class="balance-stat"><span>Registrados</span><strong>'+x.count+'</strong></div>'+
+ '<div class="balance-track">'+[[x.won+x.unpaid,'#758d6c'],[x.lost,'#bd8178'],[x.pending,'#c6ad6d']].map(([n,c])=>'<span style="width:'+(x.count?n/x.count*100:0)+'%;background:'+c+'"></span>').join('')+'</div>'+
+ [['Premiados',x.won],['Sin premio asignado',x.unpaid],['No premiados',x.lost],['Pendientes',x.pending]].map(([label,n])=>'<div class="balance-stat"><span>'+label+'</span><strong>'+n+'</strong></div>').join('')+'</div>'+
+ '<h3>Balance por juego.</h3><div class="panel">'+(groups.length?'<p class="ticketmeta">Gris: gasto registrado · Verde: premios calculados</p>'+groups.map(([game,g])=>'<div class="balance-game"><strong>'+esc(gameLabel(game))+'</strong>'+[[g.spent,'#b7baaf'],[g.prizes,'#65785a']].map(([n,c])=>'<div class="balance-bar-row"><div class="balance-bar"><span style="width:'+n/max*100+'%;background:'+c+'"></span></div><span>'+esc(m(n))+'</span></div>').join('')+(g.missing?'<small>'+g.missing+' sin coste confirmado</small>':'')+'</div>').join(''):'<p class="ticketmeta">No hay boletos en este periodo.</p>')+'</div><p class="notice">Importes brutos calculados, no necesariamente cobrados. Solo boletos registrados, agrupados por fecha de sorteo.</p>';
+}
+
 function openOfficialForCurrentTicket(){
  const t=tickets.find(x=>x.id===currentTicketId);if(!t)return;
  const r=checkTicket38(t);alert(r.state==='pending'?'Pendiente de comprobar: '+r.message:ticketStatus(t)+'\n'+r.message);
@@ -1132,11 +1193,12 @@ function renderTickets(){
  const shown=(filter==='all'?tickets:tickets.filter(t=>t.game===filter)).slice();
  try{shown.splice(0,shown.length,...sortedTickets(shown))}catch(error){console.error('LotoScan: error ordenación',error)}
  const all=document.getElementById('allTickets');
- if(all)all.innerHTML=shown.length?shown.map(safeTicketCard071).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';
+ if(all)all.innerHTML=shown.length?shown.map(safeTicketCard071).join('') : (tickets.length?'<div class="empty">Todavía no tienes boletos de este sorteo.</div>':'<div class="empty">Todavía no tienes boletos. Escanea tu primer boleto o introdúcelo manualmente.</div>');
  const home=document.getElementById('homeTickets');
- if(home){let featured=tickets.slice();try{featured=sortedTickets(featured,'prizes')}catch(error){console.error(error)}home.innerHTML=featured.slice(0,2).map(safeTicketCard071).join('')}
+ if(home){let featured=tickets.slice();try{featured=sortedTickets(featured,'prizes')}catch(error){console.error(error)}home.innerHTML=featured.length?featured.slice(0,2).map(safeTicketCard071).join(''):'<div class="empty">Tus boletos aparecerán aquí cuando registres el primero.</div>'}
  const count=document.getElementById('ticketCount');if(count)count.textContent=tickets.length+' boletos';
  const summary=document.getElementById('portfolioSummary');if(summary)summary.textContent=shown.length+' boletos · '+shown.filter(t=>['won','lost','candidate'].includes(safeTicketStatus071(t))).length+' con resultado';
+ if(document.getElementById('results')?.classList.contains('active'))renderOfficialResults();
 }
 function detailTokens(value){if(Array.isArray(value))return value.flatMap(detailTokens);return String(value??'').trim().split(/[\s,;]+/).filter(Boolean)}
 function detailBubbles(value,kind='main'){return '<div class="detail-bubbles">'+detailTokens(value).map(n=>'<span class="detail-bubble '+(kind==='extra'?'detail-bubble-extra':'')+'">'+esc(n)+'</span>').join('')+'</div>'}
