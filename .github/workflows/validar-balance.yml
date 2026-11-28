@@ -18,3 +18,8 @@ jobs:
             echo "$test"
             node "$test" || exit 1
           done
+      - run: npm install --no-save playwright
+      - run: npx playwright install --with-deps webkit
+      - run: |
+          python3 -m http.server 8765 > /tmp/lotoscan-http.log 2>&1 &
+          node tests/balance_webkit.cjs
