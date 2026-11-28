@@ -1098,6 +1098,39 @@ function checkTicket38(t){
  return lost();
 }
 function ticketStatus(t){const r=checkTicket38(t);return r.state==='won'?(r.grossEstimate?'¡Premiado! · '+money38(r.prize)+' (estimación bruta)':r.partialTotal?(Number(r.prize)>0?'Premiado · '+money38(r.prize)+' (total parcial)':'Premiado · Importe no publicado'):'Premiado · '+money38(r.prize)):r.state==='lost'?'No premiado':r.state==='matched_unpaid'?'Combinación ganadora sin premio asignado':r.state==='candidate'?'Coincidencias premiadas · verificar resguardo':'Pendiente de comprobar'}
+
+function balanceCents(value){
+ if(typeof value!=='number'&&typeof value!=='string')return null;
+ if(!/^\d+(?:\.\d{1,2})?$/.test(String(value).trim()))return null;
+ const n=Math.round(Number(value)*100);return Number.isSafeInteger(n)&&n>=0?n:null;
+}
+function balanceStats(items,period,now,check){
+ const totals={count:0,spent:0,prizes:0,won:0,lost:0,pending:0,unpaid:0,missing:0,undated:0,groups:{}};
+ for(const t of items){
+  const date=String(t.date||'');
+  const valid=/^\d{4}-\d{2}-\d{2}$/.test(date)&&!Number.isNaN(Date.parse(date))&&new Date(date).toISOString().slice(0,10)===date;
+  if(!valid){totals.undated++;if(period!=='all')continue}
+  if(period==='month'&&!date.startsWith(now.slice(0,7)))continue;
+  if(period==='year'&&!date.startsWith(now.slice(0,4)))continue;
+  const game=t.game==='quintuple'?'quintuple_plus':t.game;
+  const g=totals.groups[game]||(totals.groups[game]={count:0,spent:0,prizes:0,missing:0,pending:0});
+  totals.count++;g.count++;
+  const cost=balanceCents(t.price);
+  if(cost===null||cost===0){totals.missing++;g.missing++}else{totals.spent+=cost;g.spent+=cost}
+  let r;try{r=check(t)||{}}catch(e){r={}}
+  const prize=balanceCents(r.prize);
+  if(r.state==='won'&&prize!==null){totals.prizes+=prize;g.prizes+=prize}
+  const incomplete=r.partialTotal||r.jokerPending||r.mainPending;
+  if(incomplete||!['won','lost','matched_unpaid'].includes(r.state)||(r.state==='won'&&prize===null)){totals.pending++;g.pending++}
+  else if(r.state==='won')totals.won++;
+  else if(r.state==='matched_unpaid')totals.unpaid++;
+  else totals.lost++;
+ }
+ totals.net=totals.prizes-totals.spent;
+ totals.provisional=!!(totals.pending||totals.missing||totals.undated);
+ return totals;
+}
+
 function renderOfficialResults(){
  const el=document.getElementById('officialResultsList');if(!el)return;
  const rows=tickets.map(t=>({t,r:checkTicket38(t)}));
