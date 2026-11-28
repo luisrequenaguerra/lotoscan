@@ -1155,16 +1155,17 @@ function renderOfficialResults(){
  const x=balanceStats(tickets,balancePeriod,now,checkTicket38),m=n=>money38(n/100);
  document.querySelectorAll('.balance-filters button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.period===balancePeriod)));
  const warnings=[];
- if(x.missing)warnings.push(x.missing+' boletos sin coste confirmado.');
+ if(x.missing)warnings.push(x.missing+' boletos sin coste confirmado. El balance no descuenta esos gastos y no representa el beneficio real.');
  if(x.pending)warnings.push(x.pending+' boletos pendientes o con premio parcial.');
  if(x.undated)warnings.push(x.undated+' boletos sin fecha válida'+(balancePeriod==='all'?'.':', excluidos del periodo.'));
+ const states=[['Premiados',x.won,'#758d6c'],['Sin premio asignado',x.unpaid,'#b4b8ac'],['No premiados',x.lost,'#bd8178'],['Pendientes',x.pending,'#c6ad6d']];
  const groups=Object.entries(x.groups).sort((a,b)=>b[1].spent-a[1].spent);
  const max=Math.max(1,...groups.flatMap(([,g])=>[g.spent,g.prizes]));
- el.innerHTML='<div class="balance-main"><small>'+ (x.provisional?'BALANCE PROVISIONAL':'BALANCE BRUTO')+'</small><div class="balance-value">'+(x.missing?'—':esc(m(x.net)))+'</div><div class="balance-pair"><div><small>Gasto registrado</small><strong>'+esc(m(x.spent))+'</strong></div><div><small>Premios calculados</small><strong>'+esc(m(x.prizes))+'</strong></div></div></div>'+
+ el.innerHTML='<div class="balance-main"><small>'+ (x.provisional?'BALANCE PROVISIONAL':'BALANCE BRUTO')+'</small><div class="balance-value">'+esc((x.net>0?'+':'')+m(x.net))+'</div><div class="balance-pair"><div><small>Gasto registrado</small><strong>'+esc(m(x.spent))+'</strong></div><div><small>Premios calculados</small><strong>'+esc(m(x.prizes))+'</strong></div></div></div>'+
  (warnings.length?'<p class="notice">'+esc(warnings.join(' '))+'</p>':'')+
  '<h3>Mis boletos.</h3><div class="panel"><div class="balance-stat"><span>Registrados</span><strong>'+x.count+'</strong></div>'+
- '<div class="balance-track">'+[[x.won+x.unpaid,'#758d6c'],[x.lost,'#bd8178'],[x.pending,'#c6ad6d']].map(([n,c])=>'<span style="width:'+(x.count?n/x.count*100:0)+'%;background:'+c+'"></span>').join('')+'</div>'+
- [['Premiados',x.won],['Sin premio asignado',x.unpaid],['No premiados',x.lost],['Pendientes',x.pending]].map(([label,n])=>'<div class="balance-stat"><span>'+label+'</span><strong>'+n+'</strong></div>').join('')+'</div>'+
+ '<div class="balance-track">'+states.map(([label,n,c])=>'<span style="width:'+(x.count?n/x.count*100:0)+'%;background:'+c+'"></span>').join('')+'</div>'+
+ states.map(([label,n,c])=>'<div class="balance-stat"><span style="display:inline-flex;align-items:center;gap:8px"><i aria-hidden="true" style="display:inline-block;width:10px;height:10px;flex-shrink:0;border-radius:50%;background:'+c+'"></i>'+label+'</span><strong>'+n+'</strong></div>').join('')+'</div>'+
  '<h3>Balance por juego.</h3><div class="panel">'+(groups.length?'<p class="ticketmeta">Gris: gasto registrado · Verde: premios calculados</p>'+groups.map(([game,g])=>'<div class="balance-game"><strong>'+esc(gameLabel(game))+'</strong>'+[[g.spent,'#b7baaf'],[g.prizes,'#65785a']].map(([n,c])=>'<div class="balance-bar-row"><div class="balance-bar"><span style="width:'+n/max*100+'%;background:'+c+'"></span></div><span>'+esc(m(n))+'</span></div>').join('')+(g.missing?'<small>'+g.missing+' sin coste confirmado</small>':'')+'</div>').join(''):'<p class="ticketmeta">No hay boletos en este periodo.</p>')+'</div><p class="notice">Importes brutos calculados, no necesariamente cobrados. Solo boletos registrados, agrupados por fecha de sorteo.</p>';
 }
 
