@@ -10,8 +10,7 @@ on:
         description: 'Diagnostico sin guardar'
         type: boolean
         default: false
-  schedule:
-    - cron: '17 7 * * *'
+  # Recuperación histórica exclusivamente manual.
 permissions:
   contents: write
 concurrency:
