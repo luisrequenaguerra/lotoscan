@@ -1,0 +1,65 @@
+name: Investigar cadena futura LNAC
+on:
+  push:
+    branches: ['investigacion/lnac-automatizacion-extraordinarios']
+    paths: ['.github/workflows/investigar-cadena-lnac.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          PYTHONPATH=scripts python3 - <<'PY'
+          import json,time,pathlib,re,datetime
+          from zoneinfo import ZoneInfo
+          from actualizar_resultados_130 import BASE,fetch
+          out=pathlib.Path('salida_cadena_lnac');out.mkdir(exist_ok=True)
+          rows=[]
+          def probe(label,url):
+              raw,net=fetch(url,retries=0)
+              row={'label':label,'url':url,**net}
+              obj=None
+              if raw:
+                  try:
+                      obj=json.loads(raw)
+                      (out/(label+'.json')).write_bytes(raw)
+                      items=obj if isinstance(obj,list) else [obj]
+                      keys=('drawIdSorteo','drawIdSorteoAnterior','drawIdSorteoSiguiente','fechaSorteo','modelDraw','nombreDelSorteo','precioDecimo','tipoSorteoGeneral','id_sorteo','fecha_sorteo','tenthPrice','game_id')
+                      row['items']=[{k:x[k] for k in keys if k in x} for x in items[:10] if isinstance(x,dict)]
+                      row['keys']=[list(x) for x in items[:2] if isinstance(x,dict)]
+                  except ValueError: row['error']='invalid_json'
+              rows.append(row)
+              print(json.dumps(row,ensure_ascii=False),flush=True)
+              (out/'informe.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2))
+              time.sleep(8)
+              return obj,net
+          d,net=probe('ultimo',BASE+'resultados1')
+          seen=set()
+          today=datetime.datetime.now(ZoneInfo('Europe/Madrid')).date()
+          for i in range(8):
+              if not isinstance(d,dict):break
+              sid=str(d.get('drawIdSorteoSiguiente') or '')
+              if not re.fullmatch(r'[0-9]{6,20}',sid) or sid in seen:break
+              seen.add(sid)
+              d,net=probe('cadena_'+sid,BASE+'resultados2?idsorteo='+sid)
+              if not isinstance(d,dict) or str(d.get('drawIdSorteo'))!=sid:break
+              if d.get('modelDraw') not in (88,102):
+                  day=str(d.get('fechaSorteo',''))[:10]
+                  if re.fullmatch(r'\d{4}-\d{2}-\d{2}',day):
+                      probe('contraste_'+sid,BASE+'fecha2?game_id=LNAC&fecha_sorteo='+day.replace('-',''))
+                  break
+          if net.get('http') not in (403,406,429):
+              for day in (datetime.date(today.year,12,22),datetime.date(today.year,12,6)):
+                  if today<day<=today+datetime.timedelta(days=45):
+                      _,net=probe('control_'+day.isoformat(),BASE+'fecha2?game_id=LNAC&fecha_sorteo='+day.strftime('%Y%m%d'))
+                      if net.get('http') in (403,406,429):break
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cadena-lnac-diagnostico
+          path: salida_cadena_lnac/
