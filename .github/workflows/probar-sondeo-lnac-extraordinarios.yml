@@ -1,0 +1,14 @@
+name: Probar sondeo LNAC extraordinarios
+on:
+  push:
+    branches: ['investigacion/lnac-automatizacion-extraordinarios']
+    paths: ['scripts/sondeo_lnac_extraordinarios.py','.github/workflows/probar-sondeo-lnac-extraordinarios.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/sondeo_lnac_extraordinarios.py --self-test
+      - run: python3 scripts/descubrir_calendario_lnac.py --self-test
