@@ -1,0 +1,50 @@
+{
+  "id_sorteo": "1330009096",
+  "fecha_sorteo": "2026-11-28T13:00:00.000Z",
+  "tipo_sorteo": "S",
+  "primer_premio": "20578",
+  "segundo_premio": "89894",
+  "extracciones": {
+    "extraccionesDeCuatroCifras": [
+      "0701",
+      "1545",
+      "4025",
+      "4649"
+    ],
+    "extraccionesDeTresCifras": [
+      "268",
+      "574",
+      "602",
+      "641",
+      "656",
+      "712",
+      "780",
+      "835",
+      "946",
+      "976"
+    ],
+    "extraccionesDeDosCifras": [
+      "23",
+      "23",
+      "28",
+      "34",
+      "48",
+      "57",
+      "57",
+      "71",
+      "99"
+    ],
+    "reintegros": [
+      "1",
+      "6",
+      "8"
+    ]
+  },
+  "precio_decimo_original": 6.0,
+  "premios_verificados": false,
+  "publicable": false,
+  "fuente": "https://www.loteriasyapuestas.es/servicios/resultados1",
+  "contraste_fecha2": true,
+  "total_centimos": 42000000,
+  "sha256": "9918516c6a92614b029f418e81643b1ba875f1d2523047f5e82320ac25d7181b"
+}
