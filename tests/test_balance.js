@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync('index.html','utf8');
+const code=html.slice(html.indexOf('function balanceCents('),html.indexOf("let balancePeriod="));
+const ctx=vm.createContext({});vm.runInContext(code,ctx);
+const {balanceCents:c,balanceStats:stats}=ctx;
+for(const [v,n] of [[0.1+0.2,30],[2.5,250],['20.01',2001],[null,null],['',null],[-1,null],[1.234,null],[Infinity,null]])assert.equal(c(v),n);
+const t=(date,price,state,prize,game='bonoloto',extra={})=>({date,price,game,r:{state,prize,...extra}});
+const items=[t('2026-11-27',2.5,'won',4),t('2026-11-26',1,'lost',0),t('2026-11-28',2,'pending'),t('2026-11-25',1,'matched_unpaid',0),t('2026-11-23',null,'won',5,'primitiva',{jokerPending:true}),t('2026-10-01',3,'lost',0),t('2025-12-22',20,'won',100,'loteria_nacional'),t('2026-02-30',1,'pending')];
+const run=p=>stats(items,p,'2026-11-28',x=>x.r);
+let x=run('month');assert.equal(x.count,5);assert.equal(x.spent,650);assert.equal(x.prizes,900);assert.equal(x.net,250);assert.equal(x.missing,1);assert.equal(x.pending,2);assert.equal(x.won,1);assert.equal(x.lost,1);assert.equal(x.unpaid,1);assert.equal(x.undated,1);assert.equal(x.provisional,true);assert.equal(x.groups.primitiva.prizes,500);
+assert.equal(run('year').count,6);assert.equal(run('all').count,8);assert.equal(run('all').prizes,10900);
+x=stats([], 'year','2026-11-28',()=>{});assert.equal(x.net,0);assert.equal(x.provisional,false);
+x=stats([t('2026-11-28',1,'won',2,'__proto__')],'all','2026-11-28',z=>z.r);assert.equal(x.groups['__proto__'].spent,100);
+console.log('BALANCE: cálculos, filtros, estados, importes parciales y datos inválidos OK');
