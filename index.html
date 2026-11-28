@@ -390,11 +390,24 @@ const sampleTickets = [
  {id:4,game:'loteria_nacional',number:'55483',series:176,fraction:1,date:'2026-12-22',code:'102/26',price:20,draw:'Sorteo extraordinario de Navidad'}
 ];
 const STORAGE_KEY='lotoscan_tickets_v010';
-let tickets;
-try { const stored=localStorage.getItem(STORAGE_KEY); tickets=stored===null?sampleTickets.map(t=>({...t})):JSON.parse(stored); if(!Array.isArray(tickets))throw Error('Invalid data'); }
-catch(e){tickets=sampleTickets.map(t=>({...t}));}
-function persistTickets(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(tickets));return true}catch(e){console.error('LotoScan: error al guardar',e);alert('No se han podido guardar los cambios: '+(e?.message||'error de almacenamiento')+'. No borres los datos de Safari.');return false}}
-try{if(localStorage.getItem(STORAGE_KEY)===null)persistTickets()}catch(e){console.warn('Almacenamiento no disponible',e)}
+const DEMO_MIGRATION_KEY='lotoscan_demo_removed_v1';
+function removeOriginalDemoTickets(items){
+ return items.filter(t=>!sampleTickets.some(d=>t&&Object.keys(t).length===Object.keys(d).length&&Object.keys(d).every(k=>Object.prototype.hasOwnProperty.call(t,k)&&t[k]===d[k])));
+}
+let tickets=[],ticketStorageReadable=false;
+try {
+ const stored=localStorage.getItem(STORAGE_KEY);
+ const parsed=stored===null?[]:JSON.parse(stored);
+ if(!Array.isArray(parsed))throw Error('Invalid data');
+ tickets=parsed;ticketStorageReadable=true;
+ if(localStorage.getItem(DEMO_MIGRATION_KEY)!=='1'){
+  const cleaned=removeOriginalDemoTickets(parsed);
+  if(stored===null||cleaned.length!==parsed.length)localStorage.setItem(STORAGE_KEY,JSON.stringify(cleaned));
+  tickets=cleaned;
+  localStorage.setItem(DEMO_MIGRATION_KEY,'1');
+ }
+}catch(e){console.warn('LotoScan: almacenamiento o migración no disponible',e)}
+function persistTickets(){try{if(!ticketStorageReadable)throw Error('No se pudo leer el almacenamiento original');localStorage.setItem(STORAGE_KEY,JSON.stringify(tickets));return true}catch(e){console.error('LotoScan: error al guardar',e);alert('No se han podido guardar los cambios: '+(e?.message||'error de almacenamiento')+'. No borres los datos de Safari.');return false}}
 // LotoScan 0.84: exportación e importación conservadora de boletos.
 function downloadBackup084(data,filename){
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
@@ -1180,9 +1193,9 @@ function renderTickets(){
  const shown=(filter==='all'?tickets:tickets.filter(t=>t.game===filter)).slice();
  try{shown.splice(0,shown.length,...sortedTickets(shown))}catch(error){console.error('LotoScan: error ordenación',error)}
  const all=document.getElementById('allTickets');
- if(all)all.innerHTML=shown.length?shown.map(safeTicketCard071).join(''):'<div class="empty">Todavía no tienes boletos de este sorteo.</div>';
+ if(all)all.innerHTML=shown.length?shown.map(safeTicketCard071).join('') : (tickets.length?'<div class="empty">Todavía no tienes boletos de este sorteo.</div>':'<div class="empty">Todavía no tienes boletos. Escanea tu primer boleto o introdúcelo manualmente.</div>');
  const home=document.getElementById('homeTickets');
- if(home){let featured=tickets.slice();try{featured=sortedTickets(featured,'prizes')}catch(error){console.error(error)}home.innerHTML=featured.slice(0,2).map(safeTicketCard071).join('')}
+ if(home){let featured=tickets.slice();try{featured=sortedTickets(featured,'prizes')}catch(error){console.error(error)}home.innerHTML=featured.length?featured.slice(0,2).map(safeTicketCard071).join(''):'<div class="empty">Tus boletos aparecerán aquí cuando registres el primero.</div>'}
  const count=document.getElementById('ticketCount');if(count)count.textContent=tickets.length+' boletos';
  const summary=document.getElementById('portfolioSummary');if(summary)summary.textContent=shown.length+' boletos · '+shown.filter(t=>['won','lost','candidate'].includes(safeTicketStatus071(t))).length+' con resultado';
  if(document.getElementById('results')?.classList.contains('active'))renderOfficialResults();
