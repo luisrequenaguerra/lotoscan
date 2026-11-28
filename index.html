@@ -1103,11 +1103,11 @@ function ticketStatus(t){const r=checkTicket38(t);return r.state==='won'?(r.gros
 
 function balanceCents(value){
  if(typeof value!=='number'&&typeof value!=='string')return null;
- if(!/^\d+(?:\.\d{1,2})?$/.test(String(value).trim()))return null;
- const n=Math.round(Number(value)*100);return Number.isSafeInteger(n)&&n>=0?n:null;
+ if(typeof value==='string'&&!/^\d+(?:\.\d{1,2})?$/.test(value.trim()))return null;
+ const raw=Number(value)*100,n=Math.round(raw);return Number.isSafeInteger(n)&&n>=0&&Math.abs(raw-n)<0.00001?n:null;
 }
 function balanceStats(items,period,now,check){
- const totals={count:0,spent:0,prizes:0,won:0,lost:0,pending:0,unpaid:0,missing:0,undated:0,groups:{}};
+ const totals={count:0,spent:0,prizes:0,won:0,lost:0,pending:0,unpaid:0,missing:0,undated:0,groups:Object.create(null)};
  for(const t of items){
   const date=String(t.date||'');
   const valid=/^\d{4}-\d{2}-\d{2}$/.test(date)&&!Number.isNaN(Date.parse(date))&&new Date(date).toISOString().slice(0,10)===date;
@@ -1185,6 +1185,7 @@ function renderTickets(){
  if(home){let featured=tickets.slice();try{featured=sortedTickets(featured,'prizes')}catch(error){console.error(error)}home.innerHTML=featured.slice(0,2).map(safeTicketCard071).join('')}
  const count=document.getElementById('ticketCount');if(count)count.textContent=tickets.length+' boletos';
  const summary=document.getElementById('portfolioSummary');if(summary)summary.textContent=shown.length+' boletos · '+shown.filter(t=>['won','lost','candidate'].includes(safeTicketStatus071(t))).length+' con resultado';
+ if(document.getElementById('results')?.classList.contains('active'))renderOfficialResults();
 }
 function detailTokens(value){if(Array.isArray(value))return value.flatMap(detailTokens);return String(value??'').trim().split(/[\s,;]+/).filter(Boolean)}
 function detailBubbles(value,kind='main'){return '<div class="detail-bubbles">'+detailTokens(value).map(n=>'<span class="detail-bubble '+(kind==='extra'?'detail-bubble-extra':'')+'">'+esc(n)+'</span>').join('')+'</div>'}
